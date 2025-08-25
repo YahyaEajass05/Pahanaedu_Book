@@ -2,8 +2,10 @@ package com.pahanaedu.servlet;
 
 import com.pahanaedu.model.Bill;
 import com.pahanaedu.model.Customer;
+import com.pahanaedu.model.Item;
 import com.pahanaedu.service.BillService;
 import com.pahanaedu.service.CustomerService;
+import com.pahanaedu.service.ItemService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,31 +14,33 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "BillServlet", urlPatterns = {"/bill"})
 public class BillServlet extends HttpServlet {
 
     private BillService billService;
     private CustomerService customerService;
+    private ItemService itemService;
 
     @Override
     public void init() throws ServletException {
         billService = new BillService();
         customerService = new CustomerService();
+        itemService = new ItemService();
     }
 
-    /**
-     * Handle GET requests - display bill pages
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check if user is logged in
         if (!isUserLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
@@ -45,38 +49,38 @@ public class BillServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            if (action == null || "create".equals(action)) {
-                showCreateBillForm(request, response);
-            } else if ("generate".equals(action)) {
-                generateBill(request, response);
+            if (action == null || "list".equals(action)) {
+                listBills(request, response);
             } else if ("view".equals(action)) {
                 viewBill(request, response);
+            } else if ("new".equals(action)) {
+                showNewBillForm(request, response);
             } else if ("print".equals(action)) {
                 printBill(request, response);
-            } else if ("list".equals(action)) {
-                listBills(request, response);
             } else if ("customer".equals(action)) {
                 showCustomerBills(request, response);
-            } else if ("calculate".equals(action)) {
-                calculateBillAmount(request, response);
+            } else if ("search".equals(action)) {
+                searchBills(request, response);
+            } else if ("today".equals(action)) {
+                showTodaysBills(request, response);
+            } else if ("analytics".equals(action)) {
+                showBillAnalytics(request, response);
+            } else if ("return".equals(action)) {
+                showReturnForm(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "An error occurred while processing your request");
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
         }
     }
 
-    /**
-     * Handle POST requests - process bill operations
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check if user is logged in
         if (!isUserLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
@@ -85,169 +89,136 @@ public class BillServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            if ("generate".equals(action)) {
-                processBillGeneration(request, response);
-            } else if ("calculate".equals(action)) {
-                calculateBillAmount(request, response);
+            if ("cancel".equals(action)) {
+                cancelBill(request, response);
+            } else if ("updateStatus".equals(action)) {
+            } else if ("processReturn".equals(action)) {
+                processReturn(request, response);
+            } else if ("export".equals(action)) {
+                exportBills(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "An error occurred while processing your request");
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
         }
     }
 
-    /**
-     * Show create bill form
-     */
-    private void showCreateBillForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private void listBills(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+        String status = request.getParameter("status");
+
+        List<Bill> bills;
+
+        if (startDateStr != null && endDateStr != null && !startDateStr.isEmpty() && !endDateStr.isEmpty()) {
+            Date startDate = Date.valueOf(startDateStr);
+            Date endDate = Date.valueOf(endDateStr);
+            bills = billService.getBillsByDateRange(startDate, endDate);
+        } else {
+            bills = billService.getAllBills();
+        }
+
+        // Filter by status if specified
+        if (status != null && !status.isEmpty() && !"ALL".equals(status)) {
+            bills = bills.stream()
+                    .filter(bill -> status.equals(bill.getPaymentStatus()))
+                    .collect(Collectors.toList());
+        }
+
+        // Get statistics
+        BigDecimal todaysSales = billService.getTodaysSales();
+        Map<String, Object> billStats = billService.getBillStatisticsSummary();
+
+        // Calculate totals
+        BigDecimal totalAmount = bills.stream()
+                .filter(bill -> "PAID".equals(bill.getPaymentStatus()))
+                .map(Bill::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        request.setAttribute("bills", bills);
+        request.setAttribute("todaysSales", todaysSales);
+        request.setAttribute("billStats", billStats);
+        request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("pageTitle", "Sales Bills");
+
+        // Handle success/error messages
+        String success = request.getParameter("success");
+        String error = request.getParameter("error");
+        if (success != null) {
+            request.setAttribute("successMessage", success);
+        }
+        if (error != null) {
+            request.setAttribute("errorMessage", error);
+        }
+
+        request.getRequestDispatcher("/jsp/bill-list.jsp").forward(request, response);
+    }
+
+    private void viewBill(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String billIdStr = request.getParameter("billId");
+
+        if (billIdStr == null || billIdStr.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/bill?error=Bill ID is required");
+            return;
+        }
+
+        try {
+            int billId = Integer.parseInt(billIdStr);
+            Bill bill = billService.getBillById(billId);
+
+            if (bill == null) {
+                response.sendRedirect(request.getContextPath() + "/bill?error=Bill not found");
+                return;
+            }
+
+            // Calculate savings
+            BigDecimal totalSavings = bill.getDiscountAmount()
+                    .add(new BigDecimal(bill.getLoyaltyPointsRedeemed())
+                            .multiply(new BigDecimal("0.10")));
+
+            request.setAttribute("bill", bill);
+            request.setAttribute("totalSavings", totalSavings);
+            request.setAttribute("pageTitle", "Bill Details - " + bill.getBillNumber());
+
+            // Check for success message
+            String success = request.getParameter("success");
+            if (success != null) {
+                request.setAttribute("successMessage", success);
+            }
+
+            request.getRequestDispatcher("/jsp/viewBill.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/bill?error=Invalid bill ID");
+        }
+    }
+
+    private void showNewBillForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
 
         List<Customer> customers = customerService.getAllCustomers();
-        BigDecimal ratePerUnit = billService.getRatePerUnit();
+        List<Item> items = itemService.getAllItems();
 
         request.setAttribute("customers", customers);
-        request.setAttribute("ratePerUnit", ratePerUnit);
-        request.setAttribute("pageTitle", "Generate Bill");
-        request.getRequestDispatcher("/jsp/bill-create.jsp").forward(request, response);
+        request.setAttribute("items", items);
+        request.setAttribute("pageTitle", "New Bill");
+        request.getRequestDispatcher("/jsp/bill-new.jsp").forward(request, response);
     }
 
-    /**
-     * Generate bill (GET request - show form with customer details)
-     */
-    private void generateBill(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String accountNumber = request.getParameter("accountNumber");
-
-        if (accountNumber == null || accountNumber.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Please select a customer");
-            showCreateBillForm(request, response);
-            return;
-        }
-
-        Customer customer = customerService.getCustomerByAccountNumber(accountNumber);
-
-        if (customer == null) {
-            request.setAttribute("errorMessage", "Customer not found");
-            showCreateBillForm(request, response);
-            return;
-        }
-
-        // Calculate bill amount based on customer's units consumed
-        BigDecimal billAmount = billService.calculateBillAmount(customer.getUnitsConsumed());
-        String billNumber = billService.generateBillNumber();
-        BigDecimal ratePerUnit = billService.getRatePerUnit();
-
-        request.setAttribute("customer", customer);
-        request.setAttribute("billAmount", billAmount);
-        request.setAttribute("billNumber", billNumber);
-        request.setAttribute("ratePerUnit", ratePerUnit);
-        request.setAttribute("currentDate", Date.valueOf(LocalDate.now()));
-        request.setAttribute("pageTitle", "Generate Bill for " + customer.getName());
-        request.getRequestDispatcher("/jsp/bill-generate.jsp").forward(request, response);
-    }
-
-    /**
-     * Process bill generation (POST request - save bill)
-     */
-    private void processBillGeneration(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String accountNumber = request.getParameter("accountNumber");
-        String unitsConsumedStr = request.getParameter("unitsConsumed");
-
-        if (accountNumber == null || accountNumber.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Account number is required");
-            showCreateBillForm(request, response);
-            return;
-        }
-
-        if (unitsConsumedStr == null || unitsConsumedStr.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Units consumed is required");
-            showCreateBillForm(request, response);
-            return;
-        }
-
-        try {
-            int unitsConsumed = Integer.parseInt(unitsConsumedStr.trim());
-
-            if (unitsConsumed < 0) {
-                request.setAttribute("errorMessage", "Units consumed cannot be negative");
-                showCreateBillForm(request, response);
-                return;
-            }
-
-            // Generate bill with custom units
-            Bill bill = billService.generateBillWithCustomUnits(accountNumber, unitsConsumed);
-
-            if (bill != null) {
-                response.sendRedirect(request.getContextPath() + "/bill?action=view&billId=" +
-                        bill.getBillId() + "&success=Bill generated successfully");
-            } else {
-                request.setAttribute("errorMessage", "Failed to generate bill");
-                showCreateBillForm(request, response);
-            }
-
-        } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Invalid units consumed format");
-            showCreateBillForm(request, response);
-        }
-    }
-
-    /**
-     * View bill details
-     */
-    private void viewBill(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String billIdStr = request.getParameter("billId");
-
-        if (billIdStr == null || billIdStr.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Bill ID is required");
-            listBills(request, response);
-            return;
-        }
-
-        try {
-            int billId = Integer.parseInt(billIdStr);
-            Bill bill = billService.getBillById(billId);
-
-            if (bill == null) {
-                request.setAttribute("errorMessage", "Bill not found with ID: " + billId);
-                listBills(request, response);
-                return;
-            }
-
-            // Get customer details
-            Customer customer = customerService.getCustomerByAccountNumber(bill.getAccountNumber());
-            BigDecimal ratePerUnit = billService.getRatePerUnit();
-
-            request.setAttribute("bill", bill);
-            request.setAttribute("customer", customer);
-            request.setAttribute("ratePerUnit", ratePerUnit);
-            request.setAttribute("pageTitle", "Bill Details - #" + billId);
-            request.getRequestDispatcher("/jsp/bill-view.jsp").forward(request, response);
-
-        } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Invalid bill ID format");
-            listBills(request, response);
-        }
-    }
-
-    /**
-     * Print bill
-     */
     private void printBill(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
 
         String billIdStr = request.getParameter("billId");
 
         if (billIdStr == null || billIdStr.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Bill ID is required");
-            listBills(request, response);
+            response.sendRedirect(request.getContextPath() + "/bill?error=Bill ID is required");
             return;
         }
 
@@ -256,121 +227,269 @@ public class BillServlet extends HttpServlet {
             Bill bill = billService.getBillById(billId);
 
             if (bill == null) {
-                request.setAttribute("errorMessage", "Bill not found with ID: " + billId);
-                listBills(request, response);
+                response.sendRedirect(request.getContextPath() + "/bill?error=Bill not found");
                 return;
             }
 
-            // Get customer details
-            Customer customer = customerService.getCustomerByAccountNumber(bill.getAccountNumber());
-            BigDecimal ratePerUnit = billService.getRatePerUnit();
-
             request.setAttribute("bill", bill);
-            request.setAttribute("customer", customer);
-            request.setAttribute("ratePerUnit", ratePerUnit);
-            request.setAttribute("pageTitle", "Print Bill - #" + billId);
+            request.setAttribute("companyName", "Book Paradise");
+            request.setAttribute("companyAddress", "123 Book Street, Reading City");
+            request.setAttribute("companyPhone", "+94 11 2345678");
+            request.setAttribute("companyEmail", "info@bookparadise.lk");
+            request.setAttribute("isPrintView", true);
+
             request.getRequestDispatcher("/jsp/bill-print.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "Invalid bill ID format");
-            listBills(request, response);
+            response.sendRedirect(request.getContextPath() + "/bill?error=Invalid bill ID");
         }
     }
 
-    /**
-     * List all bills
-     */
-    private void listBills(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        List<Bill> bills = billService.getAllBills();
-        BigDecimal todaysRevenue = billService.getTodaysRevenue();
-        BigDecimal monthlyRevenue = billService.getMonthlyRevenue();
-        String billStats = billService.getBillStatistics();
-
-        request.setAttribute("bills", bills);
-        request.setAttribute("todaysRevenue", todaysRevenue);
-        request.setAttribute("monthlyRevenue", monthlyRevenue);
-        request.setAttribute("billStats", billStats);
-        request.setAttribute("pageTitle", "All Bills");
-        request.getRequestDispatcher("/jsp/bill-list.jsp").forward(request, response);
-    }
-
-    /**
-     * Show bills for a specific customer
-     */
     private void showCustomerBills(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
 
-        String accountNumber = request.getParameter("accountNumber");
+        String customerIdStr = request.getParameter("customerId");
 
-        if (accountNumber == null || accountNumber.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Account number is required");
-            listBills(request, response);
+        if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/bill?error=Customer ID is required");
             return;
         }
-
-        Customer customer = customerService.getCustomerByAccountNumber(accountNumber);
-
-        if (customer == null) {
-            request.setAttribute("errorMessage", "Customer not found");
-            listBills(request, response);
-            return;
-        }
-
-        List<Bill> bills = billService.getBillsByCustomer(accountNumber);
-
-        request.setAttribute("bills", bills);
-        request.setAttribute("customer", customer);
-        request.setAttribute("pageTitle", "Bills for " + customer.getName());
-        request.getRequestDispatcher("/jsp/bill-list.jsp").forward(request, response);
-    }
-
-    /**
-     * Calculate bill amount (AJAX request)
-     */
-    private void calculateBillAmount(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String unitsConsumedStr = request.getParameter("unitsConsumed");
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
 
         try {
-            if (unitsConsumedStr == null || unitsConsumedStr.trim().isEmpty()) {
-                response.getWriter().write("{\"error\": \"Units consumed is required\"}");
+            int customerId = Integer.parseInt(customerIdStr);
+            Customer customer = customerService.getCustomerById(customerId);
+
+            if (customer == null) {
+                response.sendRedirect(request.getContextPath() + "/bill?error=Customer not found");
                 return;
             }
 
-            int unitsConsumed = Integer.parseInt(unitsConsumedStr.trim());
+            List<Bill> bills = billService.getBillsByCustomer(customerId);
 
-            if (unitsConsumed < 0) {
-                response.getWriter().write("{\"error\": \"Units consumed cannot be negative\"}");
-                return;
+            // Calculate customer statistics
+            BigDecimal totalPurchases = BigDecimal.ZERO;
+            BigDecimal totalSavings = BigDecimal.ZERO;
+            int totalLoyaltyEarned = 0;
+            int totalLoyaltyRedeemed = 0;
+
+            for (Bill bill : bills) {
+                if ("PAID".equals(bill.getPaymentStatus())) {
+                    totalPurchases = totalPurchases.add(bill.getTotalAmount());
+                    totalSavings = totalSavings.add(bill.getDiscountAmount());
+                    totalLoyaltyEarned += bill.getLoyaltyPointsEarned();
+                    totalLoyaltyRedeemed += bill.getLoyaltyPointsRedeemed();
+                }
             }
 
-            BigDecimal billAmount = billService.calculateBillAmount(unitsConsumed);
-            BigDecimal ratePerUnit = billService.getRatePerUnit();
-
-            String jsonResponse = String.format(
-                    "{\"billAmount\": %.2f, \"ratePerUnit\": %.2f, \"unitsConsumed\": %d}",
-                    billAmount, ratePerUnit, unitsConsumed
-            );
-
-            response.getWriter().write(jsonResponse);
+            request.setAttribute("bills", bills);
+            request.setAttribute("customer", customer);
+            request.setAttribute("totalPurchases", totalPurchases);
+            request.setAttribute("totalSavings", totalSavings);
+            request.setAttribute("totalLoyaltyEarned", totalLoyaltyEarned);
+            request.setAttribute("totalLoyaltyRedeemed", totalLoyaltyRedeemed);
+            request.setAttribute("pageTitle", "Purchase History - " + customer.getName());
+            request.getRequestDispatcher("/jsp/customer-bills.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.getWriter().write("{\"error\": \"Invalid units consumed format\"}");
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().write("{\"error\": \"Calculation failed\"}");
+            response.sendRedirect(request.getContextPath() + "/bill?error=Invalid customer ID");
         }
     }
 
-    /**
-     * Check if user is logged in
-     */
+    private void searchBills(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String searchTerm = request.getParameter("q");
+
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/bill");
+            return;
+        }
+
+        List<Bill> allBills = billService.getAllBills();
+
+        // Search by bill number, customer name, or customer phone
+        List<Bill> filteredBills = allBills.stream()
+                .filter(bill ->
+                        bill.getBillNumber().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                                (bill.getCustomerName() != null &&
+                                        bill.getCustomerName().toLowerCase().contains(searchTerm.toLowerCase())) ||
+                                (bill.getCustomerPhone() != null &&
+                                        bill.getCustomerPhone().contains(searchTerm))
+                )
+                .collect(Collectors.toList());
+
+        request.setAttribute("bills", filteredBills);
+        request.setAttribute("searchTerm", searchTerm);
+        request.setAttribute("pageTitle", "Search Results: " + searchTerm);
+        request.getRequestDispatcher("/jsp/bill-list.jsp").forward(request, response);
+    }
+
+    private void showTodaysBills(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        Date today = Date.valueOf(LocalDate.now());
+        List<Bill> bills = billService.getBillsByDateRange(today, today);
+
+        // Calculate today's statistics
+        BigDecimal totalSales = BigDecimal.ZERO;
+        BigDecimal totalDiscount = BigDecimal.ZERO;
+        int totalItems = 0;
+
+        for (Bill bill : bills) {
+            if ("PAID".equals(bill.getPaymentStatus())) {
+                totalSales = totalSales.add(bill.getTotalAmount());
+                totalDiscount = totalDiscount.add(bill.getDiscountAmount());
+                totalItems += bill.getTotalItems();
+            }
+        }
+
+        request.setAttribute("bills", bills);
+        request.setAttribute("totalSales", totalSales);
+        request.setAttribute("totalDiscount", totalDiscount);
+        request.setAttribute("totalItems", totalItems);
+        request.setAttribute("pageTitle", "Today's Sales");
+        request.setAttribute("isToday", true);
+        request.getRequestDispatcher("/jsp/bill-list.jsp").forward(request, response);
+    }
+
+    private void showBillAnalytics(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        // Get date range
+        String period = request.getParameter("period");
+        Date startDate, endDate;
+
+        if ("week".equals(period)) {
+            endDate = Date.valueOf(LocalDate.now());
+            startDate = Date.valueOf(LocalDate.now().minusDays(7));
+        } else if ("month".equals(period)) {
+            endDate = Date.valueOf(LocalDate.now());
+            startDate = Date.valueOf(LocalDate.now().minusMonths(1));
+        } else {
+            // Default to current month
+            LocalDate now = LocalDate.now();
+            startDate = Date.valueOf(now.withDayOfMonth(1));
+            endDate = Date.valueOf(now.withDayOfMonth(now.lengthOfMonth()));
+        }
+
+        Map<String, BigDecimal> salesStats = billService.getSalesStatistics(startDate, endDate);
+        List<Map<String, Object>> bestSellers = billService.getBestSellingItems(10);
+        List<Map<String, Object>> categorySales = billService.getSalesByCategory();
+
+        request.setAttribute("salesStats", salesStats);
+        request.setAttribute("bestSellers", bestSellers);
+        request.setAttribute("categorySales", categorySales);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+        request.setAttribute("pageTitle", "Sales Analytics");
+        request.getRequestDispatcher("/jsp/bill-analytics.jsp").forward(request, response);
+    }
+
+    private void showReturnForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String billIdStr = request.getParameter("billId");
+
+        if (billIdStr == null || billIdStr.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/bill?error=Bill ID is required");
+            return;
+        }
+
+        try {
+            int billId = Integer.parseInt(billIdStr);
+            Bill bill = billService.getBillById(billId);
+
+            if (bill == null) {
+                response.sendRedirect(request.getContextPath() + "/bill?error=Bill not found");
+                return;
+            }
+
+            if (!"PAID".equals(bill.getPaymentStatus())) {
+                response.sendRedirect(request.getContextPath() +
+                        "/bill?action=view&billId=" + billId + "&error=Only paid bills can be returned");
+                return;
+            }
+
+            request.setAttribute("bill", bill);
+            request.setAttribute("pageTitle", "Return Items - " + bill.getBillNumber());
+            request.getRequestDispatcher("/jsp/bill-return.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/bill?error=Invalid bill ID");
+        }
+    }
+
+    private void cancelBill(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String billIdStr = request.getParameter("billId");
+
+        try {
+            int billId = Integer.parseInt(billIdStr);
+
+            if (billService.cancelBill(billId)) {
+                response.sendRedirect(request.getContextPath() +
+                        "/bill?action=view&billId=" + billId + "&success=Bill cancelled successfully");
+            } else {
+                response.sendRedirect(request.getContextPath() +
+                        "/bill?error=Failed to cancel bill");
+            }
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/bill?error=Invalid bill ID");
+        }
+    }
+
+
+    private void processReturn(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        // Implementation for processing returns
+        // This would handle the return logic for bill items
+        response.sendRedirect(request.getContextPath() + "/bill?success=Return processed successfully");
+    }
+
+    private void exportBills(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+
+        List<Bill> bills;
+        if (startDateStr != null && endDateStr != null) {
+            Date startDate = Date.valueOf(startDateStr);
+            Date endDate = Date.valueOf(endDateStr);
+            bills = billService.getBillsByDateRange(startDate, endDate);
+        } else {
+            bills = billService.getAllBills();
+        }
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=\"sales_report.csv\"");
+
+        PrintWriter writer = response.getWriter();
+
+        // Write CSV header
+        writer.println("Bill Number,Date,Customer Name,Items,Subtotal,Discount,Tax,Total,Payment Method,Status");
+
+        // Write bill data
+        for (Bill bill : bills) {
+            writer.println(String.format("%s,%s,%s,%d,%.2f,%.2f,%.2f,%.2f,%s,%s",
+                    bill.getBillNumber(),
+                    bill.getBillDate(),
+                    bill.getCustomerName() != null ? bill.getCustomerName().replace(",", " ") : "",
+                    bill.getTotalItems(),
+                    bill.getSubtotal(),
+                    bill.getDiscountAmount(),
+                    bill.getTaxAmount(),
+                    bill.getTotalAmount(),
+                    bill.getPaymentMethod(),
+                    bill.getPaymentStatus()
+            ));
+        }
+
+        writer.flush();
+    }
+
     private boolean isUserLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return session != null && session.getAttribute("adminUser") != null;
@@ -378,6 +497,6 @@ public class BillServlet extends HttpServlet {
 
     @Override
     public String getServletInfo() {
-        return "Bill Management Servlet for Pahana Edu";
+        return "Bill Management Servlet for Book Shop";
     }
 }

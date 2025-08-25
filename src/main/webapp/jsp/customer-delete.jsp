@@ -6,662 +6,949 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Customer - Pahana Edu</title>
+    <title>Delete Customer - BookStore Pro</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --dark-gradient: linear-gradient(135deg, #434343 0%, #000000 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            --hover-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            /* Modern Color Palette */
+            --primary-color: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary-color: #EC4899;
+            --secondary-dark: #DB2777;
+            --accent-color: #14B8A6;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+
+            /* Gradients */
+            --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --secondary-gradient: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            --success-gradient: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
+            --danger-gradient: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+            --warning-gradient: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+            --info-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+
+            /* Background & Glass */
+            --bg-primary: #F9FAFB;
+            --bg-secondary: #FFFFFF;
+            --glass-white: rgba(255, 255, 255, 0.85);
+            --glass-danger: rgba(239, 68, 68, 0.1);
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-danger: 0 20px 25px -5px rgba(239, 68, 68, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
+            position: relative;
         }
 
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background:
+                    radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(239, 68, 68, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            animation: bgRotate 30s linear infinite;
+        }
+
+        @keyframes bgRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .danger-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--danger-color);
+            border-radius: 50%;
+            opacity: 0;
+            /* Define default values for custom properties */
+            --x: 0px;
+            --y: 0px;
+            animation: dangerParticle 3s infinite;
+        }
+
+        @keyframes dangerParticle {
+            0% {
+                opacity: 0;
+                transform: translate(0px, 0px) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(var(--x, 0px), var(--y, 0px)) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(var(--x, 0px) * 2), calc(var(--y, 0px) * 2)) scale(0);
+            }
+        }
+
+
+        /* Navigation */
+        .navbar {
+            background: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: var(--primary-gradient);
+        }
+
+        /* Container */
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Hero Warning Section */
-        .delete-warning-hero {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 4rem 2rem;
-            border-radius: 30px;
-            margin-bottom: 3rem;
+        /* Warning Header */
+        .warning-header {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 3rem;
             text-align: center;
+            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
-            animation: slideInDown 0.8s ease-out;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInScale 0.6s ease-out;
         }
 
-        .delete-warning-hero::before {
+        .warning-header::before {
             content: '';
             position: absolute;
             top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(250, 112, 154, 0.3), transparent);
-            animation: rotate 20s linear infinite;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--danger-gradient);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .warning-icon {
-            font-size: 5rem;
-            margin-bottom: 2rem;
-            animation: bounce 2s infinite;
-            display: inline-block;
-        }
-
-        .delete-warning-hero h1 {
-            margin: 0 0 1rem 0;
-            font-size: 3rem;
-            font-weight: 800;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: var(--glass-danger);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            font-size: 3rem;
+            color: var(--danger-color);
+            position: relative;
+            animation: warningPulse 2s ease-in-out infinite;
         }
 
-        .delete-warning-hero p {
-            margin: 0;
-            font-size: 1.3rem;
-            opacity: 0.9;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
+        @keyframes warningPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            }
         }
 
-        /* Main Delete Container */
-        .delete-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            animation: slideInUp 0.8s ease-out;
-            transition: all 0.3s ease;
+        .warning-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--danger-color);
+            margin-bottom: 0.5rem;
+            animation: slideInUp 0.6s ease-out 0.2s both;
         }
 
-        .delete-container:hover {
-            box-shadow: var(--hover-shadow);
+        .warning-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            animation: slideInUp 0.6s ease-out 0.3s both;
         }
 
-        /* Danger Alert */
-        .danger-alert {
+        /* Alert Banner */
+        .alert-banner {
             background: var(--danger-gradient);
             color: white;
-            padding: 2rem;
-            margin-bottom: 0;
-            position: relative;
-            overflow: hidden;
-            animation: slideInLeft 0.6s ease-out;
-        }
-
-        .danger-alert::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 15s linear infinite;
-        }
-
-        .danger-alert-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .danger-alert h3 {
-            color: white;
-            margin: 0 0 1.5rem 0;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
             gap: 1rem;
+            box-shadow: var(--shadow-danger);
+            animation: slideInLeft 0.6s ease-out 0.4s both;
+        }
+
+        .alert-icon {
             font-size: 1.5rem;
+            animation: shake 2s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+            20%, 40%, 60%, 80% { transform: translateX(2px); }
+        }
+
+        .alert-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
             font-weight: 700;
         }
 
-        .danger-alert ul {
-            color: rgba(255,255,255,0.95);
+        .alert-list {
             margin: 0;
-            padding-left: 2rem;
+            padding-left: 1.5rem;
+            list-style: none;
         }
 
-        .danger-alert li {
-            margin-bottom: 0.75rem;
-            line-height: 1.6;
-            font-size: 1rem;
+        .alert-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
         }
 
-        /* Customer Summary Section */
-        .customer-summary {
-            padding: 3rem;
-            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
-            animation: fadeInUp 0.6s ease-out;
+        .alert-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        .summary-header {
-            text-align: center;
-            margin-bottom: 3rem;
+        /* Customer Card */
+        .customer-delete-card {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 2rem;
+            animation: slideInRight 0.6s ease-out 0.5s both;
+            position: relative;
+            border: 2px solid var(--danger-color);
         }
 
-        .summary-header h2 {
-            color: #2c3e50;
-            margin: 0 0 1rem 0;
-            font-size: 2rem;
-            font-weight: 700;
+        .delete-marker {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--danger-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 1rem;
+            gap: 0.5rem;
+            animation: blink 2s ease-in-out infinite;
         }
 
-        .summary-header p {
-            color: #7f8c8d;
-            margin: 0;
-            font-size: 1.1rem;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
-        .customer-card {
-            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 20px;
-            padding: 3rem;
-            position: relative;
-            transition: all 0.3s ease;
-            animation: scaleIn 0.6s ease-out;
-        }
-
-        .customer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
-        }
-
-        .customer-header-info {
+        .card-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 2rem;
-            margin-bottom: 3rem;
         }
 
-        .customer-avatar-delete {
+        .customer-avatar {
             width: 100px;
             height: 100px;
+            border-radius: 20px;
             background: var(--danger-gradient);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
-            font-weight: 900;
+            font-weight: 700;
             color: white;
-            box-shadow: var(--card-shadow);
             position: relative;
-            animation: pulse 2s infinite;
+            overflow: hidden;
+            animation: avatarShake 3s ease-in-out infinite;
         }
 
-        .customer-avatar-delete::after {
+        @keyframes avatarShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .customer-avatar::after {
             content: '';
             position: absolute;
-            inset: -5px;
-            background: var(--danger-gradient);
-            border-radius: inherit;
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0.7;
-            animation: glow 2s ease-in-out infinite alternate;
+            inset: -50%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s linear infinite;
         }
 
-        .customer-main-info h3 {
-            margin: 0 0 0.5rem 0;
-            color: #2c3e50;
-            font-size: 2.2rem;
-            font-weight: 800;
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .customer-main-info p {
-            margin: 0;
-            color: #7f8c8d;
-            font-size: 1.2rem;
-        }
-
-        .deletion-badge {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: var(--danger-gradient);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
+        .customer-header-info h2 {
+            font-size: 1.75rem;
             font-weight: 700;
-            box-shadow: var(--card-shadow);
-            animation: pulse 2s infinite;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-header-info p {
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .customer-details-grid {
+        /* Info Grid */
+        .info-grid {
+            padding: 2rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .detail-box {
-            background: white;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            border-radius: 15px;
-            padding: 2rem;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            animation: fadeInUp 0.6s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .detail-box:nth-child(even) {
-            animation-delay: 0.1s;
-        }
-
-        .detail-box:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-        }
-
-        .detail-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .detail-box:hover::before {
-            left: 100%;
-        }
-
-        .detail-label {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .detail-value {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            font-weight: 600;
-            word-break: break-word;
-        }
-
-        .units-highlight {
-            background: var(--warning-gradient) !important;
-            color: white !important;
-            text-align: center;
-        }
-
-        .units-highlight .detail-label {
-            color: rgba(255,255,255,0.9);
-        }
-
-        .units-highlight .detail-value {
-            color: white;
-        }
-
-        .units-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: white;
-            margin: 0;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-        }
-
-        .units-label {
-            color: rgba(255,255,255,0.9);
-            font-weight: 600;
-            margin: 0;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Impact Analysis */
-        .impact-analysis {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 3rem 0;
-            color: white;
-            animation: slideInRight 0.6s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .impact-analysis::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -30%;
-            width: 120px;
-            height: 120px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .impact-analysis-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .impact-analysis h4 {
-            color: white;
-            margin: 0 0 1.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .impact-list {
-            margin: 0;
-            color: rgba(255,255,255,0.9);
-            padding-left: 1.5rem;
-        }
-
-        .impact-list li {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        /* Customer Activity Summary */
-        .customer-activity-summary {
-            background: var(--success-gradient);
-            color: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 3rem 0;
-            animation: slideInLeft 0.6s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .customer-activity-summary::before {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -20%;
-            width: 100px;
-            height: 100px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite reverse;
-        }
-
-        .activity-summary-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .customer-activity-summary h4 {
-            color: white;
-            margin: 0 0 2rem 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .activity-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
         }
 
-        .activity-stat {
-            text-align: center;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(20px);
-            padding: 2rem;
-            border-radius: 15px;
+        .info-item {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 16px;
             transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            animation: fadeInUp 0.6s ease-out;
         }
 
-        .activity-stat:hover {
-            transform: scale(1.05);
-            background: rgba(255,255,255,0.3);
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--danger-color);
         }
 
-        .activity-stat-number {
-            font-size: 2rem;
-            font-weight: 900;
-            color: white;
-            margin: 0;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-        }
+        .info-item:nth-child(1) { animation-delay: 0.6s; }
+        .info-item:nth-child(2) { animation-delay: 0.7s; }
+        .info-item:nth-child(3) { animation-delay: 0.8s; }
+        .info-item:nth-child(4) { animation-delay: 0.9s; }
+        .info-item:nth-child(5) { animation-delay: 1s; }
+        .info-item:nth-child(6) { animation-delay: 1.1s; }
 
-        .activity-stat-label {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.9);
-            margin: 0.5rem 0 0 0;
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .info-item.highlight {
+            background: var(--warning-gradient);
+            color: white;
+            border: none;
+        }
+
+        .info-item.highlight .info-label,
+        .info-item.highlight .info-value {
+            color: white;
+        }
+
+        .info-item.highlight .info-value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        /* Impact Analysis */
+        .impact-section {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            animation: slideInUp 0.6s ease-out 1.2s both;
+        }
+
+        .impact-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .impact-header i {
+            font-size: 1.5rem;
+            color: var(--warning-color);
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .impact-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .impact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .impact-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .impact-card:nth-child(1) .impact-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .impact-card:nth-child(2) .impact-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .impact-card:nth-child(3) .impact-icon {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info-color);
+        }
+
+        .impact-card:nth-child(4) .impact-icon {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+        }
+
+        .impact-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .impact-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
         /* Confirmation Section */
         .confirmation-section {
-            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+            background: var(--bg-secondary);
+            border-radius: 20px;
             padding: 3rem;
             text-align: center;
-            animation: slideInUp 0.6s ease-out;
+            box-shadow: var(--shadow-lg);
+            animation: slideInUp 0.6s ease-out 1.4s both;
         }
 
-        .confirmation-checkbox {
-            background: white;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 15px;
+        .confirmation-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .security-check {
+            background: var(--bg-primary);
+            border: 2px solid var(--danger-color);
+            border-radius: 16px;
             padding: 2rem;
-            margin-bottom: 3rem;
-            display: inline-block;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
         }
 
-        .confirmation-checkbox::before {
+        .security-check::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s ease;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--danger-gradient);
+            animation: loadingBar 3s ease-in-out infinite;
         }
 
-        .confirmation-checkbox:hover::before {
-            left: 100%;
+        @keyframes loadingBar {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
         }
 
-        .confirmation-checkbox:hover {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
         }
 
-        .confirmation-checkbox input[type="checkbox"] {
-            margin-right: 1rem;
-            transform: scale(1.3);
+        .checkbox-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        .custom-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--danger-color);
+            border-radius: 6px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox input {
+            opacity: 0;
+            position: absolute;
             cursor: pointer;
         }
 
-        .confirmation-text {
-            color: #2c3e50;
-            font-weight: 700;
-            user-select: none;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .custom-checkbox .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 14px;
+            height: 14px;
+            background: var(--danger-gradient);
+            border-radius: 3px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .custom-checkbox input:checked ~ .checkmark {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .checkbox-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         /* Action Buttons */
-        .delete-actions {
+        .action-buttons {
             display: flex;
-            gap: 2rem;
+            gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
+            margin-top: 2rem;
         }
 
-        .btn-delete-confirm {
-            background: var(--danger-gradient);
-            color: white;
-            padding: 1.2rem 3rem;
+        .btn {
+            padding: 0.875rem 2rem;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
             position: relative;
             overflow: hidden;
-            min-width: 250px;
-            opacity: 0.5;
-            cursor: not-allowed;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
         }
 
-        .btn-delete-confirm::before {
+        .btn::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            transition: all 0.5s ease;
             transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .btn-delete-confirm.enabled::before {
+        .btn:active::before {
             width: 300px;
             height: 300px;
         }
 
-        .btn-delete-confirm.enabled {
+        .btn-danger {
+            background: var(--danger-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-danger.enabled {
             opacity: 1;
             cursor: pointer;
+            animation: dangerPulse 2s ease-in-out infinite;
         }
 
-        .btn-delete-confirm.enabled:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: var(--hover-shadow);
+        @keyframes dangerPulse {
+            0%, 100% { box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6); }
         }
 
-        .btn-keep, .btn-back {
-            padding: 1.2rem 3rem;
+        .btn-danger.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+            transform: translateY(-2px);
+        }
+
+        .countdown-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+            padding: 0.25rem 0.75rem;
             border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 0.875rem;
             font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            min-width: 200px;
-            box-shadow: var(--card-shadow);
+            margin-left: 0.5rem;
+            animation: countdownPulse 1s ease-in-out infinite;
         }
 
-        .btn-keep {
+        @keyframes countdownPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            min-width: 350px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            transform: translateX(400px);
+            animation: toastSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes toastSlideIn {
+            to { transform: translateX(0); }
+        }
+
+        .toast.hide {
+            animation: toastSlideOut 0.5s ease-out forwards;
+        }
+
+        @keyframes toastSlideOut {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast-success {
             background: var(--success-gradient);
             color: white;
         }
 
-        .btn-back {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
+        .toast-error {
+            background: var(--danger-gradient);
             color: white;
-            border: 1px solid var(--glass-border);
         }
 
-        .btn-keep:hover, .btn-back:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: var(--hover-shadow);
-        }
-
-        .countdown {
-            background: var(--primary-gradient);
+        .toast-warning {
+            background: var(--warning-gradient);
             color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            margin-left: 1rem;
-            animation: pulse 1s infinite;
         }
 
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
+        .toast-info {
+            background: var(--info-gradient);
+            color: white;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            animation: toastIconPop 0.5s ease-out;
+        }
+
+        @keyframes toastIconPop {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.2) rotate(20deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            animation: progress 5s linear forwards;
+        }
+
+        @keyframes progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .delete-animation {
+            text-align: center;
+            color: white;
+        }
+
+        .delete-icon-animate {
+            font-size: 4rem;
+            color: var(--danger-color);
+            margin-bottom: 2rem;
+            animation: deleteIcon 2s ease-in-out infinite;
+        }
+
+        @keyframes deleteIcon {
+            0% { transform: scale(1) rotate(0); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            background: var(--danger-gradient);
+            animation: loadingFill 2s ease-in-out;
+        }
+
+        @keyframes loadingFill {
+            from { width: 0; }
+            to { width: 100%; }
         }
 
         /* Animations */
-        @keyframes slideInDown {
+        @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-50px);
+                transform: translateY(-20px);
             }
             to {
                 opacity: 1;
@@ -672,7 +959,7 @@
         @keyframes slideInUp {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -683,7 +970,7 @@
         @keyframes slideInLeft {
             from {
                 opacity: 0;
-                transform: translateX(-50px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
@@ -694,7 +981,7 @@
         @keyframes slideInRight {
             from {
                 opacity: 0;
-                transform: translateX(50px);
+                transform: translateX(20px);
             }
             to {
                 opacity: 1;
@@ -705,7 +992,7 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -713,10 +1000,10 @@
             }
         }
 
-        @keyframes scaleIn {
+        @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(0.95);
             }
             to {
                 opacity: 1;
@@ -724,901 +1011,734 @@
             }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-15px);
-            }
-            60% {
-                transform: translateY(-7px);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes glow {
-            from {
-                opacity: 0.7;
-                filter: blur(15px);
-            }
-            to {
-                opacity: 1;
-                filter: blur(20px);
-            }
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
+            .navbar-container {
                 padding: 1rem;
             }
 
-            .delete-warning-hero {
-                padding: 3rem 1.5rem;
+            .nav-menu {
+                display: none;
             }
 
-            .delete-warning-hero h1 {
-                font-size: 2.5rem;
-                flex-direction: column;
-                gap: 0.5rem;
+            .warning-header {
+                padding: 2rem;
             }
 
-            .customer-header-info {
+            .warning-title {
+                font-size: 2rem;
+            }
+
+            .card-header {
                 flex-direction: column;
                 text-align: center;
             }
 
-            .customer-details-grid {
+            .info-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
             }
 
-            .activity-stats {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+            .impact-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .delete-actions {
+            .action-buttons {
                 flex-direction: column;
-                align-items: center;
             }
 
-            .btn-delete-confirm,
-            .btn-keep,
-            .btn-back {
+            .btn {
                 width: 100%;
-                max-width: 300px;
+                justify-content: center;
             }
 
-            .deletion-badge {
-                position: static;
-                margin-top: 1rem;
-                display: inline-flex;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .warning-icon {
-                font-size: 3.5rem;
-            }
-
-            .customer-avatar-delete {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
-            }
-
-            .customer-main-info h3 {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Accessibility */
-        .btn-delete-confirm:focus,
-        .btn-keep:focus,
-        .btn-back:focus,
-        .confirmation-checkbox:focus-within {
-            outline: 3px solid rgba(102, 126, 234, 0.5);
-            outline-offset: 2px;
-        }
-
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+            .toast {
+                min-width: auto;
+                margin: 0 1rem;
             }
         }
     </style>
 </head>
 <body>
-<!-- Check if user is logged in -->
+<!-- Animated Background -->
+<div class="bg-animation"></div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="delete-animation">
+        <i class="fas fa-trash-alt delete-icon-animate"></i>
+        <div class="loading-text">Deleting Customer...</div>
+        <div class="loading-bar">
+            <div class="loading-bar-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Check Authentication -->
     <%
-    if (session == null || session.getAttribute("adminUser") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
-        return;
-    }
+        if (session == null || session.getAttribute("adminUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
 
-    Customer customer = (Customer) request.getAttribute("customer");
-    if (customer == null) {
-        response.sendRedirect(request.getContextPath() + "/customer");
-        return;
-    }
+        Customer customer = (Customer) request.getAttribute("customer");
+        if (customer == null) {
+            response.sendRedirect(request.getContextPath() + "/customer");
+            return;
+        }
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
-%>
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+    %>
 
-<!-- Navigation Bar -->
+<!-- Navigation -->
 <nav class="navbar">
-    <div class="navbar-content">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
-            Pahana Edu Management
+    <div class="navbar-container">
+        <a href="${pageContext.request.contextPath}/dashboard" class="nav-brand">
+            <i class="fas fa-store"></i>
+            Pahana Edu
         </a>
-        <ul class="navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a></li>
-            <li><a href="${pageContext.request.contextPath}/customer" class="nav-link active">Customers</a></li>
-            <li><a href="${pageContext.request.contextPath}/item" class="nav-link">Items</a></li>
-            <li><a href="${pageContext.request.contextPath}/bill" class="nav-link">Billing</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">Help</a></li>
-            <li><a href="${pageContext.request.contextPath}/logout" class="nav-link logout">Logout</a></li>
+        <ul class="nav-menu">
+            <li>
+                <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/customer" class="nav-link active">
+                    <i class="fas fa-user-friends"></i>
+                    Customers
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/item" class="nav-link">
+                    <i class="fas fa-books"></i>
+                    Inventory
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/bill" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Billing
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">
+                    <i class="fas fa-headset"></i>
+                    Support
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/logout" class="nav-link">
+                    <i class="fas fa-power-off"></i>
+                    Logout
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
 
+<!-- Main Container -->
 <div class="container">
-    <!-- Warning Hero Section -->
-    <div class="delete-warning-hero">
-        <div class="hero-content">
-            <div class="warning-icon">
-                <i class="fas fa-skull-crossbones"></i>
-            </div>
-            <h1>
-                <i class="fas fa-user-times"></i>
-                Delete Customer
-            </h1>
-            <p>This action will permanently remove the customer from the system</p>
+    <!-- Warning Header -->
+    <div class="warning-header">
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h1 class="warning-title">Delete Customer Account</h1>
+        <p class="warning-subtitle">This action will permanently remove the customer from your system</p>
+    </div>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner">
+        <i class="fas fa-shield-alt alert-icon"></i>
+        <div class="alert-content">
+            <h3>Important Security Notice</h3>
+            <ul class="alert-list">
+                <li>This action cannot be undone</li>
+                <li>All customer data will be permanently deleted</li>
+                <li>Purchase history and loyalty points will be lost</li>
+                <li>Customer will be removed from all reports</li>
+            </ul>
         </div>
     </div>
 
-    <!-- Delete Container -->
-    <div class="delete-container">
-        <!-- Danger Alert -->
-        <div class="danger-alert">
-            <div class="danger-alert-content">
-                <h3>
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Warning - Permanent Action
-                </h3>
-                <ul>
-                    <li><strong>This action cannot be undone</strong> - the customer will be permanently deleted</li>
-                    <li>All billing history associated with this customer will also be removed</li>
-                    <li>Any pending bills or transactions will be lost</li>
-                    <li>Customer data will be immediately removed from all reports</li>
-                </ul>
+    <!-- Customer Delete Card -->
+    <div class="customer-delete-card">
+        <div class="delete-marker">
+            <i class="fas fa-ban"></i>
+            PENDING DELETION
+        </div>
+
+        <div class="card-header">
+            <div class="customer-avatar">
+                <%= customer.getName().substring(0, Math.min(2, customer.getName().length())).toUpperCase() %>
+            </div>
+            <div class="customer-header-info">
+                <h2><%= customer.getName() %></h2>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <%= customer.getEmail() %>
+                </p>
             </div>
         </div>
 
-        <!-- Customer Summary -->
-        <div class="customer-summary">
-            <div class="summary-header">
-                <h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-hashtag"></i>
+                    Customer ID
+                </div>
+                <div class="info-value">#<%= customer.getCustomerId() %></div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-phone"></i>
+                    Phone Number
+                </div>
+                <div class="info-value"><%= customer.getPhone() %></div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Address
+                </div>
+                <div class="info-value"><%= customer.getAddress() %></div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-medal"></i>
+                    Membership
+                </div>
+                <div class="info-value"><%= customer.getMembershipType() %></div>
+            </div>
+
+            <div class="info-item highlight">
+                <div class="info-label">
+                    <i class="fas fa-shopping-cart"></i>
+                    Total Purchases
+                </div>
+                <div class="info-value">$<%= String.format("%.2f", customer.getTotalPurchases()) %></div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-coins"></i>
+                    Loyalty Points
+                </div>
+                <div class="info-value"><%= customer.getLoyaltyPoints() %> pts</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Impact Analysis -->
+    <div class="impact-section">
+        <div class="impact-header">
+            <i class="fas fa-chart-line"></i>
+            <h3>Deletion Impact Analysis</h3>
+        </div>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-icon">
                     <i class="fas fa-user-slash"></i>
-                    Customer to be Deleted
-                </h2>
-                <p>Review the customer information below before confirming deletion</p>
+                </div>
+                <div class="impact-value">1</div>
+                <div class="impact-label">Customer Record</div>
             </div>
-
-            <div class="customer-card">
-                <div class="deletion-badge">
-                    <i class="fas fa-ban"></i>
-                    TO BE DELETED
+            <div class="impact-card">
+                <div class="impact-icon">
+                    <i class="fas fa-dollar-sign"></i>
                 </div>
-
-                <div class="customer-header-info">
-                    <div class="customer-avatar-delete">
-                        <%= customer.getName().substring(0, 1).toUpperCase() %>
-                    </div>
-                    <div class="customer-main-info">
-                        <h3><%= customer.getName() %></h3>
-                        <p>Account: <%= customer.getAccountNumber() %></p>
-                    </div>
-                </div>
-
-                <div class="customer-details-grid">
-                    <div class="detail-box">
-                        <div class="detail-label">
-                            <i class="fas fa-user"></i>
-                            Full Name
-                        </div>
-                        <div class="detail-value"><%= customer.getName() %></div>
-                    </div>
-
-                    <div class="detail-box">
-                        <div class="detail-label">
-                            <i class="fas fa-id-card"></i>
-                            Account Number
-                        </div>
-                        <div class="detail-value"><%= customer.getAccountNumber() %></div>
-                    </div>
-
-                    <div class="detail-box">
-                        <div class="detail-label">
-                            <i class="fas fa-map-marker-alt"></i>
-                            Address
-                        </div>
-                        <div class="detail-value"><%= customer.getAddress() %></div>
-                    </div>
-
-                    <div class="detail-box">
-                        <div class="detail-label">
-                            <i class="fas fa-phone"></i>
-                            Telephone
-                        </div>
-                        <div class="detail-value"><%= customer.getTelephone() %></div>
-                    </div>
-
-                    <div class="detail-box units-highlight">
-                        <div class="detail-label">
-                            <i class="fas fa-tachometer-alt"></i>
-                            Units Consumed
-                        </div>
-                        <h3 class="units-number"><%= customer.getUnitsConsumed() %></h3>
-                        <p class="units-label">units</p>
-                    </div>
-
-                    <div class="detail-box">
-                        <div class="detail-label">
-                            <i class="fas fa-calendar-plus"></i>
-                            Account Created
-                        </div>
-                        <div class="detail-value">
-                            <% if (customer.getCreatedAt() != null) { %>
-                            <%= dateFormat.format(customer.getCreatedAt()) %>
-                            <% } else { %>
-                            Unknown
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
+                <div class="impact-value">$<%= String.format("%.2f", customer.getTotalPurchases()) %></div>
+                <div class="impact-label">Revenue Loss</div>
             </div>
-
-            <!-- Impact Analysis -->
-            <div class="impact-analysis">
-                <div class="impact-analysis-content">
-                    <h4>
-                        <i class="fas fa-chart-line"></i>
-                        Deletion Impact Analysis
-                    </h4>
-                    <ul class="impact-list">
-                        <li><strong><i class="fas fa-user-circle"></i> Customer Record:</strong> Complete customer profile will be removed</li>
-                        <li><strong><i class="fas fa-file-invoice"></i> Billing History:</strong> All past bills and transactions will be deleted</li>
-                        <li><strong><i class="fas fa-dollar-sign"></i> Financial Impact:</strong>
-                            <% if (customer.getUnitsConsumed() > 0) { %>
-                            Outstanding consumption of <%= customer.getUnitsConsumed() %> units will be lost
-                            <% } else { %>
-                            No outstanding consumption to be lost
-                            <% } %>
-                        </li>
-                        <li><strong><i class="fas fa-chart-bar"></i> Reports:</strong> Customer will be removed from all future reports and analytics</li>
-                    </ul>
+            <div class="impact-card">
+                <div class="impact-icon">
+                    <i class="fas fa-coins"></i>
                 </div>
+                <div class="impact-value"><%= customer.getLoyaltyPoints() %></div>
+                <div class="impact-label">Points Lost</div>
             </div>
-
-            <!-- Customer Activity Summary -->
-            <div class="customer-activity-summary">
-                <div class="activity-summary-content">
-                    <h4>
-                        <i class="fas fa-analytics"></i>
-                        Customer Activity Summary
-                    </h4>
-                    <div class="activity-stats">
-                        <div class="activity-stat">
-                            <h3 class="activity-stat-number"><%= customer.getUnitsConsumed() %></h3>
-                            <p class="activity-stat-label">Total Units</p>
-                        </div>
-                        <div class="activity-stat">
-                            <h3 class="activity-stat-number">
-                                <%= customer.getUnitsConsumed() > 0 ? "Active" : "Inactive" %>
-                            </h3>
-                            <p class="activity-stat-label">Status</p>
-                        </div>
-                        <div class="activity-stat">
-                            <h3 class="activity-stat-number">
-                                LKR <%= String.format("%.2f", customer.getUnitsConsumed() * 50.0 * 1.08) %>
-                            </h3>
-                            <p class="activity-stat-label">Est. Value</p>
-                        </div>
-                    </div>
+            <div class="impact-card">
+                <div class="impact-icon">
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
+                <div class="impact-value">
+                    <%= customer.getCreatedAt() != null ? dateFormat.format(customer.getCreatedAt()) : "N/A" %>
+                </div>
+                <div class="impact-label">Member Since</div>
             </div>
         </div>
+    </div>
 
-        <!-- Confirmation Section -->
-        <div class="confirmation-section">
-            <label class="confirmation-checkbox" for="confirmDelete">
-                <span class="confirmation-text">
-                    <input type="checkbox" id="confirmDelete">
-                    <i class="fas fa-shield-alt"></i>
-                    I understand that this action will permanently delete the customer and cannot be undone
-                </span>
-            </label>
+    <!-- Confirmation Section -->
+    <div class="confirmation-section">
+        <h3 class="confirmation-title">Confirm Deletion</h3>
 
-            <div class="delete-actions">
-                <form action="${pageContext.request.contextPath}/customer" method="post" style="display: inline;">
-                    <input type="hidden" name="action" value="confirmDelete">
-                    <input type="hidden" name="accountNumber" value="<%= customer.getAccountNumber() %>">
-                    <button type="submit" id="deleteBtn" class="btn-delete-confirm">
-                        <i class="fas fa-skull"></i>
-                        Delete Customer Permanently
-                        <span id="countdown" class="countdown" style="display: none;"></span>
-                    </button>
-                </form>
+        <div class="security-check">
+            <form id="deleteForm" action="${pageContext.request.contextPath}/customer" method="post">
+                <input type="hidden" name="action" value="confirmDelete">
+                <input type="hidden" name="customerId" value="<%= customer.getCustomerId() %>">
 
-                <a href="${pageContext.request.contextPath}/customer?action=view&accountNumber=<%= customer.getAccountNumber() %>"
-                   class="btn-keep">
-                    <i class="fas fa-shield-alt"></i>
-                    Keep Customer
-                </a>
+                <div class="checkbox-wrapper" onclick="toggleCheckbox()">
+                    <div class="custom-checkbox">
+                        <input type="checkbox" id="confirmCheck" name="confirmCheck">
+                        <span class="checkmark"></span>
+                    </div>
+                    <label class="checkbox-label" for="confirmCheck">
+                        I understand this action is permanent and cannot be undone
+                    </label>
+                </div>
+            </form>
+        </div>
 
-                <a href="${pageContext.request.contextPath}/customer"
-                   class="btn-back">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to List
-                </a>
-            </div>
+        <div class="action-buttons">
+            <button type="button" class="btn btn-danger" id="deleteBtn" disabled onclick="confirmDelete()">
+                <i class="fas fa-trash-alt"></i>
+                Delete Customer
+                <span class="countdown-badge" id="countdown" style="display: none;"></span>
+            </button>
+
+            <a href="${pageContext.request.contextPath}/customer?action=view&customerId=<%= customer.getCustomerId() %>"
+               class="btn btn-success">
+                <i class="fas fa-user-shield"></i>
+                Keep Customer
+            </a>
+
+            <a href="${pageContext.request.contextPath}/customer"
+               class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to List
+            </a>
         </div>
     </div>
 </div>
 
 <script>
-    // Initialize animations and interactions
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add ripple effects to buttons
-        const buttons = document.querySelectorAll('.btn-delete-confirm, .btn-keep, .btn-back');
-        buttons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.6s linear;
-                    pointer-events: none;
-                    z-index: 1;
-                `;
-
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
-
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            });
-        });
-
-        // Animate detail boxes on scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        const detailBoxes = document.querySelectorAll('.detail-box');
-        detailBoxes.forEach((box, index) => {
-            box.style.opacity = '0';
-            box.style.transform = 'translateY(30px)';
-            box.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-            observer.observe(box);
-        });
-
-        // Add hover effects to activity stats
-        const activityStats = document.querySelectorAll('.activity-stat');
-        activityStats.forEach((stat, index) => {
-            stat.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.1) rotate(2deg)';
-                this.style.boxShadow = '0 15px 40px rgba(255,255,255,0.3)';
-            });
-
-            stat.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1) rotate(0deg)';
-                this.style.boxShadow = '';
-            });
-        });
-
-        // Add floating animation to warning icon
-        const warningIcon = document.querySelector('.warning-icon');
-        if (warningIcon) {
-            setInterval(() => {
-                warningIcon.style.transform = 'translateY(-10px) scale(1.05)';
-                setTimeout(() => {
-                    warningIcon.style.transform = 'translateY(0) scale(1)';
-                }, 1000);
-            }, 3000);
-        }
-
-        console.log('✨ Delete customer page animations initialized');
-    });
-
-    const confirmCheckbox = document.getElementById('confirmDelete');
-    const deleteBtn = document.getElementById('deleteBtn');
-    const countdownElement = document.getElementById('countdown');
+    // Global variables
     let countdownTimer;
-    let countdownSeconds = 5;
+    let countdownValue = 5;
+    let isDeleting = false;
 
-    // Enhanced checkbox change handler
-    confirmCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            deleteBtn.classList.add('enabled');
-            startCountdown();
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add danger particles
+        createDangerParticles();
 
-            // Add glow effect to delete button
-            deleteBtn.style.boxShadow = '0 0 30px rgba(250, 112, 154, 0.5)';
-            deleteBtn.style.animation = 'pulse 1s infinite';
-        } else {
-            deleteBtn.classList.remove('enabled');
-            stopCountdown();
+        // Initialize tooltips
+        initializeTooltips();
 
-            // Remove glow effect
-            deleteBtn.style.boxShadow = '';
-            deleteBtn.style.animation = '';
-        }
+        // Setup keyboard shortcuts
+        setupKeyboardShortcuts();
+
+        console.log('✨ Pahana Edu  Delete Customer page initialized');
     });
 
-    // Enhanced countdown functionality
+    // Toggle checkbox
+    function toggleCheckbox() {
+        const checkbox = document.getElementById('confirmCheck');
+        checkbox.checked = !checkbox.checked;
+        handleCheckboxChange();
+    }
+
+    // Handle checkbox change
+    document.getElementById('confirmCheck').addEventListener('change', handleCheckboxChange);
+
+    function handleCheckboxChange() {
+        const checkbox = document.getElementById('confirmCheck');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const countdown = document.getElementById('countdown');
+
+        if (checkbox.checked) {
+            showToast('warning', 'Countdown Started', 'Delete button will be enabled in 5 seconds');
+            startCountdown();
+        } else {
+            clearInterval(countdownTimer);
+            countdown.style.display = 'none';
+            deleteBtn.disabled = true;
+            deleteBtn.classList.remove('enabled');
+        }
+    }
+
+    // Start countdown
     function startCountdown() {
-        countdownSeconds = 5;
-        countdownElement.style.display = 'inline-block';
-        countdownElement.style.animation = 'pulse 0.5s infinite';
+        const deleteBtn = document.getElementById('deleteBtn');
+        const countdown = document.getElementById('countdown');
+
+        countdownValue = 5;
+        countdown.style.display = 'inline-flex';
+        deleteBtn.disabled = true;
+
         updateCountdown();
 
-        countdownTimer = setInterval(function() {
-            countdownSeconds--;
+        countdownTimer = setInterval(() => {
+            countdownValue--;
             updateCountdown();
 
-            if (countdownSeconds <= 0) {
-                stopCountdown();
-                enableDeleteButton();
+            if (countdownValue <= 0) {
+                clearInterval(countdownTimer);
+                countdown.style.display = 'none';
+                deleteBtn.disabled = false;
+                deleteBtn.classList.add('enabled');
+                showToast('error', 'Delete Enabled', 'You can now delete the customer');
             }
         }, 1000);
     }
 
-    function stopCountdown() {
-        if (countdownTimer) {
-            clearInterval(countdownTimer);
-        }
-        countdownElement.style.display = 'none';
-        countdownElement.style.animation = '';
-        deleteBtn.disabled = true;
-    }
-
+    // Update countdown display
     function updateCountdown() {
-        countdownElement.textContent = countdownSeconds;
-        deleteBtn.disabled = true;
+        const countdown = document.getElementById('countdown');
+        countdown.textContent = countdownValue;
 
-        // Add urgency colors as countdown decreases
-        if (countdownSeconds <= 2) {
-            countdownElement.style.background = 'var(--danger-gradient)';
-            countdownElement.style.animation = 'pulse 0.3s infinite';
-        } else if (countdownSeconds <= 3) {
-            countdownElement.style.background = 'var(--warning-gradient)';
+        // Change color based on countdown
+        if (countdownValue <= 2) {
+            countdown.style.background = 'rgba(239, 68, 68, 0.3)';
         }
     }
 
-    function enableDeleteButton() {
-        deleteBtn.disabled = false;
-        deleteBtn.innerHTML = `
-            <i class="fas fa-skull"></i>
-            Delete Customer Permanently
-        `;
+    // Confirm delete
+    function confirmDelete() {
+        if (isDeleting) return;
 
-        // Add ready state visual feedback
-        deleteBtn.style.animation = 'glow 1s ease-in-out infinite alternate';
-        showNotification('Delete button is now active', 'warning');
-    }
-
-    // Enhanced form submission with multiple confirmations
-    deleteBtn.closest('form').addEventListener('submit', function(e) {
-        if (!confirmCheckbox.checked) {
-            e.preventDefault();
-            showNotification('Please confirm that you understand this action cannot be undone.', 'error');
-            confirmCheckbox.focus();
-            confirmCheckbox.parentElement.style.animation = 'shake 0.5s ease-in-out';
-            return false;
-        }
-
-        if (deleteBtn.disabled) {
-            e.preventDefault();
-            showNotification('Please wait for the countdown to complete', 'warning');
-            return false;
-        }
-
-        // First confirmation dialog
         const customerName = '<%= customer.getName() %>';
-        const accountNumber = '<%= customer.getAccountNumber() %>';
+        const customerEmail = '<%= customer.getEmail() %>';
+        const loyaltyPoints = <%= customer.getLoyaltyPoints() %>;
+        const totalPurchases = <%= customer.getTotalPurchases() %>;
 
-        const firstConfirmation = confirm(
-            `⚠️ CRITICAL ACTION WARNING ⚠️\n\n` +
-            `You are about to permanently delete:\n` +
+        // First confirmation
+        const firstConfirm = confirm(
+            '⚠️ CRITICAL ACTION WARNING\n\n' +
+            'You are about to permanently delete:\n\n' +
             `Customer: ${customerName}\n` +
-            `Account: ${accountNumber}\n\n` +
-            `This action CANNOT be undone!\n\n` +
-            `Click OK to continue with the deletion process.`
+            `Email: ${customerEmail}\n` +
+            `Total Purchases: $${totalPurchases.toFixed(2)}\n` +
+            `Loyalty Points: ${loyaltyPoints}\n\n` +
+            'Are you absolutely sure?'
         );
 
-        if (!firstConfirmation) {
-            e.preventDefault();
-            showNotification('Deletion cancelled by user', 'info');
-            return false;
+        if (!firstConfirm) {
+            showToast('info', 'Cancelled', 'Customer deletion cancelled');
+            return;
         }
 
-        // Second confirmation with name verification
-        const typedName = prompt(
-            `🔐 FINAL SECURITY CHECK 🔐\n\n` +
-            `To confirm deletion, please type the customer name exactly:\n\n` +
-            `"${customerName}"\n\n` +
-            `Type the name below:`
+        // Email verification
+        const typedEmail = prompt(
+            '🔐 SECURITY VERIFICATION\n\n' +
+            'To confirm deletion, please type the customer\'s email address:\n\n' +
+            `${customerEmail}`
         );
 
-        if (typedName !== customerName) {
-            e.preventDefault();
-            if (typedName === null) {
-                showNotification('Deletion cancelled by user', 'info');
+        if (typedEmail !== customerEmail) {
+            if (typedEmail === null) {
+                showToast('info', 'Cancelled', 'Customer deletion cancelled');
             } else {
-                showNotification('Customer name does not match. Deletion cancelled for security.', 'error');
-                // Add shake animation to form
-                this.style.animation = 'shake 0.5s ease-in-out';
+                showToast('error', 'Verification Failed', 'Email address does not match');
             }
-            return false;
+            return;
         }
 
-        // Third and final confirmation
-        const finalConfirmation = confirm(
-            `💀 POINT OF NO RETURN 💀\n\n` +
-            `This is your FINAL chance to cancel.\n\n` +
-            `Customer "${customerName}" will be PERMANENTLY DELETED in 3 seconds.\n\n` +
-            `Click OK to proceed with IRREVERSIBLE DELETION.`
+        // Final confirmation
+        const finalConfirm = confirm(
+            '🗑️ FINAL CONFIRMATION\n\n' +
+            'This is your LAST CHANCE to cancel.\n\n' +
+            `"${customerName}" will be permanently deleted.\n\n` +
+            'Click OK to proceed with deletion.'
         );
 
-        if (!finalConfirmation) {
-            e.preventDefault();
-            showNotification('Deletion cancelled at final confirmation', 'info');
-            return false;
+        if (!finalConfirm) {
+            showToast('info', 'Cancelled', 'Customer deletion cancelled at final stage');
+            return;
         }
 
-        // Show enhanced loading state
-        deleteBtn.innerHTML = `
-            <span class="spinner"></span>
-            <i class="fas fa-trash-alt"></i>
-            Deleting Customer...
-        `;
-        deleteBtn.disabled = true;
-        deleteBtn.style.animation = 'pulse 0.5s infinite';
+        // Proceed with deletion
+        performDelete();
+    }
 
-        // Disable all form fields and buttons
-        const allButtons = document.querySelectorAll('button, a.btn-keep, a.btn-back');
-        allButtons.forEach(btn => {
-            btn.style.opacity = '0.5';
+    // Perform delete
+    function performDelete() {
+        isDeleting = true;
+
+        // Show loading overlay
+        document.getElementById('loadingOverlay').classList.add('show');
+
+        // Disable all buttons
+        document.querySelectorAll('.btn').forEach(btn => {
             btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.5';
         });
 
-        // Add deletion in progress notification
-        showNotification('Customer deletion in progress...', 'warning');
-
-        // Show countdown overlay
-        showDeletionCountdown();
-
-        return true;
-    });
-
-    // Enhanced notification system
-    function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-
-        let backgroundGradient;
-        let icon;
-        switch(type) {
-            case 'error':
-                backgroundGradient = 'var(--danger-gradient)';
-                icon = '❌';
-                break;
-            case 'success':
-                backgroundGradient = 'var(--success-gradient)';
-                icon = '✅';
-                break;
-            case 'warning':
-                backgroundGradient = 'var(--warning-gradient)';
-                icon = '⚠️';
-                break;
-            default:
-                backgroundGradient = 'var(--primary-gradient)';
-                icon = 'ℹ️';
-        }
-
-        notification.style.cssText = `
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: ${backgroundGradient};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px;
-            font-weight: 600;
-            box-shadow: var(--card-shadow);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease-out;
-            max-width: 350px;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            backdrop-filter: blur(20px);
-        `;
-
-        notification.innerHTML = `
-            <span style="font-size: 1.2rem;">${icon}</span>
-            <span>${message}</span>
-        `;
-
-        document.body.appendChild(notification);
-
+        // Submit form
         setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-out';
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
-            }, 300);
-        }, 4000);
-    }
-
-    // Deletion countdown overlay
-    function showDeletionCountdown() {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-        `;
-
-        overlay.innerHTML = `
-            <i class="fas fa-skull-crossbones" style="font-size: 4rem; margin-bottom: 2rem; color: #fa709a;"></i>
-            <div>Deleting Customer...</div>
-            <div style="font-size: 1rem; opacity: 0.8; margin-top: 1rem;">Please do not close this window</div>
-        `;
-
-        document.body.appendChild(overlay);
-    }
-
-    // Enhanced keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        // ESC to cancel
-        if (e.key === 'Escape') {
-            if (!deleteBtn.disabled) {
-                const shouldLeave = confirm('Are you sure you want to leave the deletion page?');
-                if (shouldLeave) {
-                    window.location.href = '${pageContext.request.contextPath}/customer?action=view&accountNumber=<%= customer.getAccountNumber() %>';
-                }
-            }
-        }
-
-        // Space to toggle checkbox
-        if (e.key === ' ' && e.target !== confirmCheckbox && e.target.tagName !== 'BUTTON') {
-            e.preventDefault();
-            confirmCheckbox.checked = !confirmCheckbox.checked;
-            confirmCheckbox.dispatchEvent(new Event('change'));
-
-            // Visual feedback
-            confirmCheckbox.parentElement.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                confirmCheckbox.parentElement.style.transform = 'scale(1)';
-            }, 200);
-        }
-
-        // D key to focus delete button (when enabled)
-        if (e.key === 'd' || e.key === 'D') {
-            if (!deleteBtn.disabled && confirmCheckbox.checked) {
-                deleteBtn.focus();
-                deleteBtn.style.animation = 'pulse 1s ease-in-out';
-            }
-        }
-    });
-
-    // Enhanced navigation warning
-    window.addEventListener('beforeunload', function(e) {
-        if (confirmCheckbox.checked && !deleteBtn.disabled) {
-            e.preventDefault();
-            e.returnValue = '⚠️ You have initiated the customer deletion process. Are you sure you want to leave?';
-            return e.returnValue;
-        }
-    });
-
-    // Auto-focus and accessibility improvements
-    document.addEventListener('DOMContentLoaded', function() {
-        // Focus the confirmation checkbox for accessibility
-        setTimeout(() => {
-            confirmCheckbox.focus();
-            confirmCheckbox.parentElement.style.animation = 'pulse 2s ease-in-out';
+            document.getElementById('deleteForm').submit();
         }, 1000);
-
-        // Add tooltips for better UX
-        deleteBtn.title = 'This button will be enabled after confirming and waiting for the countdown';
-        confirmCheckbox.title = 'Check this box to acknowledge the permanent nature of this action';
-    });
-
-    // Add CSS for additional animations
-    const additionalStyles = document.createElement('style');
-    additionalStyles.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideOutRight {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
-        }
-
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 20px rgba(250, 112, 154, 0.5);
-            }
-            to {
-                box-shadow: 0 0 40px rgba(250, 112, 154, 0.8), 0 0 60px rgba(250, 112, 154, 0.3);
-            }
-        }
-
-        .btn-delete-confirm, .btn-keep, .btn-back {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .confirmation-checkbox {
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .activity-stat {
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        /* Enhanced focus states */
-        .btn-delete-confirm:focus,
-        .btn-keep:focus,
-        .btn-back:focus {
-            outline: 3px solid rgba(250, 112, 154, 0.5);
-            outline-offset: 2px;
-        }
-
-        /* Improved accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* High contrast mode support */
-        @media (prefers-contrast: high) {
-            .delete-container {
-                border: 2px solid #000;
-            }
-
-            .danger-alert {
-                border: 3px solid #ff0000;
-            }
-        }
-    `;
-    document.head.appendChild(additionalStyles);
-
-    // Performance monitoring
-    const performanceObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-            if (entry.duration > 100) {
-                console.warn('🐌 Slow operation:', entry.name, entry.duration.toFixed(2) + 'ms');
-            }
-        });
-    });
-
-    if ('PerformanceObserver' in window) {
-        performanceObserver.observe({ entryTypes: ['navigation', 'resource'] });
     }
 
-    // Error handling and logging
-    window.addEventListener('error', function(e) {
-        console.error('❌ Delete page error:', e.error);
-        showNotification('An error occurred. Please refresh and try again.', 'error');
+    // Show toast notification
+    function showToast(type, title, message) {
+        const toastContainer = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+
+        toast.innerHTML = `
+        <i class="fas fa-${icons[type]} toast-icon"></i>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="closeToast(this)">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="toast-progress"></div>
+    `;
+
+        toastContainer.appendChild(toast);
+
+        // Auto close after 5 seconds
+        setTimeout(() => {
+            closeToast(toast.querySelector('.toast-close'));
+        }, 5000);
+    }
+
+    // Close toast
+    function closeToast(element) {
+        const toast = element.closest('.toast');
+        if (toast) {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+        }
+    }
+
+    // Initialize tooltips
+    function initializeTooltips() {
+        const elements = document.querySelectorAll('[title]');
+
+        elements.forEach(element => {
+            const title = element.getAttribute('title');
+            element.removeAttribute('title');
+
+            element.addEventListener('mouseenter', function(e) {
+                const tooltip = document.createElement('div');
+                tooltip.textContent = title;
+                tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                z-index: 9999;
+                pointer-events: none;
+                white-space: nowrap;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+
+                document.body.appendChild(tooltip);
+
+                const rect = this.getBoundingClientRect();
+                tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+                tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + 'px';
+
+                setTimeout(() => {
+                    tooltip.style.opacity = '1';
+                }, 10);
+
+                this.addEventListener('mouseleave', function() {
+                    tooltip.style.opacity = '0';
+                    setTimeout(() => tooltip.remove(), 300);
+                }, { once: true });
+            });
+        });
+    }
+
+    // Setup keyboard shortcuts
+    function setupKeyboardShortcuts() {
+        document.addEventListener('keydown', function(e) {
+            // Escape to go back
+            if (e.key === 'Escape') {
+                if (!isDeleting) {
+                    window.location.href = '${pageContext.request.contextPath}/customer?action=view&customerId=<%= customer.getCustomerId() %>';
+                }
+            }
+
+            // Space to toggle checkbox
+            if (e.key === ' ' && document.activeElement !== document.getElementById('confirmCheck')) {
+                e.preventDefault();
+                toggleCheckbox();
+            }
+
+            // D to delete (when enabled)
+            if ((e.key === 'd' || e.key === 'D') && !document.getElementById('deleteBtn').disabled) {
+                e.preventDefault();
+                confirmDelete();
+            }
+        });
+    }
+
+    // Create danger particles
+    function createDangerParticles() {
+        const container = document.querySelector('.bg-animation');
+
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'danger-particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+            particle.style.setProperty('--y', (Math.random() - 0.5) * 200 + 'px');
+            particle.style.animationDelay = Math.random() * 3 + 's';
+            container.appendChild(particle);
+        }
+    }
+
+    // Prevent accidental navigation
+    window.addEventListener('beforeunload', function(e) {
+        const checkbox = document.getElementById('confirmCheck');
+        if (checkbox.checked && !isDeleting) {
+            e.preventDefault();
+            e.returnValue = 'You have started the deletion process. Are you sure you want to leave?';
+        }
     });
 
-    console.log('💀 Advanced customer deletion interface loaded successfully');
+    // Easter egg - type "SAVE" to protect customer
+    let typedKeys = '';
+    document.addEventListener('keypress', function(e) {
+        typedKeys += e.key.toUpperCase();
+        typedKeys = typedKeys.slice(-4); // Keep last 4 characters
+
+        if (typedKeys === 'SAVE') {
+            protectCustomer();
+        }
+    });
+
+    // Protect customer (easter egg)
+    function protectCustomer() {
+        // Disable deletion
+        document.getElementById('confirmCheck').checked = false;
+        document.getElementById('confirmCheck').disabled = true;
+        document.getElementById('deleteBtn').disabled = true;
+        document.getElementById('deleteBtn').style.display = 'none';
+
+        // Show success message
+        showToast('success', '🛡️ Protection Activated', 'Customer is now protected from deletion!');
+
+        // Add protection badge
+        const protectionBadge = document.createElement('div');
+        protectionBadge.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--success-gradient);
+        color: white;
+        padding: 2rem 3rem;
+        border-radius: 20px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        box-shadow: var(--shadow-xl);
+        z-index: 9999;
+        animation: bounceIn 0.6s ease-out;
+    `;
+        protectionBadge.innerHTML = `
+        <i class="fas fa-shield-alt"></i> Customer Protected
+    `;
+        document.body.appendChild(protectionBadge);
+
+        // Create confetti
+        createConfetti();
+
+        // Remove badge after 3 seconds
+        setTimeout(() => {
+            protectionBadge.style.animation = 'fadeOut 0.5s ease-out';
+            setTimeout(() => protectionBadge.remove(), 500);
+        }, 3000);
+    }
+
+    // Create confetti effect
+    function createConfetti() {
+        const colors = ['#6366F1', '#EC4899', '#14B8A6', '#F59E0B'];
+        const confettiCount = 100;
+
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            left: ${Math.random() * 100}%;
+            top: -10px;
+            opacity: 1;
+            transform: rotate(${Math.random() * 360}deg);
+            z-index: 9999;
+            pointer-events: none;
+        `;
+            document.body.appendChild(confetti);
+
+            // Animate confetti
+            const animation = confetti.animate([
+                {
+                    transform: `translateY(0) rotate(0deg)`,
+                    opacity: 1
+                },
+                {
+                    transform: `translateY(${window.innerHeight + 10}px) rotate(${Math.random() * 720}deg)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 3000 + Math.random() * 2000,
+                easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            });
+
+            animation.onfinish = () => confetti.remove();
+        }
+    }
+
+    // Add bounce animation
+    const style = document.createElement('style');
+    style.textContent = `
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.3);
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        70% {
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+    }
+`;
+    document.head.appendChild(style);
+
+    // Log easter egg hint
+    console.log('💡 Hint: Type "SAVE" to activate protection mode!');
 </script>
 </body>
 </html>

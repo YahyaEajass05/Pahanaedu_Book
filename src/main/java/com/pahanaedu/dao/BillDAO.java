@@ -52,7 +52,9 @@ public class BillDAO {
                 "loyalty_points_earned, loyalty_points_redeemed, bill_date) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        String itemSql = "INSERT INTO bill_items (bill_id, item_id, quantity, unit_price, total_price) VALUES (?, ?, ?, ?, ?, ?)";
+        // FIXED: Added discount_percentage column to match 6 placeholders
+        String itemSql = "INSERT INTO bill_items (bill_id, item_id, quantity, unit_price, discount_percentage, total_price) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         String stockSql = "UPDATE items SET stock = stock - ? WHERE item_id = ?";
 
@@ -99,12 +101,12 @@ public class BillDAO {
             stockStatement = connection.prepareStatement(stockSql);
 
             for (BillItem item : billItems) {
-                // Insert bill item
+                // Insert bill item - FIXED ORDER to match SQL columns
                 itemStatement.setInt(1, billId);
                 itemStatement.setString(2, item.getItemId());
                 itemStatement.setInt(3, item.getQuantity());
                 itemStatement.setBigDecimal(4, item.getUnitPrice());
-                itemStatement.setBigDecimal(5, item.getDiscountPercentage());
+                itemStatement.setBigDecimal(5, item.getDiscountPercentage() != null ? item.getDiscountPercentage() : BigDecimal.ZERO);
                 itemStatement.setBigDecimal(6, item.getTotalPrice());
                 itemStatement.addBatch();
 
@@ -210,9 +212,18 @@ public class BillDAO {
                 billItem.setItemId(rs.getString("item_id"));
                 billItem.setQuantity(rs.getInt("quantity"));
                 billItem.setUnitPrice(rs.getBigDecimal("unit_price"));
-                billItem.setDiscountPercentage(rs.getBigDecimal("discount_percentage"));
+
+                // Handle null discount_percentage
+                BigDecimal discount = rs.getBigDecimal("discount_percentage");
+                billItem.setDiscountPercentage(discount != null ? discount : BigDecimal.ZERO);
+
                 billItem.setTotalPrice(rs.getBigDecimal("total_price"));
-                billItem.setCreatedAt(rs.getTimestamp("created_at"));
+
+                // Handle null timestamp
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                if (createdAt != null) {
+                    billItem.setCreatedAt(createdAt);
+                }
 
                 // Set item details
                 billItem.setItemName(rs.getString("item_name"));
@@ -334,8 +345,6 @@ public class BillDAO {
         return null;
     }
 
-
-
     /**
      * Cancel bill and restore stock
      */
@@ -355,7 +364,11 @@ public class BillDAO {
                 return false;
             }
 
-
+            // Update bill status to CANCELLED
+            String updateBillSql = "UPDATE bills SET payment_status = 'CANCELLED', updated_at = CURRENT_TIMESTAMP WHERE bill_id = ?";
+            updateBillStmt = connection.prepareStatement(updateBillSql);
+            updateBillStmt.setInt(1, billId);
+            updateBillStmt.executeUpdate();
 
             // Restore stock for each item
             String restoreStockSql = "UPDATE items SET stock = stock + ? WHERE item_id = ?";
@@ -404,10 +417,10 @@ public class BillDAO {
     public Map<String, BigDecimal> getSalesStatistics(Date startDate, Date endDate) throws SQLException {
         String sql = "SELECT " +
                 "COUNT(*) as total_bills, " +
-                "SUM(total_amount) as total_revenue, " +
-                "AVG(total_amount) as average_bill, " +
-                "SUM(discount_amount) as total_discount, " +
-                "SUM(tax_amount) as total_tax " +
+                "COALESCE(SUM(total_amount), 0) as total_revenue, " +
+                "COALESCE(AVG(total_amount), 0) as average_bill, " +
+                "COALESCE(SUM(discount_amount), 0) as total_discount, " +
+                "COALESCE(SUM(tax_amount), 0) as total_tax " +
                 "FROM bills " +
                 "WHERE DATE(bill_date) BETWEEN ? AND ? " +
                 "AND payment_status = 'PAID'";
@@ -423,10 +436,10 @@ public class BillDAO {
 
             if (rs.next()) {
                 stats.put("totalBills", new BigDecimal(rs.getInt("total_bills")));
-                stats.put("totalRevenue", rs.getBigDecimal("total_revenue"));
-                stats.put("averageBill", rs.getBigDecimal("average_bill"));
-                stats.put("totalDiscount", rs.getBigDecimal("total_discount"));
-                stats.put("totalTax", rs.getBigDecimal("total_tax"));
+                stats.put("totalRevenue", rs.getBigDecimal("total_revenue") != null ? rs.getBigDecimal("total_revenue") : BigDecimal.ZERO);
+                stats.put("averageBill", rs.getBigDecimal("average_bill") != null ? rs.getBigDecimal("average_bill") : BigDecimal.ZERO);
+                stats.put("totalDiscount", rs.getBigDecimal("total_discount") != null ? rs.getBigDecimal("total_discount") : BigDecimal.ZERO);
+                stats.put("totalTax", rs.getBigDecimal("total_tax") != null ? rs.getBigDecimal("total_tax") : BigDecimal.ZERO);
             }
         }
 
@@ -473,8 +486,17 @@ public class BillDAO {
         bill.setLoyaltyPointsEarned(rs.getInt("loyalty_points_earned"));
         bill.setLoyaltyPointsRedeemed(rs.getInt("loyalty_points_redeemed"));
         bill.setBillDate(rs.getTimestamp("bill_date"));
-        bill.setCreatedAt(rs.getTimestamp("created_at"));
-        bill.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+        // Handle nullable timestamps
+        Timestamp createdAt = rs.getTimestamp("created_at");
+        if (createdAt != null) {
+            bill.setCreatedAt(createdAt);
+        }
+
+        Timestamp updatedAt = rs.getTimestamp("updated_at");
+        if (updatedAt != null) {
+            bill.setUpdatedAt(updatedAt);
+        }
 
         // Customer fields
         bill.setCustomerName(rs.getString("customer_name"));

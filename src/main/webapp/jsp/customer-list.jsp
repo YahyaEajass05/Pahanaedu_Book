@@ -6,811 +6,999 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Management - Pahana Edu</title>
+    <title>Customer Management - Pahana Edu </title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --dark-gradient: linear-gradient(135deg, #434343 0%, #000000 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            --hover-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            /* Modern Purple & Blue Theme */
+            --primary-color: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary-color: #EC4899;
+            --secondary-dark: #DB2777;
+            --accent-color: #14B8A6;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+
+            /* Gradients */
+            --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --secondary-gradient: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            --success-gradient: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
+            --danger-gradient: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+            --dark-gradient: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+
+            /* Membership Tiers */
+            --bronze-gradient: linear-gradient(135deg, #92400E 0%, #B45309 100%);
+            --silver-gradient: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            --gold-gradient: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+
+            /* Background & Glass */
+            --bg-primary: #F9FAFB;
+            --bg-secondary: #FFFFFF;
+            --glass-white: rgba(255, 255, 255, 0.85);
+            --glass-dark: rgba(31, 41, 55, 0.85);
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
         }
 
+        /* Animated Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.03;
+            background-image:
+                    repeating-linear-gradient(45deg, #6366F1 25%, transparent 25%, transparent 75%, #6366F1 75%, #6366F1),
+                    repeating-linear-gradient(-45deg, #6366F1 25%, transparent 25%, transparent 75%, #6366F1 75%, #6366F1);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .float-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatAnimation 20s infinite ease-in-out;
+        }
+
+        .float-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            font-size: 60px;
+            animation-delay: 0s;
+        }
+
+        .float-element:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            font-size: 80px;
+            animation-delay: 5s;
+        }
+
+        .float-element:nth-child(3) {
+            bottom: 20%;
+            left: 50%;
+            font-size: 70px;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: var(--primary-gradient);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .nav-link.active::before {
+            left: 0;
+        }
+
+        /* Main Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Hero Header */
-        .customers-hero {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            color: white;
+        /* Page Header */
+        .page-header {
+            background: var(--bg-secondary);
+            border-radius: 24px;
             padding: 3rem;
-            border-radius: 30px;
-            margin-bottom: 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            animation: slideInDown 0.8s ease-out;
+            animation: fadeInScale 0.6s ease-out;
         }
 
-        .customers-hero::before {
+        .page-header::after {
             content: '';
             position: absolute;
             top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        .hero-content {
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-content {
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
-        .customers-hero h1 {
-            margin: 0;
-            font-size: 3rem;
+        .page-title {
+            font-size: 2.5rem;
             font-weight: 800;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-            animation: fadeInLeft 0.8s ease-out;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .customers-hero p {
-            margin: 0.5rem 0 0 0;
-            opacity: 0.9;
-            font-size: 1.3rem;
-            animation: fadeInLeft 0.8s ease-out 0.2s both;
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
         }
 
         .header-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            position: relative;
+            position: absolute;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
             z-index: 2;
-            animation: fadeInRight 0.8s ease-out 0.4s both;
         }
 
-        .btn-add-customer {
-            background: var(--warning-gradient);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: var(--card-shadow);
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
             position: relative;
             overflow: hidden;
         }
 
-        .btn-add-customer::before {
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-primary::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            transition: all 0.5s ease;
             transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .btn-add-customer:hover::before {
+        .btn-primary:active::after {
             width: 300px;
             height: 300px;
         }
 
-        .btn-add-customer:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: var(--hover-shadow);
-        }
-
-        /* Search Panel */
-        .search-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 2rem;
-            border-radius: 25px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 3rem;
-            animation: slideInLeft 0.8s ease-out;
-            transition: all 0.3s ease;
-        }
-
-        .search-panel:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--hover-shadow);
-        }
-
-        .search-form {
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
             display: flex;
-            gap: 2rem;
-            align-items: end;
-        }
-
-        .search-group {
-            flex: 1;
-        }
-
-        .search-group label {
-            display: block;
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-            color: #2c3e50;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 15px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
-            transform: scale(1.02);
-        }
-
-        .search-buttons {
-            display: flex;
+            flex-direction: column;
             gap: 1rem;
         }
 
-        .btn-search, .btn-clear {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
+        .notification {
+            min-width: 350px;
+            padding: 1.25rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            transform: translateX(400px);
+            animation: notificationSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes notificationSlideIn {
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .notification.hide {
+            animation: notificationSlideOut 0.5s ease-out forwards;
+        }
+
+        @keyframes notificationSlideOut {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .notification-error {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        .notification-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+            color: white;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .notification-content h4 {
+            margin: 0 0 0.25rem 0;
             font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: 600;
+        }
+
+        .notification-content p {
+            margin: 0;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            display: inline-flex;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            animation: progressBar 5s linear forwards;
+        }
+
+        @keyframes progressBar {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .btn-search {
-            background: var(--success-gradient);
-            color: white;
-            box-shadow: var(--card-shadow);
+        .form-input {
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-primary);
         }
 
-        .btn-clear {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            color: #2c3e50;
-            border: 1px solid var(--glass-border);
-            text-decoration: none;
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: white;
         }
 
-        .btn-search:hover, .btn-clear:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--hover-shadow);
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5rem;
+            padding-right: 3rem;
         }
 
-        /* Statistics Cards */
-        .stats-grid {
+        /* Stats Cards */
+        .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-            animation: slideInUp 0.8s ease-out;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 2rem;
+            background: var(--bg-secondary);
             border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            text-align: center;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .stat-card:nth-child(1) { border-left: 4px solid #4facfe; animation-delay: 0.1s; }
-        .stat-card:nth-child(2) { border-left: 4px solid #43e97b; animation-delay: 0.2s; }
-        .stat-card:nth-child(3) { border-left: 4px solid #fa709a; animation-delay: 0.3s; }
-        .stat-card:nth-child(4) { border-left: 4px solid #667eea; animation-delay: 0.4s; }
-
-        .stat-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--hover-shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .stat-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 80px;
-            height: 80px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
 
         .stat-icon {
-            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
             margin-bottom: 1rem;
-            color: #667eea;
-            animation: pulse 2s infinite;
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0;
-            animation: countUp 2s ease-out;
+        .stat-card:nth-child(1) .stat-icon {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            transition: all 0.3s ease;
         }
 
         .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-            margin: 0.5rem 0 0 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        /* Table Container */
-        .table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
+        /* Table Section */
+        .table-section {
+            background: var(--bg-secondary);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: var(--card-shadow);
-            animation: slideInRight 0.8s ease-out;
-            transition: all 0.3s ease;
-        }
-
-        .table-container:hover {
-            box-shadow: var(--hover-shadow);
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.6s ease-out 0.4s both;
         }
 
         .table-header {
-            background: var(--secondary-gradient);
-            color: white;
-            padding: 2rem;
+            background: var(--primary-gradient);
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .table-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 15s linear infinite;
         }
 
         .table-title {
-            font-size: 1.5rem;
+            color: white;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin: 0;
-            position: relative;
-            z-index: 2;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
-        .table-filters {
+        .table-actions {
             display: flex;
             gap: 1rem;
             align-items: center;
-            position: relative;
-            z-index: 2;
         }
 
-        .filter-select {
-            padding: 0.75rem 1rem;
-            border: none;
+        .btn-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-select:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-
-        .btn-export {
-            background: var(--warning-gradient);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .btn-export:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
 
-        /* Modern Table */
-        .customers-table {
+        /* Table Styles */
+        .data-table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .customers-table th {
-            background: var(--dark-gradient);
-            color: white;
-            padding: 1.5rem;
+        .data-table thead {
+            background: var(--bg-primary);
+        }
+
+        .data-table th {
+            padding: 1.25rem;
             text-align: left;
-            font-weight: 700;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
         }
 
-        .customers-table td {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+        .data-table td {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
+        }
+
+        .data-table tbody tr {
             transition: all 0.3s ease;
+            animation: tableRowFade 0.5s ease-out;
         }
 
-        .customers-table tbody tr {
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.6s ease-out;
+        @keyframes tableRowFade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .customers-table tbody tr:nth-child(even) {
-            animation-delay: 0.1s;
-        }
-
-        .customers-table tbody tr:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        .data-table tbody tr:hover {
+            background: var(--bg-primary);
             transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        .customer-info {
+        /* Customer Cell */
+        .customer-cell {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
         .customer-avatar {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             background: var(--primary-gradient);
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 900;
-            font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 1.125rem;
+            flex-shrink: 0;
             position: relative;
             overflow: hidden;
         }
 
-        .customer-avatar::before {
+        .customer-avatar::after {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: transform 0.5s ease;
-            transform: translateX(-100%);
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
         }
 
-        .customer-avatar:hover::before {
-            transform: translateX(100%);
+        .customer-cell:hover .customer-avatar::after {
+            animation: shimmer 0.5s ease-out;
         }
 
-        .customer-avatar:hover {
-            transform: scale(1.1) rotate(5deg);
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .customer-details h4 {
+        .customer-info h4 {
             margin: 0;
-            color: #2c3e50;
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .customer-details p {
+        .customer-info p {
             margin: 0.25rem 0 0 0;
-            color: #7f8c8d;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
-        .account-number {
-            font-weight: 800;
-            background: var(--success-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.1rem;
+        /* Contact Cell */
+        .contact-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
         }
 
-        .phone-number {
+        .contact-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #4facfe;
-            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
-        .units-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .contact-item i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        .contact-item a {
+            color: var(--primary-color);
+            text-decoration: none;
             transition: all 0.3s ease;
         }
 
-        .units-low {
-            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
-            color: #c53030;
-            border: 1px solid rgba(197, 48, 48, 0.3);
-        }
-        .units-medium {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            color: #856404;
-            border: 1px solid rgba(133, 100, 4, 0.3);
-        }
-        .units-high {
-            background: linear-gradient(135deg, #d4edda 0%, #b7e4c7 100%);
-            color: #155724;
-            border: 1px solid rgba(21, 87, 36, 0.3);
+        .contact-item a:hover {
+            color: var(--primary-dark);
         }
 
-        .units-badge:hover {
-            transform: scale(1.05);
-        }
-
-        .status-badge {
+        /* Membership Badge */
+        .membership-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
-        .badge-success {
-            background: var(--warning-gradient);
-            color: white;
-        }
-
-        .badge-warning {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            color: #856404;
-            border: 1px solid rgba(133, 100, 4, 0.3);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-action {
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
             position: relative;
             overflow: hidden;
         }
 
-        .btn-action::before {
+        .badge-regular {
+            background: var(--silver-gradient);
+            color: white;
+        }
+
+        .badge-premium {
+            background: var(--gold-gradient);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-vip {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 2px 16px rgba(99, 102, 241, 0.5); }
+        }
+
+        /* Purchase Info */
+        .purchase-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .purchase-amount {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--success-color);
+        }
+
+        .loyalty-points {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--warning-color);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            transition: all 0.5s ease;
             transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
         }
 
-        .btn-action:hover::before {
-            width: 200px;
-            height: 200px;
+        .action-btn:active::before {
+            width: 40px;
+            height: 40px;
         }
 
-        .btn-action:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        .btn-view {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info-color);
         }
 
-        .btn-view { background: var(--success-gradient); color: white; }
-        .btn-edit { background: var(--warning-gradient); color: white; }
-        .btn-delete { background: var(--danger-gradient); color: white; }
-        .btn-bill { background: var(--primary-gradient); color: white; }
+        .btn-view:hover {
+            background: var(--info-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .btn-edit {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .btn-edit:hover {
+            background: var(--warning-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger-color);
+            color: white;
+            transform: scale(1.1);
+        }
 
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 4rem;
-            color: #7f8c8d;
-            animation: fadeInUp 0.8s ease-out;
+            padding: 5rem 2rem;
         }
 
-        .empty-state-icon {
+        .empty-icon {
             font-size: 5rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+            animation: emptyBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes emptyBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.1); }
+        }
+
+        .empty-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-text {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
             margin-bottom: 2rem;
-            color: rgba(102, 126, 234, 0.3);
-            animation: bounce 2s infinite;
-        }
-
-        .empty-state h3 {
-            margin: 0 0 1rem 0;
-            color: #2c3e50;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .empty-state p {
-            margin: 0 0 3rem 0;
-            font-size: 1.2rem;
-            color: #7f8c8d;
-        }
-
-        .btn-first-customer {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: var(--card-shadow);
-        }
-
-        .btn-first-customer:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: var(--hover-shadow);
         }
 
         /* Pagination */
-        .pagination {
+        .table-footer {
+            padding: 1.5rem 2rem;
+            background: var(--bg-primary);
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 2rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
-            color: #666;
         }
 
-        .page-info {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .showing-info {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
         /* Animations */
-        @keyframes slideInDown {
+        @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
                 transform: translateY(-20px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        @keyframes countUp {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: scale(0.5);
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
             }
             to {
                 opacity: 1;
@@ -818,276 +1006,356 @@
             }
         }
 
-        /* Responsive Design */
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
-            .stats-grid {
+            .search-form {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stats-container {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
-            .container {
+            .navbar-container {
                 padding: 1rem;
             }
 
-            .customers-hero {
-                flex-direction: column;
-                text-align: center;
-                gap: 2rem;
+            .nav-menu {
+                display: none;
             }
 
-            .customers-hero h1 {
-                font-size: 2.5rem;
+            .page-header {
+                padding: 2rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .header-actions {
+                position: static;
+                margin-top: 1.5rem;
             }
 
             .search-form {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .search-buttons {
-                justify-content: center;
-            }
-
-            .stats-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
             }
 
-            .customers-table {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .table-section {
+                border-radius: 0;
+            }
+
+            .data-table {
                 font-size: 0.875rem;
             }
 
-            .customers-table th,
-            .customers-table td {
-                padding: 1rem 0.75rem;
-            }
-
-            .action-buttons {
+            .actions-cell {
                 flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .customer-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .table-filters {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .customers-table th,
-            .customers-table td {
-                padding: 0.75rem 0.5rem;
-                font-size: 0.8rem;
-            }
-
-            .customer-avatar {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-<!-- Check if user is logged in -->
+<!-- Background Pattern -->
+<div class="bg-pattern"></div>
+
+<!-- Floating Elements -->
+<div class="floating-elements">
+    <div class="float-element">📚</div>
+    <div class="float-element">📖</div>
+    <div class="float-element">📕</div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+</div>
+
+<!-- Check Authentication -->
     <%
-    if (session == null || session.getAttribute("adminUser") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
-        return;
-    }
+        if (session == null || session.getAttribute("adminUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
 
-    @SuppressWarnings("unchecked")
-    List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-    if (customers == null) {
-        customers = new ArrayList<>();
-    }
-%>
+        @SuppressWarnings("unchecked")
+        List<Customer> customers = (List<Customer>) request.getAttribute("customers");
+        if (customers == null) {
+            customers = new ArrayList<>();
+        }
 
-<!-- Navigation Bar -->
+        Integer totalCustomers = (Integer) request.getAttribute("totalCustomers");
+        Integer regularCount = (Integer) request.getAttribute("regularCount");
+        Integer premiumCount = (Integer) request.getAttribute("premiumCount");
+        Integer vipCount = (Integer) request.getAttribute("vipCount");
+
+        if (totalCustomers == null) totalCustomers = customers.size();
+        if (regularCount == null) regularCount = 0;
+        if (premiumCount == null) premiumCount = 0;
+        if (vipCount == null) vipCount = 0;
+    %>
+
+<!-- Navigation -->
 <nav class="navbar">
-    <div class="navbar-content">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
-            Pahana Edu Management
+    <div class="navbar-container">
+        <a href="${pageContext.request.contextPath}/dashboard" class="nav-brand">
+            <i class="fas fa-store"></i>
+            Pahana Edu
         </a>
-        <ul class="navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a></li>
-            <li><a href="${pageContext.request.contextPath}/customer" class="nav-link active">Customers</a></li>
-            <li><a href="${pageContext.request.contextPath}/item" class="nav-link">Items</a></li>
-            <li><a href="${pageContext.request.contextPath}/bill" class="nav-link">Billing</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">Help</a></li>
-            <li><a href="${pageContext.request.contextPath}/logout" class="nav-link logout">Logout</a></li>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/customer" class="nav-link active">
+                    <i class="fas fa-user-friends"></i>
+                    Customers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/item" class="nav-link">
+                    <i class="fas fa-books"></i>
+                    Inventory
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/bill" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Billing
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">
+                    <i class="fas fa-headset"></i>
+                    Support
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/logout" class="nav-link">
+                    <i class="fas fa-power-off"></i>
+                    Logout
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
 
+<!-- Notification Container -->
+<div class="notification-container" id="notificationContainer">
+    <% if (request.getParameter("success") != null) { %>
+    <div class="notification notification-success" id="successNotification">
+        <i class="fas fa-check-circle notification-icon"></i>
+        <div class="notification-content">
+            <h4>Success!</h4>
+            <p><%= request.getParameter("success") %></p>
+        </div>
+        <button class="notification-close" onclick="closeNotification('successNotification')">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="notification-progress"></div>
+    </div>
+    <% } %>
+
+    <% if (request.getAttribute("errorMessage") != null) { %>
+    <div class="notification notification-error" id="errorNotification">
+        <i class="fas fa-exclamation-triangle notification-icon"></i>
+        <div class="notification-content">
+            <h4>Error!</h4>
+            <p><%= request.getAttribute("errorMessage") %></p>
+        </div>
+        <button class="notification-close" onclick="closeNotification('errorNotification')">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="notification-progress"></div>
+    </div>
+    <% } %>
+</div>
+
+<!-- Main Container -->
 <div class="container">
-    <!-- Hero Header -->
-    <div class="customers-hero">
-        <div class="hero-content">
-            <h1>
-                <i class="fas fa-users"></i>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-user-friends"></i>
                 Customer Management
             </h1>
-            <p>Manage customer accounts and information with modern tools</p>
+            <p class="page-subtitle">Manage your customers, track purchases, and monitor loyalty programs</p>
         </div>
         <div class="header-actions">
-            <a href="${pageContext.request.contextPath}/customer?action=add" class="btn-add-customer">
-                <i class="fas fa-user-plus"></i>
+            <a href="${pageContext.request.contextPath}/customer?action=add" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i>
                 Add New Customer
             </a>
         </div>
     </div>
 
-    <!-- Display Messages -->
-        <% if (request.getParameter("success") != null) { %>
-    <div class="alert alert-success">
-        <i class="icon-success">✓</i>
-        <%= request.getParameter("success") %>
-    </div>
-        <% } %>
+    <!-- Search Section -->
+    <div class="search-section">
+        <form class="search-form" method="get" action="${pageContext.request.contextPath}/customer" id="searchForm">
+            <input type="hidden" name="action" value="search">
 
-        <% if (request.getAttribute("errorMessage") != null) { %>
-    <div class="alert alert-error">
-        <i class="icon-error">✗</i>
-        <%= request.getAttribute("errorMessage") %>
-    </div>
-        <% } %>
-
-    <!-- Search Panel -->
-    <div class="search-panel">
-        <form class="search-form" method="get" action="${pageContext.request.contextPath}/customer">
-            <input type="hidden" name="action" value="list">
-            <div class="search-group">
-                <label for="searchName">
-                    <i class="fas fa-user-search"></i>
-                    Search by Name
-                </label>
-                <input type="text" id="searchName" name="searchName" class="search-input"
-                       placeholder="Enter customer name..."
-                       value="<%= request.getParameter("searchName") != null ? request.getParameter("searchName") : "" %>">
-            </div>
-            <div class="search-group">
-                <label for="searchAccount">
-                    <i class="fas fa-id-card"></i>
-                    Search by Account
-                </label>
-                <input type="text" id="searchAccount" name="searchAccount" class="search-input"
-                       placeholder="Enter account number..."
-                       value="<%= request.getParameter("searchAccount") != null ? request.getParameter("searchAccount") : "" %>">
-            </div>
-            <div class="search-buttons">
-                <button type="submit" class="btn-search">
+            <div class="form-group">
+                <label class="form-label" for="searchTerm">
                     <i class="fas fa-search"></i>
-                    Search
-                </button>
-                <a href="${pageContext.request.contextPath}/customer?action=list" class="btn-clear">
-                    <i class="fas fa-times"></i>
-                    Clear
-                </a>
+                    Search Customers
+                </label>
+                <input type="text"
+                       id="searchTerm"
+                       name="searchTerm"
+                       class="form-input"
+                       placeholder="Search by name, email, or phone..."
+                       value="<%= request.getAttribute("searchTerm") != null ? request.getAttribute("searchTerm") : "" %>">
             </div>
+
+            <div class="form-group">
+                <label class="form-label" for="membershipFilter">
+                    <i class="fas fa-medal"></i>
+                    Membership Type
+                </label>
+                <select id="membershipFilter" name="membershipFilter" class="form-input form-select">
+                    <option value="ALL">All Memberships</option>
+                    <option value="REGULAR" <%= "REGULAR".equals(request.getAttribute("membershipFilter")) ? "selected" : "" %>>Regular</option>
+                    <option value="PREMIUM" <%= "PREMIUM".equals(request.getAttribute("membershipFilter")) ? "selected" : "" %>>Premium</option>
+                    <option value="VIP" <%= "VIP".equals(request.getAttribute("membershipFilter")) ? "selected" : "" %>>VIP</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+                Search
+            </button>
+
+            <a href="${pageContext.request.contextPath}/customer?action=list" class="btn" style="background: #E5E7EB; color: #6B7280;">
+                <i class="fas fa-times"></i>
+                Clear
+            </a>
         </form>
     </div>
 
-    <!-- Customer Statistics -->
-    <div class="stats-grid">
+    <!-- Statistics Cards -->
+    <div class="stats-container">
         <div class="stat-card">
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
             </div>
-            <h2 class="stat-number"><%= customers.size() %></h2>
-            <p class="stat-label">Total Customers</p>
+            <div class="stat-value" data-target="<%= totalCustomers %>">0</div>
+            <div class="stat-label">Total Customers</div>
         </div>
+
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="fas fa-user-check"></i>
+                <i class="fas fa-user"></i>
             </div>
-            <h2 class="stat-number">
-                <%
-                    int activeCustomers = 0;
-                    for (Customer customer : customers) {
-                        if (customer.getUnitsConsumed() > 0) {
-                            activeCustomers++;
-                        }
-                    }
-                %>
-                <%= activeCustomers %>
-            </h2>
-            <p class="stat-label">Active Customers</p>
+            <div class="stat-value" data-target="<%= regularCount %>">0</div>
+            <div class="stat-label">Regular Members</div>
         </div>
+
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-star"></i>
             </div>
-            <h2 class="stat-number">
-                <%
-                    int totalUnits = 0;
-                    for (Customer customer : customers) {
-                        totalUnits += customer.getUnitsConsumed();
-                    }
-                %>
-                <%= totalUnits %>
-            </h2>
-            <p class="stat-label">Total Units</p>
+            <div class="stat-value" data-target="<%= premiumCount %>">0</div>
+            <div class="stat-label">Premium Members</div>
         </div>
+
         <div class="stat-card">
             <div class="stat-icon">
-                <i class="fas fa-calculator"></i>
+                <i class="fas fa-crown"></i>
             </div>
-            <h2 class="stat-number">
-                <%= customers.size() > 0 ? String.format("%.1f", (double)totalUnits / customers.size()) : "0.0" %>
-            </h2>
-            <p class="stat-label">Avg Units/Customer</p>
+            <div class="stat-value" data-target="<%= vipCount %>">0</div>
+            <div class="stat-label">VIP Members</div>
         </div>
     </div>
 
-    <!-- Customers Table -->
-    <div class="table-container">
+    <!-- Table Section -->
+    <div class="table-section">
         <div class="table-header">
             <h3 class="table-title">
-                <i class="fas fa-table"></i>
+                <i class="fas fa-list-alt"></i>
                 Customer List
             </h3>
-            <div class="table-filters">
-                <select class="filter-select" onchange="filterTable(this.value)">
-                    <option value="all">All Customers</option>
-                    <option value="active">Active (Units > 0)</option>
-                    <option value="inactive">Inactive (Units = 0)</option>
-                    <option value="high">High Usage (Units > 50)</option>
-                </select>
-                <button onclick="exportToCSV()" class="btn-export">
-                    <i class="fas fa-file-csv"></i>
-                    Export CSV
+            <div class="table-actions">
+                <button class="btn-icon" onclick="refreshTable()" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="btn-icon" onclick="exportData()" title="Export">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="btn-icon" onclick="toggleView()" title="Toggle View">
+                    <i class="fas fa-th-large"></i>
                 </button>
             </div>
         </div>
 
-            <% if (customers.size() > 0) { %>
-        <table class="customers-table" id="customersTable">
+        <% if (customers.size() > 0) { %>
+        <table class="data-table" id="customersTable">
             <thead>
             <tr>
-                <th><i class="fas fa-user"></i> Customer</th>
-                <th><i class="fas fa-id-badge"></i> Account Number</th>
-                <th><i class="fas fa-phone"></i> Contact</th>
-                <th><i class="fas fa-chart-bar"></i> Units Consumed</th>
-                <th><i class="fas fa-info-circle"></i> Status</th>
-                <th><i class="fas fa-cogs"></i> Actions</th>
+                <th>Customer</th>
+                <th>Contact</th>
+                <th>Membership</th>
+                <th>Purchases</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-                <% for (Customer customer : customers) { %>
-            <tr data-units="<%= customer.getUnitsConsumed() %>">
+            <%
+                int index = 0;
+                for (Customer customer : customers) {
+                    index++;
+            %>
+            <tr style="animation-delay: <%= index * 0.05 %>s;">
                 <td>
-                    <div class="customer-info">
+                    <div class="customer-cell">
                         <div class="customer-avatar">
-                            <%= customer.getName().substring(0, 1).toUpperCase() %>
+                            <%= customer.getName().substring(0, Math.min(2, customer.getName().length())).toUpperCase() %>
                         </div>
-                        <div class="customer-details">
+                        <div class="customer-info">
                             <h4><%= customer.getName() %></h4>
                             <p>
                                 <i class="fas fa-map-marker-alt"></i>
@@ -1099,544 +1367,451 @@
                     </div>
                 </td>
                 <td>
-                    <span class="account-number"><%= customer.getAccountNumber() %></span>
-                </td>
-                <td>
-                    <div class="phone-number">
-                        <i class="fas fa-phone"></i>
-                        <%= customer.getTelephone() %>
+                    <div class="contact-cell">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:<%= customer.getEmail() %>"><%= customer.getEmail() %></a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span><%= customer.getPhone() %></span>
+                        </div>
                     </div>
                 </td>
                 <td>
-                    <span class="units-badge <%=
-                        customer.getUnitsConsumed() == 0 ? "units-low" :
-                        customer.getUnitsConsumed() <= 25 ? "units-medium" : "units-high" %>">
-                        <i class="fas fa-chart-pie"></i>
-                        <%= customer.getUnitsConsumed() %> units
-                    </span>
+                        <span class="membership-badge badge-<%= customer.getMembershipType().toLowerCase() %>">
+                            <% if ("VIP".equals(customer.getMembershipType())) { %>
+                                <i class="fas fa-crown"></i>
+                            <% } else if ("PREMIUM".equals(customer.getMembershipType())) { %>
+                                <i class="fas fa-star"></i>
+                            <% } else { %>
+                                <i class="fas fa-user"></i>
+                            <% } %>
+                            <%= customer.getMembershipType() %>
+                        </span>
                 </td>
                 <td>
-                    <% if (customer.getUnitsConsumed() > 0) { %>
-                    <span class="status-badge badge-success">
-                        <i class="fas fa-check-circle"></i>
-                        Active
-                    </span>
-                    <% } else { %>
-                    <span class="status-badge badge-warning">
-                        <i class="fas fa-pause-circle"></i>
-                        Inactive
-                    </span>
-                    <% } %>
+                    <div class="purchase-info">
+                        <span class="purchase-amount">$<%= String.format("%.2f", customer.getTotalPurchases()) %></span>
+                        <span class="loyalty-points">
+                                <i class="fas fa-coins"></i>
+                                <%= customer.getLoyaltyPoints() %> points
+                            </span>
+                    </div>
                 </td>
                 <td>
-                    <div class="action-buttons">
-                        <a href="${pageContext.request.contextPath}/customer?action=view&accountNumber=<%= customer.getAccountNumber() %>"
-                           class="btn-action btn-view" title="View Details">
+                    <div class="actions-cell">
+                        <a href="${pageContext.request.contextPath}/customer?action=view&customerId=<%= customer.getCustomerId() %>"
+                           class="action-btn btn-view"
+                           title="View Details">
                             <i class="fas fa-eye"></i>
-                            View
                         </a>
-                        <a href="${pageContext.request.contextPath}/customer?action=edit&accountNumber=<%= customer.getAccountNumber() %>"
-                           class="btn-action btn-edit" title="Edit Customer">
-                            <i class="fas fa-edit"></i>
-                            Edit
+                        <a href="${pageContext.request.contextPath}/customer?action=edit&customerId=<%= customer.getCustomerId() %>"
+                           class="action-btn btn-edit"
+                           title="Edit Customer">
+                            <i class="fas fa-pen"></i>
                         </a>
-                        <a href="${pageContext.request.contextPath}/bill?action=generate&accountNumber=<%= customer.getAccountNumber() %>"
-                           class="btn-action btn-bill" title="Generate Bill">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                            Bill
-                        </a>
-                        <a href="${pageContext.request.contextPath}/customer?action=delete&accountNumber=<%= customer.getAccountNumber() %>"
-                           class="btn-action btn-delete" title="Delete Customer"
-                           onclick="return confirm('Are you sure you want to delete this customer?')">
+                        <a href="#"
+                           class="action-btn btn-delete"
+                           title="Delete Customer"
+                           onclick="confirmDelete(<%= customer.getCustomerId() %>, '<%= customer.getName() %>')">
                             <i class="fas fa-trash-alt"></i>
-                            Delete
                         </a>
                     </div>
                 </td>
             </tr>
-                <% } %>
+            <% } %>
             </tbody>
         </table>
 
-        <div class="pagination">
-            <div class="page-info">
-                <i class="fas fa-info-circle"></i>
-                Showing <%= customers.size() %> customer(s)
+        <div class="table-footer">
+            <div class="showing-info">
+                Showing <%= customers.size() %> of <%= totalCustomers %> customers
+                <% if (request.getAttribute("searchTerm") != null) { %>
+                for "<%= request.getAttribute("searchTerm") %>"
+                <% } %>
             </div>
         </div>
+
         <% } else { %>
         <div class="empty-state">
-            <div class="empty-state-icon">
-                <i class="fas fa-users-slash"></i>
+            <div class="empty-icon">
+                <i class="fas fa-user-slash"></i>
             </div>
-            <h3>No Customers Found</h3>
-            <p>You haven't added any customers yet. Start by adding your first customer to get started with the system!</p>
-            <a href="${pageContext.request.contextPath}/customer?action=add" class="btn-first-customer">
-                <i class="fas fa-user-plus"></i>
-                Add Your First Customer
+            <h3 class="empty-title">No Customers Found</h3>
+            <% if (request.getAttribute("searchTerm") != null) { %>
+            <p class="empty-text">No customers match your search criteria. Try different keywords.</p>
+            <a href="${pageContext.request.contextPath}/customer?action=list" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i>
+                View All Customers
             </a>
+            <% } else { %>
+            <p class="empty-text">Start building your customer base by adding your first customer!</p>
+            <a href="${pageContext.request.contextPath}/customer?action=add" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i>
+                Add First Customer
+            </a>
+            <% } %>
         </div>
         <% } %>
     </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 400px; margin: 2rem; animation: fadeInScale 0.3s ease-out;">
+        <h3 style="margin-bottom: 1rem; color: var(--text-primary);">
+            <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i>
+            Confirm Delete
+        </h3>
+        <p id="deleteMessage" style="color: var(--text-secondary); margin-bottom: 2rem;"></p>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+            <button class="btn" style="background: #E5E7EB; color: #6B7280;" onclick="closeDeleteModal()">
+                Cancel
+            </button>
+            <button class="btn" style="background: var(--danger-gradient); color: white;" onclick="executeDelete()">
+                <i class="fas fa-trash"></i>
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Initialize animations and interactions
+    // Global variables
+    let deleteCustomerId = null;
+    let currentView = 'table';
+
+    // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
-        // Animate statistics cards
-        const statNumbers = document.querySelectorAll('.stat-number');
-        statNumbers.forEach((statNumber, index) => {
-            const finalValue = parseInt(statNumber.textContent) || parseFloat(statNumber.textContent);
-            if (finalValue > 0 && !isNaN(finalValue)) {
-                let currentValue = 0;
-                const isFloat = statNumber.textContent.includes('.');
-                const increment = isFloat ? finalValue / 50 : Math.ceil(finalValue / 20);
-
-                const timer = setInterval(function() {
-                    currentValue += increment;
-                    if (currentValue >= finalValue) {
-                        currentValue = finalValue;
-                        clearInterval(timer);
-                    }
-                    statNumber.textContent = isFloat ? currentValue.toFixed(1) : Math.floor(currentValue);
-                }, 50);
-            }
-        });
-
-        // Add hover effects to table rows
-        const tableRows = document.querySelectorAll('.customers-table tbody tr');
-        tableRows.forEach((row, index) => {
-            row.style.animationDelay = `${index * 0.05}s`;
-
-            // Add ripple effect on row click
-            row.addEventListener('click', function(e) {
-                if (e.target.closest('.btn-action')) return;
-
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.6s linear;
-                    pointer-events: none;
-                    z-index: 1;
-                `;
-
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
-
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            });
-        });
-
-        // Add floating animation to customer avatars
-        const avatars = document.querySelectorAll('.customer-avatar');
-        avatars.forEach((avatar, index) => {
-            avatar.style.animationDelay = `${index * 0.1}s`;
-
-            avatar.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.2) rotate(10deg)';
-                this.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.5)';
-            });
-
-            avatar.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1) rotate(0deg)';
-                this.style.boxShadow = '';
-            });
-        });
-
-        // Add dynamic gradient animation to action buttons
-        const actionButtons = document.querySelectorAll('.btn-action');
-        actionButtons.forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                this.style.backgroundSize = '200% 200%';
-                this.style.backgroundPosition = 'right center';
-            });
-
-            button.addEventListener('mouseleave', function() {
-                this.style.backgroundPosition = 'left center';
-            });
-        });
-
-        // Add parallax effect to hero section
-        const hero = document.querySelector('.customers-hero');
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallax = scrolled * 0.5;
-            if (hero) {
-                hero.style.transform = `translateY(${parallax}px)`;
-            }
-        });
-
-        // Add search input animations
-        const searchInputs = document.querySelectorAll('.search-input');
-        searchInputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.style.transform = 'scale(1.02)';
-                this.parentElement.style.zIndex = '10';
-            });
-
-            input.addEventListener('blur', function() {
-                this.parentElement.style.transform = 'scale(1)';
-                this.parentElement.style.zIndex = '1';
-            });
-        });
-
-        console.log('✨ Customer management page animations initialized');
+        animateCounters();
+        setupNotifications();
+        setupKeyboardShortcuts();
+        setupLiveSearch();
+        console.log('✨ Pahana Edu  Customer Management initialized');
     });
 
-    // Filter table functionality with animations
-    function filterTable(filter) {
-        const table = document.getElementById('customersTable');
-        if (!table) return;
+    // Animate statistics counters
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-value');
+        const duration = 2000;
 
-        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        let visibleCount = 0;
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / (duration / 16);
+            let current = 0;
 
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const units = parseInt(row.getAttribute('data-units'));
-            let show = true;
-
-            switch(filter) {
-                case 'active':
-                    show = units > 0;
-                    break;
-                case 'inactive':
-                    show = units === 0;
-                    break;
-                case 'high':
-                    show = units > 50;
-                    break;
-                case 'all':
-                default:
-                    show = true;
-                    break;
-            }
-
-            if (show) {
-                row.style.display = '';
-                row.style.animation = `fadeInUp 0.3s ease-out ${visibleCount * 0.05}s both`;
-                visibleCount++;
-            } else {
-                row.style.animation = 'fadeOutDown 0.3s ease-out';
-                setTimeout(() => {
-                    row.style.display = 'none';
-                }, 300);
-            }
-        }
-
-        // Update pagination info
-        const pageInfo = document.querySelector('.page-info');
-        if (pageInfo) {
-            setTimeout(() => {
-                pageInfo.innerHTML = `
-                    <i class="fas fa-filter"></i>
-                    Showing ${visibleCount} customer(s) (${filter} filter)
-                `;
-            }, 350);
-        }
-    }
-
-    // Export to CSV functionality with loading animation
-    function exportToCSV() {
-        const exportBtn = document.querySelector('.btn-export');
-        const originalHTML = exportBtn.innerHTML;
-
-        // Show loading state
-        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
-        exportBtn.disabled = true;
-
-        const table = document.getElementById('customersTable');
-        if (!table) {
-            exportBtn.innerHTML = originalHTML;
-            exportBtn.disabled = false;
-            return;
-        }
-
-        const rows = table.getElementsByTagName('tr');
-        let csv = [];
-
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const cols = row.getElementsByTagName(i === 0 ? 'th' : 'td');
-            let csvRow = [];
-
-            for (let j = 0; j < cols.length - 1; j++) { // Exclude actions column
-                let cellText = cols[j].innerText.replace(/,/g, '').replace(/\n/g, ' ').trim();
-                csvRow.push('"' + cellText + '"');
-            }
-            csv.push(csvRow.join(','));
-        }
-
-        // Simulate processing time for better UX
-        setTimeout(() => {
-            // Download CSV
-            const csvContent = csv.join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'customers_' + new Date().toISOString().split('T')[0] + '.csv';
-            a.click();
-            window.URL.revokeObjectURL(url);
-
-            // Reset button
-            exportBtn.innerHTML = '<i class="fas fa-check"></i> Exported!';
-            setTimeout(() => {
-                exportBtn.innerHTML = originalHTML;
-                exportBtn.disabled = false;
-            }, 2000);
-        }, 1000);
-    }
-
-    // Enhanced search functionality with debouncing
-    let searchTimeout;
-    document.getElementById('searchName').addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            filterByName(searchTerm);
-        }, 300);
-    });
-
-    function filterByName(searchTerm) {
-        const table = document.getElementById('customersTable');
-        if (!table) return;
-
-        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        let visibleCount = 0;
-
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const nameCell = row.getElementsByTagName('td')[0];
-            const name = nameCell.innerText.toLowerCase();
-
-            if (name.includes(searchTerm) || searchTerm === '') {
-                row.style.display = '';
-                row.style.animation = `fadeInUp 0.3s ease-out ${visibleCount * 0.05}s both`;
-                visibleCount++;
-            } else {
-                row.style.animation = 'fadeOutDown 0.3s ease-out';
-                setTimeout(() => {
-                    row.style.display = 'none';
-                }, 300);
-            }
-        }
-    }
-
-    // Auto-refresh functionality with user notification
-    let refreshInterval;
-    let lastInteraction = Date.now();
-
-    function startAutoRefresh() {
-        refreshInterval = setInterval(function() {
-            const timeSinceLastInteraction = Date.now() - lastInteraction;
-
-            // Only refresh if user hasn't interacted for 2 minutes
-            if (timeSinceLastInteraction > 120000) {
-                showRefreshNotification();
-            }
-        }, 60000);
-    }
-
-    function showRefreshNotification() {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease-out;
-            cursor: pointer;
-        `;
-        notification.innerHTML = `
-            <i class="fas fa-sync-alt"></i>
-            Click to refresh customer data
-        `;
-
-        notification.addEventListener('click', () => {
-            window.location.reload();
-        });
-
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-out';
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
                 }
-            }, 300);
+                counter.textContent = Math.floor(current);
+            }, 16);
+        });
+    }
+
+    // Setup notifications
+    function setupNotifications() {
+        const notifications = document.querySelectorAll('.notification');
+
+        notifications.forEach(notification => {
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                closeNotification(notification.id);
+            }, 5000);
+        });
+    }
+
+    // Close notification
+    function closeNotification(id) {
+        const notification = document.getElementById(id);
+        if (notification) {
+            notification.classList.add('hide');
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }
+    }
+
+    // Show notification
+    function showNotification(type, title, message) {
+        const container = document.getElementById('notificationContainer');
+        const id = 'notification-' + Date.now();
+
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.id = id;
+
+        const iconMap = {
+            success: 'check-circle',
+            error: 'exclamation-triangle',
+            warning: 'exclamation-circle',
+            info: 'info-circle'
+        };
+
+        notification.innerHTML = `
+        <i class="fas fa-${iconMap[type]} notification-icon"></i>
+        <div class="notification-content">
+            <h4>${title}</h4>
+            <p>${message}</p>
+        </div>
+        <button class="notification-close" onclick="closeNotification('${id}')">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="notification-progress"></div>
+    `;
+
+        container.appendChild(notification);
+
+        // Auto close after 5 seconds
+        setTimeout(() => {
+            closeNotification(id);
         }, 5000);
     }
 
-    function updateLastInteraction() {
-        lastInteraction = Date.now();
+    // Refresh table
+    function refreshTable() {
+        showLoading();
+        location.reload();
     }
 
-    // Track user interactions
-    document.addEventListener('click', updateLastInteraction);
-    document.addEventListener('keypress', updateLastInteraction);
-    document.addEventListener('scroll', updateLastInteraction);
+    // Show loading overlay
+    function showLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.add('show');
+    }
 
-    // Start auto-refresh when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        startAutoRefresh();
-    });
+    // Hide loading overlay
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.remove('show');
+    }
 
-    // Add CSS for additional animations
-    const additionalStyles = document.createElement('style');
-    additionalStyles.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
+    // Export data
+    function exportData() {
+        const table = document.getElementById('customersTable');
+        if (!table) {
+            showNotification('warning', 'No Data', 'No customer data to export');
+            return;
         }
 
-        @keyframes fadeOutDown {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-        }
+        showNotification('info', 'Exporting', 'Preparing your data...');
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
+        // Create CSV content
+        let csv = 'Name,Email,Phone,Address,Membership,Total Purchases,Loyalty Points\n';
+
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const name = row.querySelector('.customer-info h4').textContent;
+            const email = row.querySelector('.contact-item a').textContent;
+            const phone = row.querySelectorAll('.contact-item span')[0].textContent;
+            const address = row.querySelector('.customer-info p').textContent.trim();
+            const membership = row.querySelector('.membership-badge').textContent.trim();
+            const purchases = row.querySelector('.purchase-amount').textContent;
+            const points = row.querySelector('.loyalty-points').textContent.replace(' points', '');
+
+            csv += `"${name}","${email}","${phone}","${address}","${membership}","${purchases}","${points}"\n`;
+        });
+
+        // Download file
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'customers_' + new Date().toISOString().split('T')[0] + '.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        showNotification('success', 'Success', 'Customer data exported successfully');
+    }
+
+    // Toggle view
+    function toggleView() {
+        // This could toggle between table and card view
+        showNotification('info', 'View Changed', 'Feature coming soon!');
+    }
+
+    // Confirm delete
+    function confirmDelete(customerId, customerName) {
+        deleteCustomerId = customerId;
+        const modal = document.getElementById('deleteModal');
+        const message = document.getElementById('deleteMessage');
+
+        message.textContent = `Are you sure you want to delete customer "${customerName}"? This action cannot be undone.`;
+        modal.style.display = 'flex';
+    }
+
+    // Close delete modal
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'none';
+        deleteCustomerId = null;
+    }
+
+    // Execute delete
+    function executeDelete() {
+        if (deleteCustomerId) {
+            showLoading();
+            window.location.href = '${pageContext.request.contextPath}/customer?action=delete&customerId=' + deleteCustomerId;
+        }
+    }
+
+    // Setup keyboard shortcuts
+    function setupKeyboardShortcuts() {
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + N: Add new customer
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                window.location.href = '${pageContext.request.contextPath}/customer?action=add';
             }
-            to {
-                opacity: 1;
-                transform: translateX(0);
+
+            // Ctrl/Cmd + F: Focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchTerm').focus();
             }
-        }
 
-        @keyframes slideOutRight {
-            from {
-                opacity: 1;
-                transform: translateX(0);
+            // Ctrl/Cmd + E: Export
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                exportData();
             }
-            to {
-                opacity: 0;
-                transform: translateX(50px);
+
+            // ESC: Close modals
+            if (e.key === 'Escape') {
+                closeDeleteModal();
             }
-        }
+        });
+    }
 
-        .customers-table tbody tr {
-            cursor: pointer;
-        }
+    // Setup live search
+    function setupLiveSearch() {
+        const searchInput = document.getElementById('searchTerm');
+        let searchTimeout;
 
-        .search-group {
-            transition: all 0.3s ease;
-        }
+        searchInput.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const value = e.target.value.trim();
 
-        .btn-action {
-            background-size: 200% 200%;
-            background-position: left center;
-            transition: all 0.3s ease;
-        }
-
-        .btn-export:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+            // Only search if empty or 3+ characters
+            if (value.length === 0 || value.length >= 3) {
+                searchTimeout = setTimeout(() => {
+                    const form = document.getElementById('searchForm');
+                    showLoading();
+                    form.submit();
+                }, 800);
             }
-        }
-    `;
-    document.head.appendChild(additionalStyles);
+        });
+    }
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey || e.metaKey) {
-            switch(e.key) {
-                case 'f':
-                    e.preventDefault();
-                    document.getElementById('searchName').focus();
-                    break;
-                case 'n':
-                    e.preventDefault();
-                    window.location.href = '${pageContext.request.contextPath}/customer?action=add';
-                    break;
-                case 'e':
-                    e.preventDefault();
-                    exportToCSV();
-                    break;
-            }
-        }
-    });
+    // Add row click handler
+    document.querySelectorAll('.data-table tbody tr').forEach(row => {
+        row.addEventListener('click', function(e) {
+            // Don't trigger if clicking on action buttons
+            if (e.target.closest('.actions-cell')) return;
 
-    // Performance monitoring
-    const performanceObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-            if (entry.duration > 100) {
-                console.warn('🐌 Slow operation:', entry.name, entry.duration.toFixed(2) + 'ms');
-            }
+            // Create ripple effect
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.3);
+            pointer-events: none;
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            left: ${x}px;
+            top: ${y}px;
+        `;
+
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
         });
     });
 
-    if ('PerformanceObserver' in window) {
-        performanceObserver.observe({ entryTypes: ['navigation', 'resource'] });
+    // Add ripple animation
+    const style = document.createElement('style');
+    style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
     }
+`;
+    document.head.appendChild(style);
 
-    // Add accessibility features
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Tab') {
-            const focusableElements = document.querySelectorAll(
-                'a[href], button, input, select, [tabindex]:not([tabindex="-1"])'
-            );
+    // Handle errors
+    window.addEventListener('error', function(e) {
+        console.error('Error:', e);
+        showNotification('error', 'Error', 'An unexpected error occurred');
+    });
 
-            focusableElements.forEach(element => {
-                element.addEventListener('focus', function() {
-                    this.style.outline = '3px solid #667eea';
-                    this.style.outlineOffset = '2px';
-                });
-
-                element.addEventListener('blur', function() {
-                    this.style.outline = '';
-                    this.style.outlineOffset = '';
-                });
-            });
+    // Page visibility change
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            // Could refresh data when page becomes visible again
+            console.log('Page is visible again');
         }
     });
 
-    // Error handling
-    window.addEventListener('error', function(e) {
-        console.warn('⚠️ Customer management page error:', e.error);
+    // Initialize tooltips
+    document.querySelectorAll('[title]').forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'custom-tooltip';
+            tooltip.textContent = this.title;
+            tooltip.style.cssText = `
+            position: absolute;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            z-index: 9999;
+            pointer-events: none;
+        `;
+
+            document.body.appendChild(tooltip);
+
+            const rect = this.getBoundingClientRect();
+            tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+            tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + 'px';
+
+            this.dataset.originalTitle = this.title;
+            this.removeAttribute('title');
+
+            this.addEventListener('mouseleave', function() {
+                tooltip.remove();
+                this.title = this.dataset.originalTitle;
+            }, { once: true });
+        });
     });
 
-    console.log('🎨 Advanced customer management interface loaded successfully');
+    // Performance monitoring
+    if ('PerformanceObserver' in window) {
+        const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+                console.log('Performance:', entry.name, entry.duration + 'ms');
+            }
+        });
+        observer.observe({ entryTypes: ['measure'] });
+    }
+
+    // Mark page load complete
+    performance.mark('page-load-complete');
+    performance.measure('page-load', 'navigationStart', 'page-load-complete');
 </script>
 </body>
 </html>

@@ -3,45 +3,71 @@ package com.pahanaedu.model;
 import java.sql.Timestamp;
 
 public class Customer {
-    private String accountNumber;
+    private int customerId;
     private String name;
+    private String email;
+    private String phone;
     private String address;
-    private String telephone;
-    private int unitsConsumed;
+    private String membershipType;
+    private double totalPurchases;
+    private int loyaltyPoints;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
     // Default constructor
-    public Customer() {}
+    public Customer() {
+        this.membershipType = "REGULAR";
+        this.totalPurchases = 0.0;
+        this.loyaltyPoints = 0;
+    }
 
-    // Constructor without timestamps
-    public Customer(String accountNumber, String name, String address, String telephone, int unitsConsumed) {
-        this.accountNumber = accountNumber;
+    // Constructor without timestamps and ID (for new customers)
+    public Customer(String name, String email, String phone, String address) {
         this.name = name;
+        this.email = email;
+        this.phone = phone;
         this.address = address;
-        this.telephone = telephone;
-        this.unitsConsumed = unitsConsumed;
+        this.membershipType = "REGULAR";
+        this.totalPurchases = 0.0;
+        this.loyaltyPoints = 0;
+    }
+
+    // Constructor with essential fields
+    public Customer(int customerId, String name, String email, String phone, String address,
+                    String membershipType, double totalPurchases, int loyaltyPoints) {
+        this.customerId = customerId;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.membershipType = membershipType;
+        this.totalPurchases = totalPurchases;
+        this.loyaltyPoints = loyaltyPoints;
     }
 
     // Constructor with all fields
-    public Customer(String accountNumber, String name, String address, String telephone,
-                    int unitsConsumed, Timestamp createdAt, Timestamp updatedAt) {
-        this.accountNumber = accountNumber;
+    public Customer(int customerId, String name, String email, String phone, String address,
+                    String membershipType, double totalPurchases, int loyaltyPoints,
+                    Timestamp createdAt, Timestamp updatedAt) {
+        this.customerId = customerId;
         this.name = name;
+        this.email = email;
+        this.phone = phone;
         this.address = address;
-        this.telephone = telephone;
-        this.unitsConsumed = unitsConsumed;
+        this.membershipType = membershipType;
+        this.totalPurchases = totalPurchases;
+        this.loyaltyPoints = loyaltyPoints;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     // Getters and Setters
-    public String getAccountNumber() {
-        return accountNumber;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {
@@ -52,6 +78,22 @@ public class Customer {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -60,20 +102,28 @@ public class Customer {
         this.address = address;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getMembershipType() {
+        return membershipType;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setMembershipType(String membershipType) {
+        this.membershipType = membershipType;
     }
 
-    public int getUnitsConsumed() {
-        return unitsConsumed;
+    public double getTotalPurchases() {
+        return totalPurchases;
     }
 
-    public void setUnitsConsumed(int unitsConsumed) {
-        this.unitsConsumed = unitsConsumed;
+    public void setTotalPurchases(double totalPurchases) {
+        this.totalPurchases = totalPurchases;
+    }
+
+    public int getLoyaltyPoints() {
+        return loyaltyPoints;
+    }
+
+    public void setLoyaltyPoints(int loyaltyPoints) {
+        this.loyaltyPoints = loyaltyPoints;
     }
 
     public Timestamp getCreatedAt() {
@@ -92,14 +142,57 @@ public class Customer {
         this.updatedAt = updatedAt;
     }
 
+    // Utility methods
+    public void addPurchase(double amount) {
+        this.totalPurchases += amount;
+        // Add loyalty points (1 point per $10 spent)
+        this.loyaltyPoints += (int) (amount / 10);
+        updateMembershipType();
+    }
+
+    public void addLoyaltyPoints(int points) {
+        this.loyaltyPoints += points;
+    }
+
+    public void redeemLoyaltyPoints(int points) {
+        if (this.loyaltyPoints >= points) {
+            this.loyaltyPoints -= points;
+        }
+    }
+
+    private void updateMembershipType() {
+        if (this.totalPurchases >= 5000) {
+            this.membershipType = "VIP";
+        } else if (this.totalPurchases >= 2000) {
+            this.membershipType = "PREMIUM";
+        } else {
+            this.membershipType = "REGULAR";
+        }
+    }
+
+    public double getDiscountPercentage() {
+        switch (this.membershipType) {
+            case "VIP":
+                return 15.0;
+            case "PREMIUM":
+                return 10.0;
+            case "REGULAR":
+            default:
+                return 5.0;
+        }
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
-                "accountNumber='" + accountNumber + '\'' +
+                "customerId=" + customerId +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
-                ", telephone='" + telephone + '\'' +
-                ", unitsConsumed=" + unitsConsumed +
+                ", membershipType='" + membershipType + '\'' +
+                ", totalPurchases=" + totalPurchases +
+                ", loyaltyPoints=" + loyaltyPoints +
                 '}';
     }
 }

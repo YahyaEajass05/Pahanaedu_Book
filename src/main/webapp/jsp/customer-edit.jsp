@@ -5,10 +5,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Customer - Pahana Edu</title>
+    <title>Edit Customer - Pahana Edu </title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            /* Modern Color Palette */
+            --primary-color: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary-color: #EC4899;
+            --secondary-dark: #DB2777;
+            --accent-color: #14B8A6;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+
+            /* Gradients */
+            --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --secondary-gradient: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            --success-gradient: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
+            --danger-gradient: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+            --warning-gradient: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+            --info-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+
+            /* Membership Gradients */
+            --regular-gradient: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+            --premium-gradient: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+            --vip-gradient: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+
+            /* Background & Glass */
+            --bg-primary: #F9FAFB;
+            --bg-secondary: #FFFFFF;
+            --glass-white: rgba(255, 255, 255, 0.85);
+            --glass-dark: rgba(31, 41, 55, 0.85);
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
         * {
             margin: 0;
@@ -18,25 +61,149 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
             position: relative;
-            overflow-x: hidden;
         }
 
-        body::before {
-            content: '';
+        /* Animated Background */
+        .bg-animation {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(120, 119, 255, 0.3) 0%, transparent 50%);
+            top: 0;
+            left: 0;
             z-index: -1;
+            overflow: hidden;
         }
 
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background:
+                    radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(20, 184, 166, 0.1) 0%, transparent 50%);
+            animation: bgRotate 30s linear infinite;
+        }
+
+        @keyframes bgRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.05;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            font-size: 100px;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            font-size: 120px;
+            animation-delay: 5s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 10%;
+            left: 50%;
+            font-size: 80px;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: var(--primary-gradient);
+        }
+
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -44,623 +211,393 @@
             position: relative;
         }
 
-        /* Floating Animation Elements */
-        .floating-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .floating-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: floatUp 15s infinite ease-in-out;
-        }
-
-        .floating-circle:nth-child(1) {
-            width: 100px;
-            height: 100px;
-            top: 100%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-circle:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            top: 100%;
-            left: 70%;
-            animation-delay: -5s;
-        }
-
-        .floating-circle:nth-child(3) {
-            width: 80px;
-            height: 80px;
-            top: 100%;
-            left: 40%;
-            animation-delay: -10s;
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .edit-customer-header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 3rem 2rem;
-            border-radius: 25px;
-            margin-bottom: 3rem;
+        /* Page Header */
+        .page-header {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 25px 50px rgba(255, 107, 107, 0.3);
-            animation: slideInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: fadeInScale 0.6s ease-out;
         }
 
-        @keyframes slideInDown {
-            from {
-                transform: translateY(-100px) scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .edit-customer-header::before {
+        .page-header::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: headerShine 4s infinite;
-        }
-
-        @keyframes headerShine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .header-info {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            position: relative;
-            z-index: 2;
-            justify-content: space-between;
-        }
-
-        .customer-info-section {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .customer-avatar-edit {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary-gradient);
+            opacity: 0.1;
             border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .customer-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            border: 3px solid rgba(255,255,255,0.3);
-            position: relative;
-            animation: avatarPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes avatarPulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255,255,255,0);
-            }
-        }
-
-        .header-text h1 {
-            margin: 0 0 0.5rem 0;
             font-size: 2.5rem;
-            font-weight: 800;
-            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            animation: textGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes textGlow {
-            from {
-                text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            }
-            to {
-                text-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.5);
-            }
-        }
-
-        .header-text p {
-            margin: 0;
-            opacity: 0.95;
-            font-size: 1.2rem;
-            font-weight: 400;
-        }
-
-        .account-badge {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(20px);
-            padding: 1rem 2rem;
-            border-radius: 30px;
             font-weight: 700;
-            font-size: 1.1rem;
-            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
             position: relative;
-            animation: badgeFloat 3s ease-in-out infinite;
+            overflow: hidden;
+            animation: avatarFloat 3s ease-in-out infinite;
         }
 
-        @keyframes badgeFloat {
+        @keyframes avatarFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
 
-        .form-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.2);
-            animation: formSlideUp 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes formSlideUp {
-            from {
-                transform: translateY(50px) scale(0.95);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 3px solid transparent;
-            background: linear-gradient(90deg, #667eea, #764ba2) bottom;
-            background-size: 100% 3px;
-            background-repeat: no-repeat;
-            position: relative;
-        }
-
-        .form-header::before {
+        .customer-avatar::after {
             content: '';
             position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #ff6b6b, #ee5a24);
-            animation: headerUnderline 2s ease-out forwards;
+            inset: -50%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s linear infinite;
         }
 
-        @keyframes headerUnderline {
-            to { width: 100%; }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .form-header h2 {
-            color: #2d3436;
-            margin: 0 0 1rem 0;
+        .header-info h1 {
             font-size: 2rem;
-            font-weight: 700;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .form-header p {
-            color: #636e72;
-            margin: 0;
-            font-size: 1.1rem;
+        .header-info p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
         }
 
+        .membership-indicator {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .membership-regular {
+            background: var(--regular-gradient);
+            color: white;
+        }
+
+        .membership-premium {
+            background: var(--premium-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .membership-vip {
+            background: var(--vip-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Form Container */
+        .form-container {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+
+        /* Form Sections */
         .form-section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
             padding: 2rem;
-            background: linear-gradient(135deg, #f8f9ff 0%, #fef7ff 100%);
-            border-radius: 20px;
-            border-left: 5px solid #6c5ce7;
+            background: var(--bg-primary);
+            border-radius: 16px;
             position: relative;
             transition: all 0.3s ease;
-            animation: sectionFadeIn 0.8s ease-out forwards;
+            animation: fadeInUp 0.6s ease-out forwards;
             opacity: 0;
-            transform: translateX(-30px);
         }
 
-        .form-section:nth-child(1) { animation-delay: 0.2s; }
+        .form-section:nth-child(1) { animation-delay: 0.3s; }
         .form-section:nth-child(2) { animation-delay: 0.4s; }
-        .form-section:nth-child(3) { animation-delay: 0.6s; }
-
-        @keyframes sectionFadeIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+        .form-section:nth-child(3) { animation-delay: 0.5s; }
 
         .form-section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .form-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .section-title {
-            color: #2d3436;
-            font-size: 1.4rem;
-            margin-bottom: 1.5rem;
+        .section-header {
             display: flex;
             align-items: center;
             gap: 1rem;
-            font-weight: 700;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 2px;
-            background: linear-gradient(90deg, #6c5ce7, transparent);
-            border-radius: 1px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
             margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
         }
 
-        .form-row.single {
-            grid-template-columns: 1fr;
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .form-section:nth-child(1) .section-icon {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+        }
+
+        .form-section:nth-child(2) .section-icon {
+            background: rgba(236, 72, 153, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .form-section:nth-child(3) .section-icon {
+            background: rgba(20, 184, 166, 0.1);
+            color: var(--accent-color);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Form Fields */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 2rem;
             position: relative;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #2d3436;
-            font-size: 1.1rem;
-            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
             transition: all 0.3s ease;
         }
 
-        .required::after {
-            content: ' ✦';
-            color: #fd79a8;
-            font-weight: bold;
-            animation: requirePulse 2s infinite;
+        .form-label.required::after {
+            content: ' *';
+            color: var(--danger-color);
         }
 
-        @keyframes requirePulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.2); }
-        }
-
-        .readonly-field {
-            background: linear-gradient(145deg, #e9ecef 0%, #f8f9fa 100%) !important;
-            border: 3px solid #dee2e6 !important;
-            color: #6c757d !important;
-            cursor: not-allowed !important;
-            position: relative;
-        }
-
-        .readonly-field:focus {
-            box-shadow: none !important;
-            border-color: #dee2e6 !important;
-        }
-
-        .readonly-field::after {
-            content: '🔒';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            opacity: 0.5;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1.25rem 1rem 1.25rem 3.5rem;
-            border: 3px solid #e9ecef;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-            font-family: 'Inter', sans-serif;
-            position: relative;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #fd79a8;
-            background: #ffffff;
-            box-shadow: 0 0 0 0.25rem rgba(253, 121, 168, 0.15),
-            0 10px 30px rgba(253, 121, 168, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .form-control:valid:not(.readonly-field) {
-            border-color: #00b894;
-            background: linear-gradient(145deg, #f0fff4 0%, #e8f5e8 100%);
-        }
-
-        .form-control.error {
-            border-color: #e74c3c;
-            background: linear-gradient(145deg, #fdf2f2 0%, #ffeaa7 100%);
-            box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
-            animation: fieldShake 0.5s ease-in-out;
-        }
-
-        @keyframes fieldShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .input-group {
+        .input-wrapper {
             position: relative;
         }
 
         .input-icon {
             position: absolute;
-            left: 1.25rem;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1.4rem;
-            z-index: 2;
+            color: var(--text-secondary);
             transition: all 0.3s ease;
-            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        .input-group:focus-within .input-icon {
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-input:focus ~ .input-icon {
+            color: var(--primary-color);
             transform: translateY(-50%) scale(1.1);
-            filter: drop-shadow(0 0 8px rgba(108, 92, 231, 0.5));
-            animation: iconBounce 0.6s ease;
         }
 
-        @keyframes iconBounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(-50%) scale(1.1);
-            }
-            40% {
-                transform: translateY(-60%) scale(1.2);
-            }
-            60% {
-                transform: translateY(-55%) scale(1.15);
-            }
+        .form-input.has-error {
+            border-color: var(--danger-color);
+            animation: shake 0.5s ease-in-out;
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .form-input.has-success {
+            border-color: var(--success-color);
+        }
+
+        .form-input.modified {
+            background: rgba(251, 191, 36, 0.05);
+            border-color: var(--warning-color);
+        }
+
+        /* Help Text */
         .help-text {
-            font-size: 0.95rem;
-            color: #636e72;
-            margin-top: 0.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            border-left: 3px solid #74b9ff;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
 
+        .form-group:hover .help-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Error Messages */
         .error-message {
-            color: #d63031;
-            font-size: 0.95rem;
-            margin-top: 0.75rem;
-            display: none;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
-            border-radius: 10px;
-            border-left: 3px solid #d63031;
-            animation: errorSlideIn 0.3s ease-out;
-        }
-
-        @keyframes errorSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid var(--danger-color);
+            border-radius: 6px;
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            opacity: 0;
+            transform: translateY(-10px) scale(0.9);
+            transition: all 0.3s ease;
+            visibility: hidden;
         }
 
         .error-message.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            visibility: visible;
+            animation: errorPop 0.5s ease-out;
+        }
+
+        @keyframes errorPop {
+            0% { transform: scale(0.8) translateY(-10px); }
+            50% { transform: scale(1.05) translateY(2px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
+        /* Success Message */
+        .success-message {
             display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid var(--success-color);
+            border-radius: 6px;
+            color: var(--success-color);
+            font-size: 0.875rem;
+            opacity: 0;
+            transform: translateY(-10px) scale(0.9);
+            transition: all 0.3s ease;
         }
 
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            animation: successPop 0.5s ease-out;
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(0.8) translateY(-10px); }
+            50% { transform: scale(1.05) translateY(2px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
+        /* Change Indicator */
         .change-indicator {
-            background: linear-gradient(135deg, #fdcb6e 0%, #fd79a8 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 0.75rem;
-            margin-top: 0.75rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: none;
-            position: relative;
-            overflow: hidden;
-            animation: changeIndicatorPulse 2s infinite;
-        }
-
-        @keyframes changeIndicatorPulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(253, 203, 110, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(253, 203, 110, 0);
-            }
-        }
-
-        .change-indicator::before {
-            content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: changeShimmer 2s infinite;
-        }
-
-        @keyframes changeShimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--warning-color);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
         .change-indicator.show {
-            display: block;
+            opacity: 1;
+            animation: blink 2s ease-in-out infinite;
         }
 
-        .form-actions {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        .btn-update {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            color: white;
-            padding: 1.5rem 3rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            min-width: 200px;
-            box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-update::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-update:hover:not(:disabled)::before {
-            left: 100%;
-        }
-
-        .btn-update:hover:not(:disabled) {
-            background: linear-gradient(135deg, #00a085 0%, #00b8b3 100%);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 184, 148, 0.4);
-        }
-
-        .btn-update:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        .btn-update:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
-        }
-
-        .btn-loading {
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        /* Changes Summary */
         .changes-summary {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            background: var(--info-gradient);
             color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 2rem;
+            padding: 1.5rem;
+            border-radius: 16px;
             margin-bottom: 2rem;
             display: none;
-            box-shadow: 0 15px 35px rgba(116, 185, 255, 0.3);
+            animation: slideDown 0.5s ease-out;
             position: relative;
             overflow: hidden;
-            animation: summarySlideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes summarySlideIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
         }
 
         .changes-summary.show {
@@ -674,121 +611,382 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: summaryShine 3s infinite;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: sweep 3s linear infinite;
         }
 
-        @keyframes summaryShine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        @keyframes sweep {
+            0% { transform: translateX(-100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(-100%) rotate(45deg); }
         }
 
-        .changes-summary h4 {
-            color: white;
-            margin: 0 0 1rem 0;
-            font-size: 1.3rem;
-            font-weight: 700;
+        .changes-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
         .changes-list {
-            margin: 0;
-            padding-left: 2rem;
-            color: white;
+            list-style: none;
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
-        .changes-list li {
-            margin-bottom: 0.5rem;
+        .change-item {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            animation: slideInLeft 0.5s ease-out forwards;
+        }
+
+        .change-item:nth-child(1) { animation-delay: 0.1s; }
+        .change-item:nth-child(2) { animation-delay: 0.2s; }
+        .change-item:nth-child(3) { animation-delay: 0.3s; }
+        .change-item:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
             font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .original-values {
-            background: linear-gradient(135deg, #ddd6fe 0%, #c7d2fe 100%);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            border: 2px solid rgba(139, 92, 246, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             position: relative;
             overflow: hidden;
         }
 
-        .original-values::before {
+        .btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #8b5cf6, #a78bfa, #c4b5fd);
-            animation: originalValuesGradient 3s ease-in-out infinite;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        @keyframes originalValuesGradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
-        .original-values h5 {
-            margin: 0 0 1rem 0;
-            color: #6b21a8;
-            font-size: 1.1rem;
-            font-weight: 700;
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
         }
 
-        .original-value {
-            font-size: 0.95rem;
-            color: #6b21a8;
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 8px;
-            border-left: 3px solid #8b5cf6;
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
-            color: white;
-            padding: 1.5rem 3rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(99, 110, 114, 0.3);
-            font-family: 'Inter', sans-serif;
+            background: #E5E7EB;
+            color: var(--text-primary);
         }
 
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            background: #D1D5DB;
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(99, 110, 114, 0.4);
         }
 
-        /* Alert Styles */
-        .alert {
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
+        /* Loading State */
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spinner 0.8s linear infinite;
+        }
+
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            min-width: 350px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
             display: flex;
             align-items: center;
             gap: 1rem;
-            animation: alertSlideIn 0.5s ease-out;
             position: relative;
-            overflow: hidden;
+            transform: translateX(400px);
+            animation: toastSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
 
-        @keyframes alertSlideIn {
+        @keyframes toastSlideIn {
+            to { transform: translateX(0); }
+        }
+
+        .toast.hide {
+            animation: toastSlideOut 0.5s ease-out forwards;
+        }
+
+        @keyframes toastSlideOut {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .toast-error {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        .toast-warning {
+            background: var(--warning-gradient);
+            color: white;
+        }
+
+        .toast-info {
+            background: var(--info-gradient);
+            color: white;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+            animation: toastIconPop 0.5s ease-out;
+        }
+
+        @keyframes toastIconPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            animation: progress 5s linear forwards;
+        }
+
+        @keyframes progress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+            animation: modalBounce 0.5s ease-out;
+        }
+
+        @keyframes modalBounce {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            animation: modalIconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes modalIconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-message {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateX(-50px);
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
@@ -796,942 +994,923 @@
             }
         }
 
-        .alert-error {
-            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
-            color: white;
-            box-shadow: 0 10px 30px rgba(255, 118, 117, 0.3);
-        }
-
-        .alert-error::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: alertShine 2s infinite;
-        }
-
-        @keyframes alertShine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .icon-error {
-            font-size: 1.5rem;
-            animation: errorBounce 1s infinite;
-        }
-
-        @keyframes errorBounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
             }
-            40% {
-                transform: translateY(-10px);
+            50% {
+                transform: scale(1.05);
             }
-            60% {
-                transform: translateY(-5px);
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
             }
         }
 
-        /* Mobile Responsiveness */
+        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
 
-            .edit-customer-header {
-                padding: 2rem 1.5rem;
-                margin-bottom: 2rem;
-                border-radius: 20px;
+            .page-header {
+                padding: 2rem;
             }
 
-            .header-info {
+            .header-content {
                 flex-direction: column;
                 text-align: center;
                 gap: 1.5rem;
             }
 
-            .customer-info-section {
+            .header-left {
                 flex-direction: column;
-                gap: 1rem;
-            }
-
-            .customer-avatar-edit {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-
-            .header-text h1 {
-                font-size: 2rem;
             }
 
             .form-container {
-                padding: 2rem;
-                margin: 1rem;
-                border-radius: 20px;
-            }
-
-            .form-section {
                 padding: 1.5rem;
-                margin-bottom: 2rem;
             }
 
-            .form-row {
+            .form-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
             }
 
             .form-actions {
                 flex-direction: column;
-                align-items: center;
-                gap: 1rem;
             }
 
-            .btn-update,
-            .btn-secondary {
+            .btn {
                 width: 100%;
-                max-width: 300px;
+                justify-content: center;
             }
-        }
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #5f4fcf 0%, #9085e8 100%);
+            .toast {
+                min-width: auto;
+                margin: 0 1rem;
+            }
         }
     </style>
 </head>
 <body>
-<!-- Floating Animation Elements -->
-<div class="floating-elements">
-    <div class="floating-circle"></div>
-    <div class="floating-circle"></div>
-    <div class="floating-circle"></div>
+<!-- Animated Background -->
+<div class="bg-animation">
+    <div class="floating-element">📚</div>
+    <div class="floating-element">📖</div>
+    <div class="floating-element">📕</div>
 </div>
 
-<!-- Check if user is logged in -->
+<!-- Check Authentication -->
     <%
-    if (session == null || session.getAttribute("adminUser") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
-        return;
-    }
+        if (session == null || session.getAttribute("adminUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
 
-    Customer customer = (Customer) request.getAttribute("customer");
-    if (customer == null) {
-        response.sendRedirect(request.getContextPath() + "/customer");
-        return;
-    }
-%>
+        Customer customer = (Customer) request.getAttribute("customer");
+        if (customer == null) {
+            response.sendRedirect(request.getContextPath() + "/customer");
+            return;
+        }
+    %>
 
-<!-- Navigation Bar -->
+<!-- Navigation -->
 <nav class="navbar">
-    <div class="navbar-content">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
-            Pahana Edu Management
+    <div class="navbar-container">
+        <a href="${pageContext.request.contextPath}/dashboard" class="nav-brand">
+            <i class="fas fa-store"></i>
+            Pahana Edu
         </a>
-        <ul class="navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a></li>
-            <li><a href="${pageContext.request.contextPath}/customer" class="nav-link active">Customers</a></li>
-            <li><a href="${pageContext.request.contextPath}/item" class="nav-link">Items</a></li>
-            <li><a href="${pageContext.request.contextPath}/bill" class="nav-link">Billing</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">Help</a></li>
-            <li><a href="${pageContext.request.contextPath}/logout" class="nav-link logout">Logout</a></li>
+        <ul class="nav-menu">
+            <li>
+                <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/customer" class="nav-link active">
+                    <i class="fas fa-user-friends"></i>
+                    Customers
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/item" class="nav-link">
+                    <i class="fas fa-books"></i>
+                    Inventory
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/bill" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Billing
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">
+                    <i class="fas fa-headset"></i>
+                    Support
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/logout" class="nav-link">
+                    <i class="fas fa-power-off"></i>
+                    Logout
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
 
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer">
+    <% if (request.getAttribute("errorMessage") != null) { %>
+    <div class="toast toast-error" id="errorToast">
+        <i class="fas fa-exclamation-circle toast-icon"></i>
+        <div class="toast-content">
+            <div class="toast-title">Error</div>
+            <div class="toast-message"><%= request.getAttribute("errorMessage") %></div>
+        </div>
+        <button class="toast-close" onclick="closeToast('errorToast')">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="toast-progress"></div>
+    </div>
+    <% } %>
+</div>
+
+<!-- Main Container -->
 <div class="container">
     <!-- Page Header -->
-    <div class="edit-customer-header">
-        <div class="header-info">
-            <div class="customer-info-section">
-                <div class="customer-avatar-edit">
-                    <%= customer.getName().substring(0, 1).toUpperCase() %>
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="customer-avatar">
+                    <%= customer.getName().substring(0, Math.min(2, customer.getName().length())).toUpperCase() %>
                 </div>
-                <div class="header-text">
-                    <h1>🎨 Edit Customer</h1>
-                    <p>Modify <%= customer.getName() %>'s profile information</p>
+                <div class="header-info">
+                    <h1>
+                        <i class="fas fa-user-edit"></i>
+                        Edit Customer
+                    </h1>
+                    <p>Update information for <%= customer.getName() %></p>
                 </div>
             </div>
-            <div class="account-badge">
-                🏆 <%= customer.getAccountNumber() %>
+            <div class="membership-indicator membership-<%= customer.getMembershipType().toLowerCase() %>">
+                <% if ("VIP".equals(customer.getMembershipType())) { %>
+                <i class="fas fa-crown"></i>
+                <% } else if ("PREMIUM".equals(customer.getMembershipType())) { %>
+                <i class="fas fa-star"></i>
+                <% } else { %>
+                <i class="fas fa-user"></i>
+                <% } %>
+                <%= customer.getMembershipType() %> Member
             </div>
         </div>
     </div>
-
-    <!-- Display Error Messages -->
-        <% if (request.getAttribute("errorMessage") != null) { %>
-    <div class="alert alert-error">
-        <i class="icon-error">⚠️</i>
-        <%= request.getAttribute("errorMessage") %>
-    </div>
-        <% } %>
 
     <!-- Changes Summary -->
     <div id="changesSummary" class="changes-summary">
-        <h4>🔄 Pending Changes</h4>
-        <ul id="changesList" class="changes-list"></ul>
+        <div class="changes-header">
+            <i class="fas fa-info-circle"></i>
+            <span>Unsaved Changes</span>
+        </div>
+        <ul class="changes-list" id="changesList"></ul>
     </div>
 
-    <!-- Edit Customer Form -->
-    <div class="form-container">
-        <div class="form-header">
-            <h2>Customer Information</h2>
-            <p>Update the customer details with our enhanced interface</p>
-        </div>
 
+    <!-- Form Container -->
+    <div class="form-container">
         <form id="editCustomerForm" action="${pageContext.request.contextPath}/customer" method="post" novalidate>
             <input type="hidden" name="action" value="update">
-            <input type="hidden" name="accountNumber" value="<%= customer.getAccountNumber() %>">
-
-            <!-- Account Information Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    🎯 Account Information
-                </h3>
-
-                <div class="form-group">
-                    <label for="accountNumber">Account Number</label>
-                    <div class="input-group">
-                        <span class="input-icon">🎯</span>
-                        <input type="text"
-                               id="accountNumber"
-                               class="form-control readonly-field"
-                               value="<%= customer.getAccountNumber() %>"
-                               readonly>
-                    </div>
-                    <div class="help-text">
-                        🔐 Account number is permanently locked after creation
-                    </div>
-                </div>
-            </div>
+            <input type="hidden" name="customerId" value="<%= customer.getCustomerId() %>">
 
             <!-- Personal Information Section -->
             <div class="form-section">
-                <h3 class="section-title">
-                    👑 Personal Information
-                </h3>
-
-                <div class="form-group">
-                    <label for="name" class="required">Full Name</label>
-                    <div class="input-group">
-                        <span class="input-icon">👤</span>
-                        <input type="text"
-                               id="name"
-                               name="name"
-                               class="form-control"
-                               value="<%= customer.getName() %>"
-                               placeholder="Enter customer's full name"
-                               required
-                               maxlength="100"
-                               pattern="[A-Za-z\s.']+">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-user"></i>
                     </div>
-                    <div class="help-text">
-                        ✨ Enter the customer's complete name
-                    </div>
-                    <div id="nameError" class="error-message">
-                        🔥 <span></span>
-                    </div>
-                    <div id="nameChange" class="change-indicator">
-                        Original: <span id="nameOriginal"><%= customer.getName() %></span>
-                    </div>
+                    <h3 class="section-title">Personal Information</h3>
                 </div>
 
-                <div class="form-group">
-                    <label for="address" class="required">Address</label>
-                    <div class="input-group">
-                        <span class="input-icon">🏰</span>
-                        <textarea id="address"
-                                  name="address"
-                                  class="form-control"
-                                  placeholder="Enter complete address"
-                                  required
-                                  maxlength="500"
-                                  rows="3"><%= customer.getAddress() %></textarea>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name" class="form-label required">Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text"
+                                   id="name"
+                                   name="name"
+                                   class="form-input"
+                                   value="<%= customer.getName() %>"
+                                   placeholder="Enter customer name"
+                                   required
+                                   maxlength="100"
+                                   data-original="<%= customer.getName() %>">
+                            <span class="change-indicator" id="nameChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Customer's full name for identification
+                        </div>
+                        <div class="error-message" id="nameError">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span></span>
+                        </div>
                     </div>
-                    <div class="help-text">
-                        🗺️ Include complete address with postal code
-                    </div>
-                    <div id="addressError" class="error-message">
-                        🔥 <span></span>
-                    </div>
-                    <div id="addressChange" class="change-indicator">
-                        Original: <span id="addressOriginal"><%= customer.getAddress() %></span>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="telephone" class="required">Telephone Number</label>
-                    <div class="input-group">
-                        <span class="input-icon">📱</span>
-                        <input type="tel"
-                               id="telephone"
-                               name="telephone"
-                               class="form-control"
-                               value="<%= customer.getTelephone() %>"
-                               placeholder="Enter contact number"
-                               required
-                               maxlength="15"
-                               pattern="[0-9\s\-\+\(\)]+">
+                    <div class="form-group">
+                        <label for="email" class="form-label required">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email"
+                                   id="email"
+                                   name="email"
+                                   class="form-input"
+                                   value="<%= customer.getEmail() %>"
+                                   placeholder="customer@example.com"
+                                   required
+                                   maxlength="100"
+                                   data-original="<%= customer.getEmail() %>">
+                            <span class="change-indicator" id="emailChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Email for receipts and notifications
+                        </div>
+                        <div class="error-message" id="emailError">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span></span>
+                        </div>
                     </div>
-                    <div class="help-text">
-                        📞 Enter a valid contact number
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label required">Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel"
+                                   id="phone"
+                                   name="phone"
+                                   class="form-input"
+                                   value="<%= customer.getPhone() %>"
+                                   placeholder="+1 (555) 123-4567"
+                                   required
+                                   maxlength="15"
+                                   data-original="<%= customer.getPhone() %>">
+                            <span class="change-indicator" id="phoneChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Contact number for order updates
+                        </div>
+                        <div class="error-message" id="phoneError">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span></span>
+                        </div>
                     </div>
-                    <div id="telephoneError" class="error-message">
-                        🔥 <span></span>
-                    </div>
-                    <div id="telephoneChange" class="change-indicator">
-                        Original: <span id="telephoneOriginal"><%= customer.getTelephone() %></span>
+
+                    <div class="form-group">
+                        <label for="address" class="form-label required">Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-map-marker-alt input-icon"></i>
+                            <textarea id="address"
+                                      name="address"
+                                      class="form-input"
+                                      placeholder="Enter complete address"
+                                      required
+                                      rows="3"
+                                      maxlength="500"
+                                      data-original="<%= customer.getAddress() %>"><%= customer.getAddress() %></textarea>
+                            <span class="change-indicator" id="addressChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Delivery address for book orders
+                        </div>
+                        <div class="error-message" id="addressError">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Usage Information Section -->
+            <!-- Membership Information Section -->
             <div class="form-section">
-                <h3 class="section-title">
-                    ⚡ Usage Information
-                </h3>
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3 class="section-title">Membership & Billing</h3>
+                </div>
 
-                <div class="form-group">
-                    <label for="unitsConsumed" class="required">Units Consumed</label>
-                    <div class="input-group">
-                        <span class="input-icon">⚡</span>
-                        <input type="number"
-                               id="unitsConsumed"
-                               name="unitsConsumed"
-                               class="form-control"
-                               value="<%= customer.getUnitsConsumed() %>"
-                               placeholder="Enter current reading"
-                               required
-                               min="0"
-                               max="9999">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="membershipType" class="form-label">Membership Type</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-crown input-icon"></i>
+                            <select id="membershipType"
+                                    name="membershipType"
+                                    class="form-input"
+                                    data-original="<%= customer.getMembershipType() %>">
+                                <option value="REGULAR" <%= "REGULAR".equals(customer.getMembershipType()) ? "selected" : "" %>>Regular Member</option>
+                                <option value="PREMIUM" <%= "PREMIUM".equals(customer.getMembershipType()) ? "selected" : "" %>>Premium Member (10% off)</option>
+                                <option value="VIP" <%= "VIP".equals(customer.getMembershipType()) ? "selected" : "" %>>VIP Member (20% off)</option>
+                            </select>
+                            <span class="change-indicator" id="membershipTypeChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Membership level affects discounts
+                        </div>
                     </div>
-                    <div class="help-text">
-                        🔋 Current meter reading or consumption units
+
+                    <div class="form-group">
+                        <label for="totalPurchases" class="form-label">Total Purchases</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-dollar-sign input-icon"></i>
+                            <input type="number"
+                                   id="totalPurchases"
+                                   name="totalPurchases"
+                                   class="form-input"
+                                   value="<%= customer.getTotalPurchases() %>"
+                                   placeholder="0.00"
+                                   step="0.01"
+                                   min="0"
+                                   data-original="<%= customer.getTotalPurchases() %>">
+                            <span class="change-indicator" id="totalPurchasesChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            Lifetime purchase amount
+                        </div>
+                        <div class="error-message" id="totalPurchasesError">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span></span>
+                        </div>
                     </div>
-                    <div id="unitsConsumedError" class="error-message">
-                        🔥 <span></span>
-                    </div>
-                    <div id="unitsConsumedChange" class="change-indicator">
-                        Original: <span id="unitsConsumedOriginal"><%= customer.getUnitsConsumed() %></span> units
+
+                    <div class="form-group">
+                        <label for="loyaltyPoints" class="form-label">Loyalty Points</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-coins input-icon"></i>
+                            <input type="number"
+                                   id="loyaltyPoints"
+                                   name="loyaltyPoints"
+                                   class="form-input"
+                                   value="<%= customer.getLoyaltyPoints() %>"
+                                   placeholder="0"
+                                   min="0"
+                                   data-original="<%= customer.getLoyaltyPoints() %>">
+                            <span class="change-indicator" id="loyaltyPointsChange"></span>
+                        </div>
+                        <div class="help-text">
+                            <i class="fas fa-info-circle"></i>
+                            1 point = $0.01 discount
+                        </div>
+                        <div class="error-message" id="loyaltyPointsError">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Original Values (Hidden for reference) -->
-            <div class="original-values">
-                <h5>📋 Original Values (for reference)</h5>
-                <div class="original-value"><strong>Name:</strong> <%= customer.getName() %></div>
-                <div class="original-value"><strong>Address:</strong> <%= customer.getAddress() %></div>
-                <div class="original-value"><strong>Telephone:</strong> <%= customer.getTelephone() %></div>
-                <div class="original-value"><strong>Units:</strong> <%= customer.getUnitsConsumed() %></div>
+            <!-- Account Status Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3 class="section-title">Account Information</h3>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Customer ID</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hashtag input-icon"></i>
+                            <input type="text"
+                                   class="form-input"
+                                   value="<%= customer.getCustomerId() %>"
+                                   readonly
+                                   style="background: #F3F4F6; cursor: not-allowed;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Member Since</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                            <input type="text"
+                                   class="form-input"
+                                   value="<%= customer.getCreatedAt() != null ? new java.text.SimpleDateFormat("MMM dd, yyyy").format(customer.getCreatedAt()) : "N/A" %>"
+                                   readonly
+                                   style="background: #F3F4F6; cursor: not-allowed;">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Form Actions -->
             <div class="form-actions">
-                <button type="submit" id="updateBtn" class="btn-update">
-                    <span class="btn-text">🚀 Update Customer</span>
-                    <span class="btn-loading" style="display: none;">
-                            <span class="spinner"></span>
-                            Updating...
-                        </span>
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-save"></i>
+                    <span class="btn-text">Save Changes</span>
                 </button>
-                <a href="${pageContext.request.contextPath}/customer?action=view&accountNumber=<%= customer.getAccountNumber() %>"
-                   class="btn btn-secondary btn-lg">
-                    🔙 Cancel
+                <a href="${pageContext.request.contextPath}/customer?action=view&customerId=<%= customer.getCustomerId() %>"
+                   class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancel
                 </a>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    // Store original values
-    const originalValues = {
-        name: '<%= customer.getName() %>',
-        address: '<%= customer.getAddress() %>',
-        telephone: '<%= customer.getTelephone() %>',
-        unitsConsumed: '<%= customer.getUnitsConsumed() %>'
-    };
+<!-- Confirmation Modal -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+        <div class="modal-icon">
+            <i class="fas fa-question"></i>
+        </div>
+        <h3 class="modal-title">Confirm Changes</h3>
+        <p class="modal-message">Are you sure you want to save these changes?</p>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="confirmSave()">
+                <i class="fas fa-check"></i>
+                Yes, Save
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
 
-    // Form elements
+<script>
+    // Global variables
     const form = document.getElementById('editCustomerForm');
-    const updateBtn = document.getElementById('updateBtn');
+    const submitBtn = document.getElementById('submitBtn');
     const changesSummary = document.getElementById('changesSummary');
     const changesList = document.getElementById('changesList');
+    const toastContainer = document.getElementById('toastContainer');
 
-    // Field references
+    // Field tracking
     const fields = {
         name: document.getElementById('name'),
+        email: document.getElementById('email'),
+        phone: document.getElementById('phone'),
         address: document.getElementById('address'),
-        telephone: document.getElementById('telephone'),
-        unitsConsumed: document.getElementById('unitsConsumed')
+        membershipType: document.getElementById('membershipType'),
+        totalPurchases: document.getElementById('totalPurchases'),
+        loyaltyPoints: document.getElementById('loyaltyPoints')
     };
 
-    // Validation rules (same as add form)
-    const validationRules = {
+    // Validation rules
+    const validators = {
         name: {
             required: true,
             minLength: 2,
             maxLength: 100,
-            pattern: /^[A-Za-z\s.']+$/,
-            message: 'Name must be 2-100 characters long and contain only letters, spaces, dots, and apostrophes'
+            pattern: /^[A-Za-z\s\-'.]+$/,
+            message: 'Name should only contain letters, spaces, hyphens, and apostrophes'
+        },
+        email: {
+            required: true,
+            pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: 'Please enter a valid email address'
+        },
+        phone: {
+            required: true,
+            pattern: /^[\d\s\-\+\(\)]+$/,
+            minLength: 7,
+            maxLength: 15,
+            message: 'Please enter a valid phone number'
         },
         address: {
             required: true,
-            minLength: 5,
+            minLength: 10,
             maxLength: 500,
-            message: 'Address must be 5-500 characters long'
+            message: 'Address must be between 10 and 500 characters'
         },
-        telephone: {
-            required: true,
-            minLength: 7,
-            maxLength: 15,
-            pattern: /^[0-9\s\-\+\(\)]+$/,
-            message: 'Telephone must be 7-15 characters long and contain only numbers, spaces, hyphens, plus signs, and parentheses'
-        },
-        unitsConsumed: {
-            required: true,
+        totalPurchases: {
             min: 0,
-            max: 9999,
-            message: 'Units consumed must be between 0 and 9999'
+            pattern: /^\d+(\.\d{1,2})?$/,
+            message: 'Please enter a valid amount'
+        },
+        loyaltyPoints: {
+            min: 0,
+            pattern: /^\d+$/,
+            message: 'Please enter a valid number'
         }
     };
 
-    // Validate field function (same as add form)
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeForm();
+        setupEventListeners();
+        checkForChanges();
+
+        // Show keyboard shortcuts tooltip
+        setTimeout(() => {
+            showToast('info', 'Tip', 'Use Ctrl+S to save changes quickly!');
+        }, 3000);
+    });
+
+    // Initialize form
+    function initializeForm() {
+        // Focus first field
+        fields.name.focus();
+
+        // Load saved draft if exists
+        loadDraft();
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+        // Field change listeners
+        Object.keys(fields).forEach(fieldName => {
+            const field = fields[fieldName];
+
+            field.addEventListener('input', () => {
+                validateField(fieldName);
+                checkForChanges();
+                saveDraft();
+            });
+
+            field.addEventListener('blur', () => {
+                validateField(fieldName);
+            });
+
+            // Add animation on focus
+            field.addEventListener('focus', function() {
+                this.parentElement.querySelector('.input-icon').style.color = 'var(--primary-color)';
+            });
+
+            field.addEventListener('blur', function() {
+                this.parentElement.querySelector('.input-icon').style.color = 'var(--text-secondary)';
+            });
+        });
+
+        // Form submit
+        form.addEventListener('submit', handleSubmit);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', handleKeyboardShortcuts);
+
+        // Prevent accidental navigation
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Phone formatting
+        fields.phone.addEventListener('input', formatPhoneNumber);
+
+        // Email lowercase
+        fields.email.addEventListener('blur', function() {
+            this.value = this.value.toLowerCase().trim();
+        });
+    }
+
+    // Validate field
     function validateField(fieldName) {
         const field = fields[fieldName];
-        const rule = validationRules[fieldName];
         const value = field.value.trim();
+        const validator = validators[fieldName];
         const errorElement = document.getElementById(fieldName + 'Error');
+
+        if (!validator) return true;
 
         let isValid = true;
         let errorMessage = '';
 
-        if (rule.required && !value) {
+        // Required check
+        if (validator.required && !value) {
             isValid = false;
-            errorMessage = `${fieldName} is required`;
-        } else if (rule.minLength && value.length < rule.minLength) {
+            errorMessage = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ' is required';
+        }
+        // Min length check
+        else if (validator.minLength && value.length < validator.minLength) {
             isValid = false;
-            errorMessage = `${fieldName} must be at least ${rule.minLength} characters`;
-        } else if (rule.maxLength && value.length > rule.maxLength) {
+            errorMessage = 'Minimum ' + validator.minLength + ' characters required';
+        }
+        // Max length check
+        else if (validator.maxLength && value.length > validator.maxLength) {
             isValid = false;
-            errorMessage = `${fieldName} must not exceed ${rule.maxLength} characters`;
-        } else if (rule.min !== undefined && parseInt(value) < rule.min) {
+            errorMessage = 'Maximum ' + validator.maxLength + ' characters allowed';
+        }
+        // Pattern check
+        else if (validator.pattern && !validator.pattern.test(value)) {
             isValid = false;
-            errorMessage = `${fieldName} must be at least ${rule.min}`;
-        } else if (rule.max !== undefined && parseInt(value) > rule.max) {
+            errorMessage = validator.message;
+        }
+        // Min value check
+        else if (validator.min !== undefined && parseFloat(value) < validator.min) {
             isValid = false;
-            errorMessage = `${fieldName} must not exceed ${rule.max}`;
-        } else if (rule.pattern && !rule.pattern.test(value)) {
-            isValid = false;
-            errorMessage = rule.message;
+            errorMessage = 'Value must be at least ' + validator.min;
         }
 
         // Update UI
         if (isValid) {
-            field.classList.remove('error');
-            errorElement.classList.remove('show');
+            field.classList.remove('has-error');
+            field.classList.add('has-success');
+            if (errorElement) {
+                errorElement.classList.remove('show');
+            }
         } else {
-            field.classList.add('error');
-            errorElement.querySelector('span').textContent = errorMessage;
-            errorElement.classList.add('show');
+            field.classList.add('has-error');
+            field.classList.remove('has-success');
+            if (errorElement) {
+                errorElement.querySelector('span').textContent = errorMessage;
+                errorElement.classList.add('show');
+            }
         }
 
         return isValid;
     }
 
-    // Check for changes and update UI
+    // Check for changes
     function checkForChanges() {
         const changes = [];
         let hasChanges = false;
 
-        for (const fieldName in fields) {
+        Object.keys(fields).forEach(fieldName => {
             const field = fields[fieldName];
             const currentValue = field.value.trim();
-            const originalValue = originalValues[fieldName].toString().trim();
+            const originalValue = field.getAttribute('data-original').trim();
             const changeIndicator = document.getElementById(fieldName + 'Change');
 
             if (currentValue !== originalValue) {
                 hasChanges = true;
-                changes.push(`${fieldName}: "${originalValue}" → "${currentValue}"`);
-                changeIndicator.classList.add('show');
-            } else {
-                changeIndicator.classList.remove('show');
-            }
-        }
-
-        // Update changes summary
-        if (hasChanges) {
-            changesList.innerHTML = changes.map(change => `<li>${change}</li>`).join('');
-            changesSummary.classList.add('show');
-            updateBtn.disabled = false;
-        } else {
-            changesSummary.classList.remove('show');
-            updateBtn.disabled = true;
-        }
-    }
-
-    // Enhanced field interactions with animations
-    function addFieldEnhancements() {
-        for (const fieldName in fields) {
-            const field = fields[fieldName];
-            const inputGroup = field.closest('.input-group');
-            const icon = inputGroup ? inputGroup.querySelector('.input-icon') : null;
-
-            // Focus animations
-            field.addEventListener('focus', function() {
-                if (icon) {
-                    icon.style.transform = 'translateY(-50%) scale(1.2)';
-                    icon.style.filter = 'drop-shadow(0 0 15px rgba(253, 121, 168, 0.7))';
+                field.classList.add('modified');
+                if (changeIndicator) {
+                    changeIndicator.classList.add('show');
                 }
 
-                // Add glow effect to form section
-                const formSection = this.closest('.form-section');
-                formSection.style.transform = 'translateY(-3px)';
-                formSection.style.boxShadow = '0 25px 50px rgba(253, 121, 168, 0.2)';
-            });
+                // Format change text
+                let changeText = formatFieldName(fieldName);
+                let changeItem = '';
 
-            // Blur animations
-            field.addEventListener('blur', function() {
-                if (icon) {
-                    icon.style.transform = 'translateY(-50%) scale(1)';
-                    icon.style.filter = 'drop-shadow(0 0 8px rgba(108, 92, 231, 0.5))';
-                }
-
-                // Remove glow effect
-                const formSection = this.closest('.form-section');
-                formSection.style.transform = 'translateY(0)';
-                formSection.style.boxShadow = '0 20px 40px rgba(108, 92, 231, 0.15)';
-            });
-
-            // Input animations
-            field.addEventListener('input', function() {
-                if (icon) {
-                    icon.style.animation = 'iconBounce 0.6s ease';
-                    setTimeout(() => {
-                        icon.style.animation = '';
-                    }, 600);
-                }
-
-                // Show typing indicator
-                this.style.borderColor = '#74b9ff';
-                this.style.boxShadow = '0 0 0 0.25rem rgba(116, 185, 255, 0.15)';
-
-                setTimeout(() => {
-                    if (!this.classList.contains('error')) {
-                        this.style.borderColor = '';
-                        this.style.boxShadow = '';
-                    }
-                }, 1000);
-            });
-        }
-    }
-
-    // Initialize field enhancements
-    addFieldEnhancements();
-
-    // Enhanced change tracking with visual feedback
-    function enhancedChangeTracking() {
-        for (const fieldName in fields) {
-            const field = fields[fieldName];
-
-            field.addEventListener('input', function() {
-                const currentValue = this.value.trim();
-                const originalValue = originalValues[fieldName].toString().trim();
-
-                if (currentValue !== originalValue) {
-                    // Add change indicator animation
-                    this.style.background = 'linear-gradient(145deg, #fff3cd 0%, #ffeaa7 100%)';
-                    this.style.borderLeft = '4px solid #fd79a8';
+                if (fieldName === 'totalPurchases') {
+                    changeItem = changeText + ': $' + originalValue + ' → $' + currentValue;
+                } else if (fieldName === 'loyaltyPoints') {
+                    changeItem = changeText + ': ' + originalValue + ' → ' + currentValue + ' points';
                 } else {
-                    this.style.background = '';
-                    this.style.borderLeft = '';
+                    changeItem = changeText + ': "' + originalValue + '" → "' + currentValue + '"';
                 }
 
-                checkForChanges();
-            });
-        }
-    }
-
-    // Initialize enhanced change tracking
-    enhancedChangeTracking();
-
-    // Progress indicator for form completion
-    function addProgressIndicator() {
-        const progressBar = document.createElement('div');
-        progressBar.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 4px;
-            background: linear-gradient(90deg, #fd79a8 0%, #74b9ff 100%);
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 9999;
-            box-shadow: 0 0 15px rgba(253, 121, 168, 0.6);
-        `;
-
-        document.body.appendChild(progressBar);
-
-        function updateProgress() {
-            const totalFields = Object.keys(fields).length;
-            let validFields = 0;
-
-            for (const fieldName in fields) {
-                if (fields[fieldName].value.trim() && !fields[fieldName].classList.contains('error')) {
-                    validFields++;
-                }
-            }
-
-            const progress = (validFields / totalFields) * 100;
-            progressBar.style.width = progress + '%';
-
-            // Dynamic color based on progress
-            if (progress < 30) {
-                progressBar.style.background = 'linear-gradient(90deg, #ff7675 0%, #d63031 100%)';
-            } else if (progress < 70) {
-                progressBar.style.background = 'linear-gradient(90deg, #fdcb6e 0%, #fd79a8 100%)';
+                changes.push(changeItem);
             } else {
-                progressBar.style.background = 'linear-gradient(90deg, #00b894 0%, #74b9ff 100%)';
-            }
-        }
-
-        // Update progress on field changes
-        for (const fieldName in fields) {
-            fields[fieldName].addEventListener('input', updateProgress);
-            fields[fieldName].addEventListener('blur', updateProgress);
-        }
-
-        updateProgress();
-    }
-
-    // Initialize progress indicator
-    addProgressIndicator();
-
-    // Add event listeners
-    for (const fieldName in fields) {
-        const field = fields[fieldName];
-
-        field.addEventListener('input', () => {
-            checkForChanges();
-            if (field.classList.contains('error')) {
-                validateField(fieldName);
+                field.classList.remove('modified');
+                if (changeIndicator) {
+                    changeIndicator.classList.remove('show');
+                }
             }
         });
 
-        field.addEventListener('blur', () => validateField(fieldName));
+        // Update UI
+        if (hasChanges) {
+            let changesHTML = '';
+            changes.forEach((change, index) => {
+                changesHTML += '<li class="change-item" style="animation-delay: ' + (index * 0.1) + 's;">';
+                changesHTML += '<i class="fas fa-chevron-right"></i> ' + change;
+                changesHTML += '</li>';
+            });
+            changesList.innerHTML = changesHTML;
+            changesSummary.classList.add('show');
+            submitBtn.disabled = false;
+        } else {
+            changesSummary.classList.remove('show');
+            submitBtn.disabled = true;
+        }
     }
 
-    // Enhanced form submission with animation
-    form.addEventListener('submit', function(e) {
+    // Format field name
+    function formatFieldName(fieldName) {
+        return fieldName
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, str => str.toUpperCase());
+    }
+
+    // Handle form submit
+    function handleSubmit(e) {
         e.preventDefault();
 
         // Validate all fields
         let isValid = true;
-        for (const fieldName in fields) {
+        Object.keys(fields).forEach(fieldName => {
             if (!validateField(fieldName)) {
                 isValid = false;
             }
-        }
+        });
 
         if (!isValid) {
-            const firstError = form.querySelector('.error');
-            if (firstError) {
-                firstError.focus();
-                firstError.style.animation = 'fieldShake 0.5s ease-in-out';
-                setTimeout(() => {
-                    firstError.style.animation = '';
-                }, 500);
-            }
+            showToast('error', 'Validation Error', 'Please fix all errors before submitting');
             return;
         }
 
-        // Check if there are actually changes
-        checkForChanges();
-        if (updateBtn.disabled) {
-            // Show no changes animation
-            const noChangesAlert = document.createElement('div');
-            noChangesAlert.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: linear-gradient(135deg, #fdcb6e 0%, #fd79a8 100%);
-                color: white;
-                padding: 2rem;
-                border-radius: 15px;
-                box-shadow: 0 15px 35px rgba(253, 203, 110, 0.4);
-                z-index: 10000;
-                text-align: center;
-                animation: bounceIn 0.6s ease-out;
-            `;
-            noChangesAlert.innerHTML = `
-                <h3 style="margin: 0 0 1rem 0;">🤔 No Changes Detected</h3>
-                <p style="margin: 0;">Please make changes before updating.</p>
-            `;
-
-            document.body.appendChild(noChangesAlert);
-
-            setTimeout(() => {
-                noChangesAlert.style.animation = 'fadeOut 0.3s ease-out forwards';
-                setTimeout(() => {
-                    document.body.removeChild(noChangesAlert);
-                }, 300);
-            }, 2000);
-
+        // Check for changes
+        if (submitBtn.disabled) {
+            showToast('warning', 'No Changes', 'No changes have been made');
             return;
         }
 
-        // Enhanced confirmation dialog
-        const confirmationDialog = document.createElement('div');
-        confirmationDialog.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            animation: fadeIn 0.3s ease-out;
-        `;
-
-        confirmationDialog.innerHTML = `
-            <div style="
-                background: white;
-                padding: 2rem;
-                border-radius: 20px;
-                max-width: 500px;
-                text-align: center;
-                animation: bounceIn 0.6s ease-out;
-                box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            ">
-                <h3 style="margin: 0 0 1rem 0; color: #2d3436;">💾 Confirm Changes</h3>
-                <p style="margin: 0 0 2rem 0; color: #636e72;">Are you sure you want to save these changes?</p>
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button id="confirmYes" style="
-                        background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-                        color: white;
-                        border: none;
-                        padding: 1rem 2rem;
-                        border-radius: 50px;
-                        cursor: pointer;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                    ">✅ Yes, Save</button>
-                    <button id="confirmNo" style="
-                        background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
-                        color: white;
-                        border: none;
-                        padding: 1rem 2rem;
-                        border-radius: 50px;
-                        cursor: pointer;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                    ">❌ Cancel</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(confirmationDialog);
-
-        // Handle confirmation
-        document.getElementById('confirmYes').addEventListener('click', function() {
-            document.body.removeChild(confirmationDialog);
-
-            // Show loading state with enhanced animation
-            const btnText = updateBtn.querySelector('.btn-text');
-            const btnLoading = updateBtn.querySelector('.btn-loading');
-
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline-flex';
-            updateBtn.disabled = true;
-
-            // Add success animation to form
-            form.style.animation = 'formSuccess 1s ease-out forwards';
-
-            // Submit form after animation
-            setTimeout(() => {
-                form.submit();
-            }, 1000);
-        });
-
-        document.getElementById('confirmNo').addEventListener('click', function() {
-            confirmationDialog.style.animation = 'fadeOut 0.3s ease-out forwards';
-            setTimeout(() => {
-                document.body.removeChild(confirmationDialog);
-            }, 300);
-        });
-    });
-
-    // Reset form with animation
-    function resetForm() {
-        for (const fieldName in fields) {
-            const field = fields[fieldName];
-            field.value = originalValues[fieldName];
-            field.classList.remove('error');
-            field.style.background = '';
-            field.style.borderLeft = '';
-            document.getElementById(fieldName + 'Error').classList.remove('show');
-            document.getElementById(fieldName + 'Change').classList.remove('show');
-        }
-        changesSummary.classList.remove('show');
-        updateBtn.disabled = true;
-
-        // Add reset animation
-        form.style.animation = 'formReset 0.8s ease-out';
-        setTimeout(() => {
-            form.style.animation = '';
-        }, 800);
+        // Show confirmation modal
+        showModal();
     }
 
-    // Enhanced keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey) {
-            switch(e.key) {
-                case 's':
-                    e.preventDefault();
-                    if (!updateBtn.disabled) {
-                        form.dispatchEvent(new Event('submit'));
-                    }
-                    break;
-                case 'r':
-                    e.preventDefault();
-                    if (confirm('🔄 Reset all changes to original values?')) {
-                        resetForm();
-                    }
-                    break;
-                case 'z':
-                    e.preventDefault();
-                    resetForm();
-                    break;
+    // Show modal
+    function showModal() {
+        const modal = document.getElementById('confirmModal');
+        modal.classList.add('show');
+    }
+
+    // Close modal
+    function closeModal() {
+        const modal = document.getElementById('confirmModal');
+        modal.classList.remove('show');
+    }
+
+    // Confirm save
+    function confirmSave() {
+        closeModal();
+
+        // Show loading state
+        submitBtn.classList.add('btn-loading');
+        submitBtn.disabled = true;
+
+        // Clear draft
+        clearDraft();
+
+        // Submit form
+        setTimeout(() => {
+            form.submit();
+        }, 500);
+    }
+
+    // Format phone number
+    function formatPhoneNumber(e) {
+        let value = e.target.value.replace(/[^\d]/g, '');
+        if (value.length > 0) {
+            if (value.length <= 3) {
+                value = value;
+            } else if (value.length <= 6) {
+                value = value.slice(0, 3) + '-' + value.slice(3);
+            } else {
+                value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
+            }
+        }
+        e.target.value = value;
+    }
+
+    // Save draft
+    function saveDraft() {
+        const draft = {};
+        Object.keys(fields).forEach(fieldName => {
+            draft[fieldName] = fields[fieldName].value;
+        });
+        localStorage.setItem('customerEdit_<%= customer.getCustomerId() %>', JSON.stringify(draft));
+    }
+
+    // Load draft
+    function loadDraft() {
+        const draftData = localStorage.getItem('customerEdit_<%= customer.getCustomerId() %>');
+        if (draftData) {
+            const draft = JSON.parse(draftData);
+            let hasDraft = false;
+
+            Object.keys(draft).forEach(fieldName => {
+                if (fields[fieldName] && draft[fieldName] !== fields[fieldName].getAttribute('data-original')) {
+                    fields[fieldName].value = draft[fieldName];
+                    hasDraft = true;
+                }
+            });
+
+            if (hasDraft) {
+                checkForChanges();
+                showToast('info', 'Draft Restored', 'Previous changes have been restored');
+            }
+        }
+    }
+
+    // Clear draft
+    function clearDraft() {
+        localStorage.removeItem('customerEdit_<%= customer.getCustomerId() %>');
+    }
+
+    // Handle keyboard shortcuts
+    function handleKeyboardShortcuts(e) {
+        // Ctrl/Cmd + S: Save
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            if (!submitBtn.disabled) {
+                handleSubmit(e);
             }
         }
 
+        // Ctrl/Cmd + Z: Reset
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault();
+            resetForm();
+        }
+
+        // Escape: Cancel
         if (e.key === 'Escape') {
-            if (!updateBtn.disabled) {
-                if (confirm('🚪 Discard changes and go back?')) {
-                    window.location.href = '${pageContext.request.contextPath}/customer?action=view&accountNumber=<%= customer.getAccountNumber() %>';
+            if (!submitBtn.disabled) {
+                if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+                    window.location.href = '${pageContext.request.contextPath}/customer?action=view&customerId=<%= customer.getCustomerId() %>';
                 }
             } else {
-                window.location.href = '${pageContext.request.contextPath}/customer?action=view&accountNumber=<%= customer.getAccountNumber() %>';
+                window.location.href = '${pageContext.request.contextPath}/customer?action=view&customerId=<%= customer.getCustomerId() %>';
             }
         }
-    });
-
-    // Auto-save draft functionality
-    function autoSaveDraft() {
-        const draft = {};
-        for (const fieldName in fields) {
-            draft[fieldName] = fields[fieldName].value;
-        }
-        localStorage.setItem('customerEditDraft_<%= customer.getAccountNumber() %>', JSON.stringify(draft));
     }
 
-    function loadDraft() {
-        const draft = localStorage.getItem('customerEditDraft_<%= customer.getAccountNumber() %>');
-        if (draft) {
-            const data = JSON.parse(draft);
-            for (const fieldName in data) {
-                if (fields[fieldName]) {
-                    fields[fieldName].value = data[fieldName];
-                }
+    // Handle before unload
+    function handleBeforeUnload(e) {
+        if (!submitBtn.disabled) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    }
+
+    // Reset form
+    function resetForm() {
+        Object.keys(fields).forEach(fieldName => {
+            const field = fields[fieldName];
+            field.value = field.getAttribute('data-original');
+            field.classList.remove('has-error', 'has-success', 'modified');
+            const errorElement = document.getElementById(fieldName + 'Error');
+            if (errorElement) {
+                errorElement.classList.remove('show');
             }
-            checkForChanges();
+        });
+        checkForChanges();
+        showToast('info', 'Form Reset', 'All changes have been discarded');
+    }
+
+    // Show toast notification - Fixed to avoid JSP EL conflicts
+    function showToast(type, title, message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-' + type;
+
+        const iconClass = getToastIcon(type);
+
+        // Build HTML using string concatenation to avoid JSP EL issues
+        let toastHTML = '<i class="fas fa-' + iconClass + ' toast-icon"></i>';
+        toastHTML += '<div class="toast-content">';
+        toastHTML += '<div class="toast-title">' + title + '</div>';
+        toastHTML += '<div class="toast-message">' + message + '</div>';
+        toastHTML += '</div>';
+        toastHTML += '<button class="toast-close" onclick="closeToast(this)">';
+        toastHTML += '<i class="fas fa-times"></i>';
+        toastHTML += '</button>';
+        toastHTML += '<div class="toast-progress"></div>';
+
+        toast.innerHTML = toastHTML;
+        toastContainer.appendChild(toast);
+
+        // Auto close after 5 seconds
+        setTimeout(() => {
+            closeToast(toast.querySelector('.toast-close'));
+        }, 5000);
+    }
+
+    // Get toast icon
+    function getToastIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+
+    // Close toast
+    function closeToast(element) {
+        const toast = element.closest ? element.closest('.toast') : element.parentElement;
+        if (toast) {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
         }
     }
 
     // Auto-save every 30 seconds
-    setInterval(autoSaveDraft, 30000);
-
-    // Save on field changes
-    for (const fieldName in fields) {
-        fields[fieldName].addEventListener('input', autoSaveDraft);
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        loadDraft();
-        checkForChanges();
-        fields.name.focus();
-
-        // Add welcome animation
-        form.style.animation = 'formSlideUp 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    });
-
-    // Warn before leaving with unsaved changes
-    window.addEventListener('beforeunload', function(e) {
-        if (!updateBtn.disabled) {
-            e.preventDefault();
-            e.returnValue = '⚠️ You have unsaved changes. Are you sure you want to leave?';
-            return e.returnValue;
-        } else {
-            // Clear draft if no changes
-            localStorage.removeItem('customerEditDraft_<%= customer.getAccountNumber() %>');
+    setInterval(() => {
+        if (!submitBtn.disabled) {
+            saveDraft();
+            console.log('Draft saved automatically');
         }
-    });
+    }, 30000);
 
-    // Clear draft on successful submission
-    form.addEventListener('submit', function() {
-        if (!updateBtn.disabled) {
-            localStorage.removeItem('customerEditDraft_<%= customer.getAccountNumber() %>');
-        }
-    });
-
-    // Add additional CSS animations
-    const additionalStyles = document.createElement('style');
-    additionalStyles.textContent = `
-        @keyframes formSuccess {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes formReset {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.98); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-    `;
-    document.head.appendChild(additionalStyles);
-
-    console.log('🎨 Enhanced customer edit form initialized with animations!');
+    console.log('✨ Pahana Edu  Customer Edit initialized');
 </script>
 </body>
 </html>

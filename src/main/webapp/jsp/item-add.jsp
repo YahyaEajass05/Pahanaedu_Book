@@ -4,296 +4,548 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item - Pahana Edu</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
+    <title>Add New Book - Pahana Edu </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            /* Modern Purple & Blue Theme */
+            --primary-color: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary-color: #EC4899;
+            --secondary-dark: #DB2777;
+            --accent-color: #14B8A6;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+
+            /* Gradients */
+            --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --secondary-gradient: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);
+            --success-gradient: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
+            --danger-gradient: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+            --dark-gradient: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+
+            /* Background & Glass */
+            --bg-primary: #F9FAFB;
+            --bg-secondary: #FFFFFF;
+            --glass-white: rgba(255, 255, 255, 0.85);
+            --glass-dark: rgba(31, 41, 55, 0.85);
+            --border-color: #E5E7EB;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
 
         * {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Animation Keyframes */
-        @keyframes slideInDown {
-            0% { transform: translateY(-100px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes slideInUp {
-            0% { transform: translateY(50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes slideInLeft {
-            0% { transform: translateX(-50px); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            0% { transform: translateX(50px); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes fadeInScale {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes wiggle {
-            0%, 7%, 14%, 21%, 28%, 35%, 42%, 49%, 56%, 63%, 70%, 77%, 84%, 91%, 98%, 100% { transform: rotate(0deg); }
-            3.5%, 10.5%, 17.5%, 24.5%, 31.5%, 38.5%, 45.5%, 52.5%, 59.5%, 66.5%, 73.5%, 80.5%, 87.5%, 94.5% { transform: rotate(3deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(138, 43, 226, 0.3); }
-            50% { box-shadow: 0 0 30px rgba(138, 43, 226, 0.7); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Main Styles */
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8A2BE2 100%);
-            min-height: 100vh;
+            margin: 0;
             padding: 0;
-            margin: 0;
+            box-sizing: border-box;
         }
 
-        .add-item-header {
-            background: linear-gradient(145deg, #FF1744 0%, #E91E63 50%, #9C27B0 100%);
-            color: white;
-            padding: 3rem 2rem;
-            margin: 2rem auto 3rem;
-            max-width: 900px;
-            border-radius: 25px;
-            text-align: center;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
             position: relative;
-            overflow: hidden;
-            animation: slideInDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 40px rgba(255, 23, 68, 0.3);
         }
 
-        .add-item-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-
-        .add-item-header h1 {
-            margin: 0 0 1rem 0;
-            font-size: 3.2rem;
-            font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 2;
-        }
-
-        .add-item-header h1 i {
-            animation: wiggle 2s infinite, float 3s infinite;
-            margin-right: 15px;
-        }
-
-        .add-item-header p {
-            margin: 0;
-            font-size: 1.4rem;
-            opacity: 0.95;
-            position: relative;
-            z-index: 2;
-            font-weight: 300;
-        }
-
-        .form-container {
-            background: linear-gradient(145deg, #ffffff 0%, #f8f9ff 100%);
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            max-width: 900px;
-            margin: 0 auto 3rem;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInScale 0.8s ease-out 0.3s both;
-        }
-
-        .form-container::before {
-            content: '';
-            position: absolute;
+        /* Animated Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            width: 100%;
+            height: 100%;
             top: 0;
             left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #FF1744, #E91E63, #9C27B0, #667eea, #764ba2);
-            border-radius: 30px 30px 0 0;
+            z-index: -1;
+            opacity: 0.03;
+            background-image:
+                    repeating-linear-gradient(45deg, #6366F1 25%, transparent 25%, transparent 75%, #6366F1 75%, #6366F1),
+                    repeating-linear-gradient(-45deg, #6366F1 25%, transparent 25%, transparent 75%, #6366F1 75%, #6366F1);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            animation: backgroundMove 20s linear infinite;
         }
 
-        .form-section {
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: rgba(255,255,255,0.7);
-            border-radius: 20px;
-            border: 1px solid rgba(138, 43, 226, 0.1);
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .float-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatAnimation 20s infinite ease-in-out;
+        }
+
+        .float-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            font-size: 60px;
+            animation-delay: 0s;
+        }
+
+        .float-element:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            font-size: 80px;
+            animation-delay: 5s;
+        }
+
+        .float-element:nth-child(3) {
+            bottom: 20%;
+            left: 50%;
+            font-size: 70px;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
             transition: all 0.3s ease;
-            animation: slideInUp 0.6s ease-out;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-brand i {
+            font-size: 1.75rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .form-section:nth-child(odd) {
-            animation: slideInLeft 0.6s ease-out;
-        }
-
-        .form-section:nth-child(even) {
-            animation: slideInRight 0.6s ease-out;
-        }
-
-        .form-section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.2);
-            border-color: rgba(138, 43, 226, 0.3);
-        }
-
-        .form-section::before {
+        .nav-link::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.1), transparent);
-            transition: left 0.5s;
+            background: var(--primary-gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
         }
 
-        .form-section:hover::before {
-            left: 100%;
+        .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
         }
 
-        .form-section:last-child {
-            margin-bottom: 0;
+        .nav-link.active {
+            color: white;
+            background: var(--primary-gradient);
+            box-shadow: var(--shadow-glow);
         }
 
-        .section-title {
-            color: #4A148C;
-            font-size: 1.6rem;
-            font-weight: 700;
+        .nav-link.active::before {
+            left: 0;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary-gradient);
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .notification {
+            min-width: 350px;
+            padding: 1.25rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            transform: translateX(400px);
+            animation: notificationSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes notificationSlideIn {
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .notification.hide {
+            animation: notificationSlideOut 0.5s ease-out forwards;
+        }
+
+        @keyframes notificationSlideOut {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .notification-error {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        .notification-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #FCD34D 100%);
+            color: white;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .notification-content h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .notification-content p {
+            margin: 0;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .notification-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            animation: progressBar 5s linear forwards;
+        }
+
+        @keyframes progressBar {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            gap: 0.75rem;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Form Container */
+        .form-container {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+
+        .form-header {
+            background: var(--primary-gradient);
+            padding: 1.5rem 2rem;
+            color: white;
+        }
+
+        .form-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-body {
+            padding: 2rem;
+        }
+
+        /* Form Sections */
+        .form-section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .section-title i {
-            font-size: 2rem;
-            color: #E91E63;
-            animation: pulse 2s infinite;
+            color: var(--primary-color);
         }
 
-        .form-row {
+        /* Form Grid */
+        .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
         }
 
-        .form-row.single {
+        .form-grid.single {
             grid-template-columns: 1fr;
         }
 
+        /* Form Groups */
         .form-group {
-            margin-bottom: 2rem;
-            position: relative;
-            animation: fadeInScale 0.5s ease-out;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .form-group:nth-child(odd) {
-            animation-delay: 0.1s;
-        }
-
-        .form-group:nth-child(even) {
-            animation-delay: 0.2s;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        .form-label {
             font-weight: 600;
-            color: #4A148C;
-            position: relative;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .required::after {
-            content: ' ⚡';
-            color: #FF1744;
-            font-weight: bold;
-            font-size: 1.2rem;
-            animation: pulse 1s infinite;
+            content: '*';
+            color: var(--danger-color);
+            margin-left: 0.25rem;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 1rem 1.2rem;
-            border: 3px solid #E1BEE7;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            background: linear-gradient(145deg, #fafafa 0%, #ffffff 100%);
-            position: relative;
+        .form-input {
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
         }
 
-        .form-control:focus {
+        .form-input:focus {
             outline: none;
-            border-color: #9C27B0;
-            background: linear-gradient(145deg, #ffffff 0%, #f3e5f5 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(156, 39, 176, 0.3);
-            animation: glow 0.5s ease-out;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        .form-control:valid:not(:placeholder-shown) {
-            border-color: #4CAF50;
-            background: linear-gradient(145deg, #ffffff 0%, #e8f5e8 100%);
+        .form-input.error {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.05);
         }
 
-        .form-control.error {
-            border-color: #FF1744;
-            background: linear-gradient(145deg, #ffffff 0%, #ffebee 100%);
-            animation: shake 0.5s ease-in-out;
+        .form-input.success {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        .form-textarea {
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            resize: vertical;
+            min-height: 100px;
         }
 
-        .input-group {
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Input with Icon */
+        .input-icon-wrapper {
             position: relative;
-            display: flex;
-            align-items: center;
         }
 
         .input-icon {
@@ -301,24 +553,15 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #9C27B0;
-            font-size: 1.3rem;
+            color: var(--text-secondary);
             pointer-events: none;
-            z-index: 2;
-            transition: all 0.3s ease;
         }
 
-        .input-group .form-control:focus + .input-icon,
-        .input-group:focus-within .input-icon {
-            color: #FF1744;
-            transform: translateY(-50%) scale(1.2);
-            animation: wiggle 0.5s ease-out;
+        .input-icon-wrapper .form-input {
+            padding-left: 2.75rem;
         }
 
-        .input-group .form-control {
-            padding-left: 3rem;
-        }
-
+        /* Currency Input */
         .currency-input {
             position: relative;
         }
@@ -328,44 +571,37 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #4CAF50;
-            font-weight: 800;
-            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 600;
             pointer-events: none;
-            z-index: 2;
-            background: linear-gradient(45deg, #4CAF50, #8BC34A);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        .currency-input .form-control {
+        .currency-input .form-input {
             padding-left: 3.5rem;
         }
 
+        /* Help Text */
         .help-text {
-            font-size: 0.9rem;
-            color: #7B1FA2;
-            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 500;
+            gap: 0.25rem;
         }
 
         .help-text i {
-            animation: float 3s infinite;
+            font-size: 0.875rem;
+            color: var(--primary-color);
         }
 
+        /* Error Messages */
         .error-message {
-            color: #FF1744;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--danger-color);
             display: none;
             align-items: center;
-            gap: 8px;
-            animation: slideInUp 0.3s ease-out;
+            gap: 0.25rem;
+            animation: errorShake 0.5s ease-out;
         }
 
         .error-message.show {
@@ -373,596 +609,722 @@
         }
 
         .error-message i {
-            animation: wiggle 1s infinite;
+            font-size: 0.875rem;
         }
 
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Price Calculator */
+        .price-calculator {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 2px solid var(--primary-color);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .price-calculator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .calculator-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .calculator-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        .calculator-row.total {
+            border-top: 2px solid var(--border-color);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        /* Form Actions */
         .form-actions {
             display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-top: 3rem;
-            padding-top: 3rem;
-            border-top: 3px dashed #E1BEE7;
-            animation: slideInUp 0.8s ease-out 0.5s both;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding: 2rem;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
         }
 
-        .btn-submit {
-            background: linear-gradient(145deg, #FF1744 0%, #E91E63 50%, #9C27B0 100%);
-            color: white;
-            padding: 1.2rem 3rem;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
             border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s ease;
+            text-decoration: none;
             position: relative;
             overflow: hidden;
-            min-width: 200px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 25px rgba(255, 23, 68, 0.4);
         }
 
-        .btn-submit::before {
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--dark-gradient);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .btn-submit:hover::before {
-            left: 100%;
-        }
-
-        .btn-submit:hover:not(:disabled) {
-            background: linear-gradient(145deg, #D50000 0%, #C2185B 50%, #7B1FA2 100%);
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(255, 23, 68, 0.6);
-            animation: pulse 0.5s ease-out;
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-loading {
-            display: none;
-            align-items: center;
-            gap: 10px;
+            position: relative;
+            color: transparent;
         }
 
-        .spinner {
+        .btn-loading::before {
+            content: '';
+            position: absolute;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid white;
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
+            border-top-color: transparent;
+            animation: spinner 0.8s linear infinite;
+        }
+
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .validation-summary {
-            background: linear-gradient(145deg, #FFF3E0 0%, #FFE0B2 100%);
-            border: 2px solid #FF9800;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            display: none;
-            animation: slideInDown 0.5s ease-out;
-            box-shadow: 0 10px 20px rgba(255, 152, 0, 0.2);
+        /* Character Counter */
+        .char-counter {
+            position: absolute;
+            right: 1rem;
+            bottom: -1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
         }
 
-        .validation-summary.show {
-            display: block;
+        .char-counter.warning {
+            color: var(--warning-color);
         }
 
-        .validation-summary h4 {
-            color: #E65100;
-            margin: 0 0 1rem 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .char-counter.danger {
+            color: var(--danger-color);
         }
 
-        .validation-summary h4 i {
-            animation: wiggle 1s infinite;
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .validation-summary ul {
-            margin: 0;
-            padding-left: 2rem;
-            color: #E65100;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .validation-summary li {
-            margin-bottom: 5px;
-            font-weight: 500;
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        .example-box {
-            background: linear-gradient(145deg, #E3F2FD 0%, #BBDEFB 100%);
-            border: 2px solid #2196F3;
-            border-left: 5px solid #1976D2;
-            padding: 1.2rem;
-            margin-top: 10px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .example-box:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
-        }
-
-        .example-box h5 {
-            margin: 0 0 8px 0;
-            color: #0D47A1;
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .example-box h5 i {
-            animation: float 3s infinite;
-        }
-
-        .example-box p {
-            margin: 0;
-            font-size: 0.95rem;
-            color: #1565C0;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            background: rgba(255,255,255,0.7);
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-
-        .price-calculator {
-            background: linear-gradient(145deg, #F1F8E9 0%, #DCEDC8 100%);
-            border: 2px solid #8BC34A;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-            transition: all 0.3s ease;
-            animation: fadeInScale 0.5s ease-out;
-        }
-
-        .price-calculator:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 25px rgba(139, 195, 74, 0.3);
-        }
-
-        .price-calculator h5 {
-            margin: 0 0 1rem 0;
-            color: #33691E;
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .price-calculator h5 i {
-            animation: float 3s infinite;
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
-            font-size: 1rem;
-            font-weight: 500;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .price-row:hover {
-            background: rgba(255,255,255,0.8);
-            transform: translateX(5px);
-        }
-
-        .price-row.total {
-            border-top: 2px solid #689F38;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            font-weight: 800;
-            color: #33691E;
-            font-size: 1.1rem;
-            background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(139, 195, 74, 0.1));
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .form-container {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
-                border-radius: 20px;
+            .navbar-container {
+                padding: 1rem;
             }
 
-            .form-row {
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .page-header {
+                padding: 2rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .form-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
             }
 
             .form-actions {
                 flex-direction: column;
-                align-items: center;
             }
 
-            .add-item-header {
-                margin: 1rem;
-                padding: 2rem 1.5rem;
-                border-radius: 20px;
-            }
-
-            .add-item-header h1 {
-                font-size: 2.5rem;
-            }
-
-            .form-section {
-                padding: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 1.4rem;
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
-
-        /* Additional Enhancements */
-        .form-group::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #FF1744, #E91E63, #9C27B0);
-            transition: width 0.3s ease;
-            border-radius: 1px;
-        }
-
-        .form-group:focus-within::before {
-            width: 100%;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(145deg, #607D8B 0%, #455A64 100%);
-            color: white;
-            padding: 1.2rem 3rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.4s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 25px rgba(96, 125, 139, 0.4);
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(145deg, #455A64 0%, #263238 100%);
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(96, 125, 139, 0.6);
-            color: white;
-            text-decoration: none;
-        }
-
-        /* Loading animation for form sections */
-        .form-section {
-            opacity: 0;
-            animation: fadeInScale 0.6s ease-out forwards;
-        }
-
-        .form-section:nth-child(1) { animation-delay: 0.1s; }
-        .form-section:nth-child(2) { animation-delay: 0.2s; }
-        .form-section:nth-child(3) { animation-delay: 0.3s; }
-        .form-section:nth-child(4) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
+<!-- Background Pattern -->
+<div class="bg-pattern"></div>
+
+<!-- Floating Elements -->
+<div class="floating-elements">
+    <div class="float-element">📚</div>
+    <div class="float-element">📖</div>
+    <div class="float-element">📕</div>
+</div>
+
 <!-- Check if user is logged in -->
     <%
-    if (session == null || session.getAttribute("adminUser") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
-        return;
-    }
-%>
+        if (session == null || session.getAttribute("adminUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
 
-<!-- Navigation Bar -->
+        @SuppressWarnings("unchecked")
+        java.util.List<String> categories = (java.util.List<String>) request.getAttribute("categories");
+        if (categories == null) {
+            categories = new java.util.ArrayList<>();
+        }
+    %>
+
+<!-- Navigation -->
 <nav class="navbar">
-    <div class="navbar-content">
-        <a href="${pageContext.request.contextPath}/dashboard" class="navbar-brand">
-            Pahana Edu Management
+    <div class="navbar-container">
+        <a href="${pageContext.request.contextPath}/dashboard" class="nav-brand">
+            <i class="fas fa-store"></i>
+            Pahana Edu
         </a>
-        <ul class="navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/dashboard" class="nav-link">Dashboard</a></li>
-            <li><a href="${pageContext.request.contextPath}/customer" class="nav-link">Customers</a></li>
-            <li><a href="${pageContext.request.contextPath}/item" class="nav-link active">Items</a></li>
-            <li><a href="${pageContext.request.contextPath}/bill" class="nav-link">Billing</a></li>
-            <li><a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">Help</a></li>
-            <li><a href="${pageContext.request.contextPath}/logout" class="nav-link logout">Logout</a></li>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/dashboard" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/customer" class="nav-link">
+                    <i class="fas fa-user-friends"></i>
+                    Customers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/item" class="nav-link active">
+                    <i class="fas fa-books"></i>
+                    Inventory
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/bill" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    Billing
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/jsp/help.jsp" class="nav-link">
+                    <i class="fas fa-headset"></i>
+                    Support
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/logout" class="nav-link">
+                    <i class="fas fa-power-off"></i>
+                    Logout
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
 
+<!-- Notification Container -->
+<div class="notification-container" id="notificationContainer"></div>
+
+<!-- Main Container -->
 <div class="container">
     <!-- Page Header -->
-    <div class="add-item-header">
-        <h1><i class="fas fa-plus-circle"></i>Add New Item</h1>
-        <p><i class="fas fa-book-reader"></i>Add a new book or educational material to your inventory</p>
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-plus-circle"></i>
+                Add New Book
+            </h1>
+            <p class="page-subtitle">Add a new book to your inventory</p>
+        </div>
     </div>
 
     <!-- Display Error Messages -->
-    <% if (request.getAttribute("errorMessage") != null) { %>
+        <% if (request.getAttribute("errorMessage") != null) { %>
     <div class="alert alert-error">
-        <i class="icon-error">✗</i>
+        <i class="fas fa-exclamation-circle"></i>
         <%= request.getAttribute("errorMessage") %>
     </div>
-    <% } %>
+        <% } %>
 
-    <!-- Validation Summary -->
-    <div id="validationSummary" class="validation-summary">
-        <h4><i class="fas fa-exclamation-triangle"></i>Please fix the following errors:</h4>
-        <ul id="validationList"></ul>
-    </div>
-
-    <!-- Add Item Form -->
+    <!-- Form Container -->
     <div class="form-container">
-        <form id="addItemForm" action="${pageContext.request.contextPath}/item" method="post" novalidate>
+        <div class="form-header">
+            <h3>
+                <i class="fas fa-book"></i>
+                Book Information
+            </h3>
+        </div>
+
+        <form id="addBookForm" action="${pageContext.request.contextPath}/item" method="post" novalidate>
             <input type="hidden" name="action" value="add">
 
-            <!-- Basic Information Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-info-circle"></i>Basic Information
-                </h3>
+            <div class="form-body">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Basic Information
+                    </h4>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="itemId" class="required">Item ID</label>
-                        <div class="input-group">
-                            <input type="text"
-                                   id="itemId"
-                                   name="itemId"
-                                   class="form-control"
-                                   value="<%= request.getAttribute("itemId") != null ? request.getAttribute("itemId") : "" %>"
-                                   placeholder="Enter unique item ID"
-                                   required
-                                   maxlength="20"
-                                   pattern="[A-Za-z0-9_-]+">
-                            <i class="fas fa-tag input-icon"></i>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required" for="itemId">
+                                <i class="fas fa-barcode"></i>
+                                ISBN
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-fingerprint input-icon"></i>
+                                <input type="text"
+                                       id="itemId"
+                                       name="itemId"
+                                       class="form-input"
+                                       value="<%= request.getAttribute("itemId") != null ? request.getAttribute("itemId") : "" %>"
+                                       placeholder="Enter unique ISBN"
+                                       required
+                                       maxlength="20">
+                            </div>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter the book's ISBN or unique identifier
+                            </div>
+                            <div id="itemIdError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span></span>
+                            </div>
                         </div>
-                        <div class="help-text">
-                            <i class="fas fa-lightbulb"></i> Use only letters, numbers, hyphens, and underscores (3-20 characters)
-                        </div>
-                        <div id="itemIdError" class="error-message">
-                            <i class="fas fa-times-circle"></i> <span></span>
-                        </div>
-                        <div class="example-box">
-                            <h5><i class="fas fa-code"></i>Examples:</h5>
-                            <p>BOOK001, MATH_G10, SCIENCE-11</p>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="itemName">
+                                <i class="fas fa-book"></i>
+                                Book Title
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-pen input-icon"></i>
+                                <input type="text"
+                                       id="itemName"
+                                       name="itemName"
+                                       class="form-input"
+                                       value="<%= request.getAttribute("itemName") != null ? request.getAttribute("itemName") : "" %>"
+                                       placeholder="Enter book title"
+                                       required
+                                       maxlength="100">
+                            </div>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter the complete title of the book
+                            </div>
+                            <div id="itemNameError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="itemName" class="required">Item Name</label>
-                        <div class="input-group">
-                            <input type="text"
-                                   id="itemName"
-                                   name="itemName"
-                                   class="form-control"
-                                   value="<%= request.getAttribute("itemName") != null ? request.getAttribute("itemName") : "" %>"
-                                   placeholder="Enter item name"
-                                   required
-                                   maxlength="100">
-                            <i class="fas fa-book-open input-icon"></i>
-                        </div>
-                        <div class="help-text">
-                            <i class="fas fa-pen-fancy"></i> Enter the complete name or title of the book/material
-                        </div>
-                        <div id="itemNameError" class="error-message">
-                            <i class="fas fa-times-circle"></i> <span></span>
+                    <div class="form-grid single">
+                        <div class="form-group">
+                            <label class="form-label" for="category">
+                                <i class="fas fa-tag"></i>
+                                Category
+                            </label>
+                            <select id="category"
+                                    name="category"
+                                    class="form-input">
+                                <option value="">Select a category</option>
+                                <%
+                                    String[] defaultCategories = {
+                                            "Fiction", "Non-Fiction", "Science", "Mathematics",
+                                            "History", "Biography", "Self-Help", "Children",
+                                            "Technology", "Arts", "Business", "Education"
+                                    };
+                                    for (String cat : defaultCategories) {
+                                %>
+                                <option value="<%= cat %>"
+                                        <%= cat.equals(request.getAttribute("category")) ? "selected" : "" %>>
+                                    <%= cat %>
+                                </option>
+                                <% } %>
+                                <% for (String cat : categories) {
+                                    boolean isDuplicate = false;
+                                    for (String defaultCat : defaultCategories) {
+                                        if (defaultCat.equals(cat)) {
+                                            isDuplicate = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isDuplicate) {
+                                %>
+                                <option value="<%= cat %>"
+                                        <%= cat.equals(request.getAttribute("category")) ? "selected" : "" %>>
+                                    <%= cat %>
+                                </option>
+                                <% }} %>
+                            </select>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Select or add a category for better organization
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Pricing & Stock Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-coins"></i>Pricing & Stock Information
-                </h3>
+                <!-- Pricing & Stock -->
+                <div class="form-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-dollar-sign"></i>
+                        Pricing & Stock
+                    </h4>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="price" class="required">Price (LKR)</label>
-                        <div class="currency-input">
-                            <span class="currency-symbol">LKR</span>
-                            <input type="number"
-                                   id="price"
-                                   name="price"
-                                   class="form-control"
-                                   value="<%= request.getAttribute("price") != null ? request.getAttribute("price") : "" %>"
-                                   placeholder="0.00"
-                                   required
-                                   min="0.01"
-                                   max="999999.99"
-                                   step="0.01">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required" for="price">
+                                <i class="fas fa-tag"></i>
+                                Price
+                            </label>
+                            <div class="currency-input">
+                                <span class="currency-symbol">LKR</span>
+                                <input type="number"
+                                       id="price"
+                                       name="price"
+                                       class="form-input"
+                                       value="<%= request.getAttribute("price") != null ? request.getAttribute("price") : "" %>"
+                                       placeholder="0.00"
+                                       required
+                                       min="0.01"
+                                       step="0.01">
+                            </div>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter the selling price
+                            </div>
+                            <div id="priceError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span></span>
+                            </div>
                         </div>
-                        <div class="help-text">
-                            <i class="fas fa-money-bill-wave"></i> Enter the selling price in Sri Lankan Rupees
-                        </div>
-                        <div id="priceError" class="error-message">
-                            <i class="fas fa-times-circle"></i> <span></span>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="stock">
+                                <i class="fas fa-boxes"></i>
+                                Initial Stock
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-warehouse input-icon"></i>
+                                <input type="number"
+                                       id="stock"
+                                       name="stock"
+                                       class="form-input"
+                                       value="<%= request.getAttribute("stock") != null ? request.getAttribute("stock") : "0" %>"
+                                       placeholder="0"
+                                       required
+                                       min="0"
+                                       max="9999">
+                            </div>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Number of units available
+                            </div>
+                            <div id="stockError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="stock" class="required">Initial Stock Quantity</label>
-                        <div class="input-group">
-                            <input type="number"
-                                   id="stock"
-                                   name="stock"
-                                   class="form-control"
-                                   value="<%= request.getAttribute("stock") != null ? request.getAttribute("stock") : "0" %>"
-                                   placeholder="Enter stock quantity"
-                                   required
-                                   min="0"
-                                   max="9999">
-                            <i class="fas fa-boxes input-icon"></i>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="discountPercentage">
+                                <i class="fas fa-percentage"></i>
+                                Discount Percentage
+                            </label>
+                            <div class="input-icon-wrapper">
+                                <i class="fas fa-tag input-icon"></i>
+                                <input type="number"
+                                       id="discountPercentage"
+                                       name="discountPercentage"
+                                       class="form-input"
+                                       value="<%= request.getAttribute("discountPercentage") != null ? request.getAttribute("discountPercentage") : "0" %>"
+                                       placeholder="0"
+                                       min="0"
+                                       max="100"
+                                       step="0.01">
+                            </div>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Enter discount percentage (0-100)
+                            </div>
+                            <div id="discountError" class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span></span>
+                            </div>
                         </div>
-                        <div class="help-text">
-                            <i class="fas fa-warehouse"></i> Number of units available for sale
+                    </div>
+
+                    <!-- Price Calculator -->
+                    <div id="priceCalculator" class="price-calculator">
+                        <div class="calculator-header">
+                            <i class="fas fa-calculator"></i>
+                            Inventory Value Calculator
                         </div>
-                        <div id="stockError" class="error-message">
-                            <i class="fas fa-times-circle"></i> <span></span>
+                        <div class="calculator-row">
+                            <span>Unit Price:</span>
+                            <span id="calcUnitPrice">LKR 0.00</span>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Price Calculator -->
-                <div class="price-calculator" id="priceCalculator" style="display: none;">
-                    <h5><i class="fas fa-calculator"></i>Inventory Value Calculator</h5>
-                    <div class="price-row">
-                        <span>Unit Price:</span>
-                        <span id="calcUnitPrice">LKR 0.00</span>
-                    </div>
-                    <div class="price-row">
-                        <span>Stock Quantity:</span>
-                        <span id="calcQuantity">0 units</span>
-                    </div>
-                    <div class="price-row total">
-                        <span>Total Inventory Value:</span>
-                        <span id="calcTotalValue">LKR 0.00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Information Section -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-clipboard-list"></i>Additional Information
-                </h3>
-
-                <div class="form-group">
-                    <label for="category">Category</label>
-                    <div class="input-group">
-                        <input type="text"
-                               id="category"
-                               name="category"
-                               class="form-control"
-                               value="<%= request.getAttribute("category") != null ? request.getAttribute("category") : "" %>"
-                               placeholder="Enter item category"
-                               list="categoryList"
-                               maxlength="50">
-                        <i class="fas fa-list input-icon"></i>
-                        <datalist id="categoryList">
-                            <option value="Textbooks">
-                            <option value="Reference Books">
-                            <option value="Fiction">
-                            <option value="Non-Fiction">
-                            <option value="Children's Books">
-                            <option value="Academic">
-                            <option value="Educational Materials">
-                            <option value="Workbooks">
-                            <option value="Study Guides">
-                        </datalist>
-                    </div>
-                    <div class="help-text">
-                        <i class="fas fa-tags"></i> Categorize the item for better organization (optional)
-                    </div>
-                    <div id="categoryError" class="error-message">
-                        <i class="fas fa-times-circle"></i> <span></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <div class="input-group">
-                        <textarea id="description"
-                                  name="description"
-                                  class="form-control"
-                                  placeholder="Enter item description (optional)"
-                                  rows="4"
-                                  maxlength="500"><%= request.getAttribute("description") != null ? request.getAttribute("description") : "" %></textarea>
-                        <i class="fas fa-align-left input-icon"></i>
-                    </div>
-                    <div class="help-text">
-                        <i class="fas fa-edit"></i> Add a detailed description, author, publisher, or other relevant information
-                    </div>
-                    <div id="descriptionError" class="error-message">
-                        <i class="fas fa-times-circle"></i> <span></span>
+                        <div class="calculator-row">
+                            <span>Discount:</span>
+                            <span id="calcDiscount">0%</span>
+                        </div>
+                        <div class="calculator-row">
+                            <span>Sale Price:</span>
+                            <span id="calcSalePrice">LKR 0.00</span>
+                        </div>
+                        <div class="calculator-row">
+                            <span>Stock Quantity:</span>
+                            <span id="calcQuantity">0 units</span>
+                        </div>
+                        <div class="calculator-row total">
+                            <span>Total Inventory Value:</span>
+                            <span id="calcTotalValue">LKR 0.00</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Form Actions -->
             <div class="form-actions">
-                <button type="submit" id="submitBtn" class="btn-submit">
-                    <span class="btn-text"><i class="fas fa-check-circle"></i> Add Item</span>
-                    <span class="btn-loading">
-                        <span class="spinner"></span>
-                        Adding Item...
-                    </span>
-                </button>
-                <a href="${pageContext.request.contextPath}/item" class="btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Cancel
+                <a href="${pageContext.request.contextPath}/item" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancel
                 </a>
+                <button type="submit" id="submitBtn" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    <span class="btn-text">Add Book</span>
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    // Form validation
-    const form = document.getElementById('addItemForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const validationSummary = document.getElementById('validationSummary');
-    const validationList = document.getElementById('validationList');
-    const priceCalculator = document.getElementById('priceCalculator');
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+</div>
 
-    // Field references
+<script>
+    // Form elements
+    const form = document.getElementById('addBookForm');
+    const submitBtn = document.getElementById('submitBtn');
     const fields = {
         itemId: document.getElementById('itemId'),
         itemName: document.getElementById('itemName'),
+        category: document.getElementById('category'),
         price: document.getElementById('price'),
         stock: document.getElementById('stock'),
-        category: document.getElementById('category'),
-        description: document.getElementById('description')
+        discountPercentage: document.getElementById('discountPercentage')
     };
 
-    // Validation rules
+    // Price calculator elements
+    const priceCalculator = document.getElementById('priceCalculator');
+    const calcElements = {
+        unitPrice: document.getElementById('calcUnitPrice'),
+        discount: document.getElementById('calcDiscount'),
+        salePrice: document.getElementById('calcSalePrice'),
+        quantity: document.getElementById('calcQuantity'),
+        totalValue: document.getElementById('calcTotalValue')
+    };
+
+    // Notification System
+    function showNotification(message, type = 'info', duration = 5000) {
+        const container = document.getElementById('notificationContainer');
+
+        const notification = document.createElement('div');
+        notification.className = 'notification notification-' + type;
+
+        const icon = document.createElement('div');
+        icon.className = 'notification-icon';
+        icon.innerHTML = type === 'success' ? '<i class="fas fa-check-circle"></i>' :
+            type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' :
+                type === 'warning' ? '<i class="fas fa-exclamation-triangle"></i>' :
+                    '<i class="fas fa-info-circle"></i>';
+
+        const content = document.createElement('div');
+        content.className = 'notification-content';
+        content.innerHTML = '<h4>' + (type.charAt(0).toUpperCase() + type.slice(1)) + '</h4>' +
+            '<p>' + message + '</p>';
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'notification-close';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.onclick = () => hideNotification(notification);
+
+        const progress = document.createElement('div');
+        progress.className = 'notification-progress';
+
+        notification.appendChild(icon);
+        notification.appendChild(content);
+        notification.appendChild(closeBtn);
+        notification.appendChild(progress);
+
+        container.appendChild(notification);
+
+        // Auto hide after duration
+        setTimeout(() => {
+            hideNotification(notification);
+        }, duration);
+    }
+
+    function hideNotification(notification) {
+        notification.classList.add('hide');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 500);
+    }
+
+    // Validation Rules
     const validationRules = {
         itemId: {
             required: true,
             minLength: 3,
             maxLength: 20,
             pattern: /^[A-Za-z0-9_-]+$/,
-            message: 'Item ID must be 3-20 characters long and contain only letters, numbers, hyphens, and underscores'
+            message: 'ISBN must be 3-20 characters (letters, numbers, hyphens, underscores only)'
         },
         itemName: {
             required: true,
             minLength: 2,
             maxLength: 100,
-            message: 'Item name must be 2-100 characters long'
+            message: 'Book title must be 2-100 characters'
         },
         price: {
             required: true,
@@ -974,17 +1336,13 @@
             required: true,
             min: 0,
             max: 9999,
-            message: 'Stock must be between 0 and 9999 units'
+            message: 'Stock must be between 0 and 9999'
         },
-        category: {
+        discountPercentage: {
             required: false,
-            maxLength: 50,
-            message: 'Category must not exceed 50 characters'
-        },
-        description: {
-            required: false,
-            maxLength: 500,
-            message: 'Description must not exceed 500 characters'
+            min: 0,
+            max: 100,
+            message: 'Discount must be between 0% and 100%'
         }
     };
 
@@ -1001,28 +1359,28 @@
         // Required check
         if (rule.required && !value) {
             isValid = false;
-            errorMessage = `${fieldName} is required`;
+            errorMessage = fieldName.replace(/([A-Z])/g, ' $1').trim() + ' is required';
+        }
+        // Pattern check
+        else if (rule.pattern && value && !rule.pattern.test(value)) {
+            isValid = false;
+            errorMessage = rule.message;
         }
         // Length checks
         else if (rule.minLength && value.length < rule.minLength) {
             isValid = false;
-            errorMessage = `${fieldName} must be at least ${rule.minLength} characters`;
+            errorMessage = rule.message;
         }
         else if (rule.maxLength && value.length > rule.maxLength) {
             isValid = false;
-            errorMessage = `${fieldName} must not exceed ${rule.maxLength} characters`;
+            errorMessage = rule.message;
         }
         // Number checks
         else if (rule.min !== undefined && parseFloat(value) < rule.min) {
             isValid = false;
-            errorMessage = `${fieldName} must be at least ${rule.min}`;
+            errorMessage = rule.message;
         }
         else if (rule.max !== undefined && parseFloat(value) > rule.max) {
-            isValid = false;
-            errorMessage = `${fieldName} must not exceed ${rule.max}`;
-        }
-        // Pattern check
-        else if (rule.pattern && value && !rule.pattern.test(value)) {
             isValid = false;
             errorMessage = rule.message;
         }
@@ -1030,13 +1388,17 @@
         // Update UI
         if (isValid) {
             field.classList.remove('error');
-            field.classList.add('valid');
-            errorElement.classList.remove('show');
+            field.classList.add('success');
+            if (errorElement) {
+                errorElement.classList.remove('show');
+            }
         } else {
             field.classList.add('error');
-            field.classList.remove('valid');
-            errorElement.querySelector('span').textContent = errorMessage;
-            errorElement.classList.add('show');
+            field.classList.remove('success');
+            if (errorElement) {
+                errorElement.querySelector('span').textContent = errorMessage;
+                errorElement.classList.add('show');
+            }
         }
 
         return isValid;
@@ -1045,23 +1407,11 @@
     // Validate entire form
     function validateForm() {
         let isValid = true;
-        const errors = [];
 
-        for (const fieldName in fields) {
+        for (const fieldName in validationRules) {
             if (!validateField(fieldName)) {
                 isValid = false;
-                const rule = validationRules[fieldName];
-                errors.push(rule.message || `Invalid ${fieldName}`);
             }
-        }
-
-        // Update validation summary
-        if (errors.length > 0) {
-            validationList.innerHTML = errors.map(error => `<li>${error}</li>`).join('');
-            validationSummary.classList.add('show');
-            validationSummary.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-            validationSummary.classList.remove('show');
         }
 
         return isValid;
@@ -1071,16 +1421,32 @@
     function updatePriceCalculator() {
         const price = parseFloat(fields.price.value) || 0;
         const stock = parseInt(fields.stock.value) || 0;
-        const totalValue = price * stock;
+        const discount = parseFloat(fields.discountPercentage.value) || 0;
 
-        document.getElementById('calcUnitPrice').textContent = `LKR ${price.toFixed(2)}`;
-        document.getElementById('calcQuantity').textContent = `${stock} units`;
-        document.getElementById('calcTotalValue').textContent = `LKR ${totalValue.toFixed(2)}`;
+        const salePrice = price * (1 - discount / 100);
+        const totalValue = salePrice * stock;
 
+        calcElements.unitPrice.textContent = 'LKR ' + price.toFixed(2).toLocaleString();
+        calcElements.discount.textContent = discount.toFixed(0) + '%';
+        calcElements.salePrice.textContent = 'LKR ' + salePrice.toFixed(2).toLocaleString();
+        calcElements.quantity.textContent = stock + ' units';
+        calcElements.totalValue.textContent = 'LKR ' + totalValue.toFixed(2).toLocaleString();
+
+        // Show calculator if there's data
         if (price > 0 || stock > 0) {
-            priceCalculator.style.display = 'block';
+            priceCalculator.classList.add('show');
         } else {
-            priceCalculator.style.display = 'none';
+            priceCalculator.classList.remove('show');
+        }
+    }
+
+    // Show/Hide Loading
+    function showLoading(show) {
+        const overlay = document.getElementById('loadingOverlay');
+        if (show) {
+            overlay.classList.add('show');
+        } else {
+            overlay.classList.remove('show');
         }
     }
 
@@ -1088,15 +1454,17 @@
     for (const fieldName in fields) {
         const field = fields[fieldName];
 
+        // Validate on blur
         field.addEventListener('blur', () => validateField(fieldName));
+
+        // Clear error on input
         field.addEventListener('input', () => {
-            // Clear error on input
             if (field.classList.contains('error')) {
                 validateField(fieldName);
             }
 
-            // Update calculator for price and stock fields
-            if (fieldName === 'price' || fieldName === 'stock') {
+            // Update calculator for relevant fields
+            if (['price', 'stock', 'discountPercentage'].includes(fieldName)) {
                 updatePriceCalculator();
             }
         });
@@ -1107,41 +1475,39 @@
         e.preventDefault();
 
         if (validateForm()) {
-            // Show loading state
-            const btnText = submitBtn.querySelector('.btn-text');
-            const btnLoading = submitBtn.querySelector('.btn-loading');
-
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline-flex';
+            // Show loading
+            showLoading(true);
+            submitBtn.classList.add('btn-loading');
             submitBtn.disabled = true;
 
-            // Add submission animation
-            submitBtn.style.animation = 'pulse 0.5s infinite';
+            // Add success animation
+            showNotification('Adding book to inventory...', 'info');
 
-            // Submit form
+            // Submit form after brief delay
             setTimeout(() => {
                 form.submit();
             }, 500);
+        } else {
+            // Show error notification
+            showNotification('Please fix the errors in the form', 'error');
+
+            // Scroll to first error
+            const firstError = document.querySelector('.form-input.error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
         }
     });
 
-    // Auto-generate item ID suggestion
+    // Auto-generate ISBN suggestion
     fields.itemName.addEventListener('input', function() {
         const name = this.value.trim();
         if (name && !fields.itemId.value) {
-            const suggestion = name.substring(0, 4).toUpperCase().replace(/[^A-Z0-9]/g, '') +
-                Math.floor(Math.random() * 100).toString().padStart(2, '0');
-            fields.itemId.placeholder = `Suggestion: ${suggestion}`;
+            const suggestion = 'ISBN-' + name.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, '') +
+                '-' + Math.floor(Math.random() * 9000 + 1000);
+            fields.itemId.placeholder = 'Suggestion: ' + suggestion;
         }
-    });
-
-    // Auto-focus first field with animation
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-            fields.itemId.focus();
-            fields.itemId.style.animation = 'glow 1s ease-out';
-        }, 500);
-        updatePriceCalculator();
     });
 
     // Save draft functionality
@@ -1150,242 +1516,168 @@
         for (const fieldName in fields) {
             draft[fieldName] = fields[fieldName].value;
         }
-        localStorage.setItem('itemDraft', JSON.stringify(draft));
+        localStorage.setItem('bookDraft', JSON.stringify(draft));
+        showNotification('Draft saved', 'success', 2000);
     }
 
     function loadDraft() {
-        const draft = localStorage.getItem('itemDraft');
+        const draft = localStorage.getItem('bookDraft');
         if (draft) {
-            const data = JSON.parse(draft);
-            for (const fieldName in data) {
-                if (fields[fieldName] && !fields[fieldName].value) {
-                    fields[fieldName].value = data[fieldName];
+            try {
+                const data = JSON.parse(draft);
+                for (const fieldName in data) {
+                    if (fields[fieldName] && !fields[fieldName].value) {
+                        fields[fieldName].value = data[fieldName];
+                    }
                 }
+                updatePriceCalculator();
+                showNotification('Draft loaded', 'info', 2000);
+            } catch (e) {
+                console.error('Failed to load draft:', e);
             }
-            updatePriceCalculator();
         }
     }
 
-    // Load draft on page load
-    loadDraft();
-
-    // Save draft on input with debounce
-    let draftTimeout;
-    for (const fieldName in fields) {
-        fields[fieldName].addEventListener('input', function() {
-            clearTimeout(draftTimeout);
-            draftTimeout = setTimeout(saveDraft, 1000);
-        });
-    }
-
-    // Clear draft on successful submission
-    form.addEventListener('submit', function() {
-        if (validateForm()) {
-            localStorage.removeItem('itemDraft');
-        }
-    });
-
-    // Add floating label effect
-    for (const fieldName in fields) {
-        const field = fields[fieldName];
-        const label = field.parentElement.parentElement.querySelector('label');
-
-        field.addEventListener('focus', function() {
-            label.style.transform = 'translateY(-5px) scale(0.9)';
-            label.style.color = '#9C27B0';
-        });
-
-        field.addEventListener('blur', function() {
-            if (!field.value) {
-                label.style.transform = 'translateY(0) scale(1)';
-                label.style.color = '#4A148C';
-            }
-        });
-    }
-
-    // Add real-time character counter for text fields
-    function addCharacterCounter(fieldName) {
-        const field = fields[fieldName];
-        const maxLength = validationRules[fieldName].maxLength;
-
-        if (maxLength) {
-            const counter = document.createElement('div');
-            counter.style.cssText = `
-                position: absolute;
-                right: 12px;
-                bottom: 12px;
-                font-size: 0.8rem;
-                color: #9C27B0;
-                background: rgba(255,255,255,0.9);
-                padding: 2px 6px;
-                border-radius: 4px;
-                transition: all 0.3s ease;
-            `;
-
-            field.parentElement.style.position = 'relative';
-            field.parentElement.appendChild(counter);
-
-            function updateCounter() {
-                const remaining = maxLength - field.value.length;
-                counter.textContent = `${remaining} left`;
-
-                if (remaining < 20) {
-                    counter.style.color = '#FF1744';
-                    counter.style.animation = 'pulse 1s infinite';
-                } else {
-                    counter.style.color = '#9C27B0';
-                    counter.style.animation = 'none';
-                }
-            }
-
-            field.addEventListener('input', updateCounter);
-            updateCounter();
-        }
-    }
-
-    // Add character counters to relevant fields
-    addCharacterCounter('itemId');
-    addCharacterCounter('itemName');
-    addCharacterCounter('category');
-    addCharacterCounter('description');
-
-    // Add progressive form enhancement
-    function enhanceFormExperience() {
-        // Add smooth transitions to form sections
-        const sections = document.querySelectorAll('.form-section');
-        sections.forEach((section, index) => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-
-            setTimeout(() => {
-                section.style.transition = 'all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)';
-                section.style.opacity = '1';
-                section.style.transform = 'translateY(0)';
-            }, 100 * (index + 1));
-        });
-
-        // Add interactive feedback sounds (if supported)
-        function playFeedbackSound(type) {
-            if (window.AudioContext || window.webkitAudioContext) {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                if (type === 'success') {
-                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-                    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
-                } else if (type === 'error') {
-                    oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
-                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime + 0.1);
-                }
-
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.2);
-            }
-        }
-
-        // Add haptic feedback for mobile devices
-        function addHapticFeedback(type) {
-            if (navigator.vibrate) {
-                if (type === 'success') {
-                    navigator.vibrate(50);
-                } else if (type === 'error') {
-                    navigator.vibrate([50, 100, 50]);
-                }
-            }
-        }
-
-        // Enhance validation feedback
-        const originalValidateField = validateField;
-        validateField = function(fieldName) {
-            const result = originalValidateField(fieldName);
-
-            if (result) {
-                playFeedbackSound('success');
-                addHapticFeedback('success');
-            } else {
-                playFeedbackSound('error');
-                addHapticFeedback('error');
-            }
-
-            return result;
-        };
-    }
-
-    // Initialize enhanced form experience
-    enhanceFormExperience();
-
-    // Add keyboard shortcuts
+    // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         // Ctrl/Cmd + S to save draft
         if ((e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
             saveDraft();
-
-            // Show save confirmation
-            const saveIndicator = document.createElement('div');
-            saveIndicator.textContent = '💾 Draft saved!';
-            saveIndicator.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(145deg, #4CAF50, #45a049);
-                color: white;
-                padding: 12px 24px;
-                border-radius: 25px;
-                font-weight: 600;
-                z-index: 9999;
-                animation: slideInRight 0.5s ease-out;
-                box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-            `;
-
-            document.body.appendChild(saveIndicator);
-
-            setTimeout(() => {
-                saveIndicator.style.animation = 'slideOutRight 0.5s ease-out';
-                setTimeout(() => document.body.removeChild(saveIndicator), 500);
-            }, 2000);
         }
 
-        // Ctrl/Cmd + Enter to submit form
+        // Ctrl/Cmd + Enter to submit
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
             e.preventDefault();
             form.dispatchEvent(new Event('submit'));
         }
+
+        // ESC to cancel
+        if (e.key === 'Escape') {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                window.location.href = '${pageContext.request.contextPath}/item';
+            }
+        }
     });
 
-    // Add CSS for additional animations
-    const additionalStyles = document.createElement('style');
-    additionalStyles.textContent = `
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+    // Auto-save draft
+    let draftTimer;
+    for (const fieldName in fields) {
+        fields[fieldName].addEventListener('input', function() {
+            clearTimeout(draftTimer);
+            draftTimer = setTimeout(saveDraft, 3000);
+        });
+    }
+
+    // Clear draft on successful submission
+    if (window.location.search.includes('success=true')) {
+        localStorage.removeItem('bookDraft');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load draft if exists
+        loadDraft();
+
+        // Focus first field
+        fields.itemId.focus();
+
+        // Initialize calculator
+        updatePriceCalculator();
+
+        // Add field animations
+        const formSections = document.querySelectorAll('.form-section');
+        formSections.forEach((section, index) => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                section.style.transition = 'all 0.5s ease';
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Show tips
+        setTimeout(() => {
+            showNotification('Tip: Press Ctrl+S to save a draft at any time', 'info', 4000);
+        }, 2000);
+    });
+
+    // Character counter for text fields
+    function addCharacterCounter(field, maxLength) {
+        const wrapper = field.closest('.form-group');
+        const counter = document.createElement('div');
+        counter.className = 'char-counter';
+        counter.style.position = 'relative';
+        counter.style.textAlign = 'right';
+        counter.style.fontSize = '0.75rem';
+        counter.style.color = 'var(--text-secondary)';
+        counter.style.marginTop = '0.25rem';
+
+        function updateCounter() {
+            const remaining = maxLength - field.value.length;
+            counter.textContent = remaining + ' characters remaining';
+
+            if (remaining < 10) {
+                counter.classList.add('danger');
+            } else if (remaining < 20) {
+                counter.classList.add('warning');
+            } else {
+                counter.classList.remove('danger', 'warning');
+            }
         }
 
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
+        field.addEventListener('input', updateCounter);
+        wrapper.appendChild(counter);
+        updateCounter();
+    }
 
-        .form-control:focus {
-            animation: focusGlow 0.5s ease-out;
-        }
+    // Add character counters
+    addCharacterCounter(fields.itemId, 20);
+    addCharacterCounter(fields.itemName, 100);
 
-        @keyframes focusGlow {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-    `;
-    document.head.appendChild(additionalStyles);
+    // Enhanced form validation feedback
+    const formInputs = document.querySelectorAll('.form-input');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+            this.parentElement.style.transition = 'transform 0.2s ease';
+        });
 
-    console.log('✨ Enhanced add item form initialized with animations and interactions');
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.cssText = 'position: absolute; width: ' + size + 'px; height: ' + size + 'px;' +
+                'left: ' + x + 'px; top: ' + y + 'px; border-radius: 50%;' +
+                'background: rgba(255, 255, 255, 0.5); transform: scale(0);' +
+                'animation: ripple-effect 0.6s ease-out;';
+
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    // Add ripple animation
+    const style = document.createElement('style');
+    style.textContent = '@keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }';
+    document.head.appendChild(style);
+
+    console.log('✨ Add Book form initialized with all features');
 </script>
 </body>
 </html>
+

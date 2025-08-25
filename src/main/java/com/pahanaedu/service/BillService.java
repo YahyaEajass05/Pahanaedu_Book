@@ -1,160 +1,234 @@
 package com.pahanaedu.service;
 
 import com.pahanaedu.dao.BillDAO;
+import com.pahanaedu.dao.BillItemDAO;
 import com.pahanaedu.dao.CustomerDAO;
+import com.pahanaedu.dao.ItemDAO;
 import com.pahanaedu.model.Bill;
+import com.pahanaedu.model.BillItem;
 import com.pahanaedu.model.Customer;
+import com.pahanaedu.model.Item;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BillService {
 
     private BillDAO billDAO;
+    private BillItemDAO billItemDAO;
     private CustomerDAO customerDAO;
-    private static final BigDecimal RATE_PER_UNIT = new BigDecimal("50.00"); // LKR 50 per unit
+    private ItemDAO itemDAO;
+
+    // Business constants
+    private static final BigDecimal TAX_RATE = new BigDecimal("0.08"); // 8% tax
+    private static final BigDecimal LOYALTY_POINT_VALUE = new BigDecimal("0.10"); // 1 point = 0.10 currency
+    private static final int LOYALTY_POINTS_PER_AMOUNT = 10; // 1 point per 10 currency units
+
+    // Membership discounts
+    private static final BigDecimal REGULAR_DISCOUNT = BigDecimal.ZERO;
+    private static final BigDecimal PREMIUM_DISCOUNT = new BigDecimal("5.00"); // 5%
+    private static final BigDecimal VIP_DISCOUNT = new BigDecimal("10.00"); // 10%
 
     public BillService() {
         this.billDAO = new BillDAO();
+        this.billItemDAO = new BillItemDAO();
         this.customerDAO = new CustomerDAO();
+        this.itemDAO = new ItemDAO();
     }
 
     /**
-     * Generate a new bill for a customer
-     * @param accountNumber - customer account number
-     * @return Bill object if successful, null otherwise
+     * Bill calculation result class
      */
-    public Bill generateBill(String accountNumber) {
-        // Validate input
-        if (accountNumber == null || accountNumber.trim().isEmpty()) {
-            return null;
+    public static class BillCalculation {
+        public BigDecimal subtotal = BigDecimal.ZERO;
+        public BigDecimal itemDiscountAmount = BigDecimal.ZERO;
+        public BigDecimal membershipDiscountAmount = BigDecimal.ZERO;
+        public BigDecimal loyaltyDiscountAmount = BigDecimal.ZERO;
+        public BigDecimal totalDiscountAmount = BigDecimal.ZERO;
+        public BigDecimal taxableAmount = BigDecimal.ZERO;
+        public BigDecimal taxAmount = BigDecimal.ZERO;
+        public BigDecimal totalAmount = BigDecimal.ZERO;
+        public int loyaltyPointsEarned = 0;
+        public BigDecimal totalSavings = BigDecimal.ZERO;
+    }
+
+    /**
+     * Create a new bill with items
+     */
+    public Bill createBill(int customerId, List<BillItem> billItems, String paymentMethod,
+                           int loyaltyPointsToRedeem) throws SQLException {
+
+        // Validate inputs
+        if (customerId <= 0 || billItems == null || billItems.isEmpty()) {
+            throw new IllegalArgumentException("Invalid bill data");
         }
 
         // Get customer details
-        Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber.trim());
+        Customer customer = customerDAO.getCustomerById(customerId);
         if (customer == null) {
-            return null;
+            throw new IllegalArgumentException("Customer not found");
         }
 
-        // Calculate bill amount
-        int unitsConsumed = customer.getUnitsConsumed();
-        BigDecimal totalAmount = calculateBillAmount(unitsConsumed);
+        // Validate loyalty points
+        if (loyaltyPointsToRedeem > customer.getLoyaltyPoints()) {
+            throw new IllegalArgumentException("Insufficient loyalty points");
+        }
+
+        // Validate and prepare bill items
+        List<BillItem> validatedItems = validateAndPrepareBillItems(billItems);
+
+        // Calculate bill totals
+        BillCalculation calc = calculateBillTotals(validatedItems, customer, loyaltyPointsToRedeem);
 
         // Create bill object
         Bill bill = new Bill();
-        bill.setAccountNumber(customer.getAccountNumber());
-        bill.setTotalUnits(unitsConsumed);
-        bill.setTotalAmount(totalAmount);
-        bill.setBillDate(Date.valueOf(LocalDate.now()));
+        bill.setCustomerId(customerId);
+        bill.setSubtotal(calc.subtotal);
+        bill.setDiscountAmount(calc.totalDiscountAmount);
+        bill.setTaxAmount(calc.taxAmount);
+        bill.setTotalAmount(calc.totalAmount);
+        bill.setPaymentMethod(paymentMethod != null ? paymentMethod : "CASH");
+        bill.setPaymentStatus("PAID");
+        bill.setLoyaltyPointsEarned(calc.loyaltyPointsEarned);
+        bill.setLoyaltyPointsRedeemed(loyaltyPointsToRedeem);
+        bill.setBillDate(new java.util.Date());
+        bill.setCustomer(customer);
 
-        // Save bill to database
-        if (billDAO.addBill(bill)) {
-            return bill;
-        }
+        // Save bill with items
+        int billId = billDAO.createBillWithItems(bill, validatedItems);
+        bill.setBillId(billId);
 
-        return null;
+        return bill;
     }
 
     /**
-     * Generate bill with custom units (override customer's current units)
-     * @param accountNumber - customer account number
-     * @param customUnits - custom units consumed
-     * @return Bill object if successful, null otherwise
+     * Validate and prepare bill items
      */
-    public Bill generateBillWithCustomUnits(String accountNumber, int customUnits) {
-        // Validate input
-        if (accountNumber == null || accountNumber.trim().isEmpty() || customUnits < 0) {
-            return null;
+    private List<BillItem> validateAndPrepareBillItems(List<BillItem> billItems) throws SQLException {
+        List<BillItem> preparedItems = new ArrayList<>();
+
+        for (BillItem billItem : billItems) {
+            // Get item details
+            Item item = itemDAO.getItemById(billItem.getItemId());
+            if (item == null) {
+                throw new IllegalArgumentException("Item not found: " + billItem.getItemId());
+            }
+
+            // Check stock availability
+            if (!item.isAvailable(billItem.getQuantity())) {
+                throw new IllegalArgumentException("Insufficient stock for item: " + item.getItemName() +
+                        ". Available: " + item.getStock() + ", Requested: " + billItem.getQuantity());
+            }
+
+            // Set item details
+            billItem.setItem(item);
+            billItem.setUnitPrice(item.getPrice());
+
+            // Apply item discount if not already set
+            if (billItem.getDiscountPercentage() == null ||
+                    billItem.getDiscountPercentage().compareTo(BigDecimal.ZERO) == 0) {
+                billItem.setDiscountPercentage(item.getDiscountPercentage());
+            }
+
+            // Calculate item total
+            billItem.calculateTotalPrice();
+
+            preparedItems.add(billItem);
         }
 
-        // Check if customer exists
-        Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber.trim());
-        if (customer == null) {
-            return null;
-        }
-
-        // Calculate bill amount
-        BigDecimal totalAmount = calculateBillAmount(customUnits);
-
-        // Create bill object
-        Bill bill = new Bill();
-        bill.setAccountNumber(customer.getAccountNumber());
-        bill.setTotalUnits(customUnits);
-        bill.setTotalAmount(totalAmount);
-        bill.setBillDate(Date.valueOf(LocalDate.now()));
-
-        // Save bill to database
-        if (billDAO.addBill(bill)) {
-            // Update customer's units consumed
-            customer.setUnitsConsumed(customUnits);
-            customerDAO.updateCustomer(customer);
-            return bill;
-        }
-
-        return null;
+        return preparedItems;
     }
 
     /**
-     * Calculate bill amount based on units consumed
-     * @param unitsConsumed - number of units consumed
-     * @return calculated bill amount
+     * Calculate bill totals with all discounts and taxes
      */
-    public BigDecimal calculateBillAmount(int unitsConsumed) {
-        if (unitsConsumed < 0) {
-            return BigDecimal.ZERO;
+    public BillCalculation calculateBillTotals(List<BillItem> billItems, Customer customer,
+                                               int loyaltyPointsToRedeem) {
+        BillCalculation calc = new BillCalculation();
+
+        // Calculate subtotal and item discounts
+        for (BillItem item : billItems) {
+            BigDecimal itemOriginalPrice = item.getUnitPrice()
+                    .multiply(new BigDecimal(item.getQuantity()));
+            BigDecimal itemDiscount = itemOriginalPrice
+                    .multiply(item.getDiscountPercentage())
+                    .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+
+            calc.subtotal = calc.subtotal.add(itemOriginalPrice);
+            calc.itemDiscountAmount = calc.itemDiscountAmount.add(itemDiscount);
         }
 
-        BigDecimal baseAmount = RATE_PER_UNIT.multiply(new BigDecimal(unitsConsumed));
+        // Calculate membership discount
+        BigDecimal membershipDiscountPercentage = getMembershipDiscountPercentage(customer.getMembershipType());
+        calc.membershipDiscountAmount = calc.subtotal
+                .subtract(calc.itemDiscountAmount)
+                .multiply(membershipDiscountPercentage)
+                .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
 
-        // Apply discount for high consumption
-        BigDecimal finalAmount = applyDiscounts(baseAmount, unitsConsumed);
+        // Calculate loyalty points discount
+        calc.loyaltyDiscountAmount = new BigDecimal(loyaltyPointsToRedeem)
+                .multiply(LOYALTY_POINT_VALUE);
 
-        // Apply taxes
-        finalAmount = applyTaxes(finalAmount);
+        // Calculate total discount
+        calc.totalDiscountAmount = calc.itemDiscountAmount
+                .add(calc.membershipDiscountAmount)
+                .add(calc.loyaltyDiscountAmount);
 
-        // Round to 2 decimal places
-        return finalAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
-    }
-
-    /**
-     * Apply discounts based on consumption level
-     * @param baseAmount - base amount before discount
-     * @param unitsConsumed - units consumed
-     * @return amount after discount
-     */
-    private BigDecimal applyDiscounts(BigDecimal baseAmount, int unitsConsumed) {
-        BigDecimal discountRate = BigDecimal.ZERO;
-
-        if (unitsConsumed >= 100) {
-            discountRate = new BigDecimal("0.15"); // 15% discount for 100+ units
-        } else if (unitsConsumed >= 50) {
-            discountRate = new BigDecimal("0.10"); // 10% discount for 50-99 units
-        } else if (unitsConsumed >= 20) {
-            discountRate = new BigDecimal("0.05"); // 5% discount for 20-49 units
+        // Ensure discount doesn't exceed subtotal
+        if (calc.totalDiscountAmount.compareTo(calc.subtotal) > 0) {
+            calc.totalDiscountAmount = calc.subtotal;
         }
 
-        BigDecimal discount = baseAmount.multiply(discountRate);
-        return baseAmount.subtract(discount);
+        // Calculate taxable amount
+        calc.taxableAmount = calc.subtotal.subtract(calc.totalDiscountAmount);
+
+        // Calculate tax
+        calc.taxAmount = calc.taxableAmount.multiply(TAX_RATE)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        // Calculate total
+        calc.totalAmount = calc.taxableAmount.add(calc.taxAmount);
+
+        // Calculate loyalty points earned
+        calc.loyaltyPointsEarned = calc.totalAmount
+                .divide(new BigDecimal(LOYALTY_POINTS_PER_AMOUNT), 0, RoundingMode.DOWN)
+                .intValue();
+
+        // Calculate total savings
+        calc.totalSavings = calc.totalDiscountAmount;
+
+        return calc;
     }
 
     /**
-     * Apply taxes to the bill amount
-     * @param amount - amount before tax
-     * @return amount after tax
+     * Get membership discount percentage
      */
-    private BigDecimal applyTaxes(BigDecimal amount) {
-        BigDecimal taxRate = new BigDecimal("0.08"); // 8% tax
-        BigDecimal tax = amount.multiply(taxRate);
-        return amount.add(tax);
+    private BigDecimal getMembershipDiscountPercentage(String membershipType) {
+        if (membershipType == null) {
+            return REGULAR_DISCOUNT;
+        }
+
+        switch (membershipType.toUpperCase()) {
+            case "PREMIUM":
+                return PREMIUM_DISCOUNT;
+            case "VIP":
+                return VIP_DISCOUNT;
+            default:
+                return REGULAR_DISCOUNT;
+        }
     }
 
     /**
-     * Get bill by bill ID
-     * @param billId - bill ID
-     * @return Bill object if found, null otherwise
+     * Get bill by ID with all details
      */
-    public Bill getBillById(int billId) {
+    public Bill getBillById(int billId) throws SQLException {
         if (billId <= 0) {
             return null;
         }
@@ -163,164 +237,207 @@ public class BillService {
     }
 
     /**
-     * Get all bills for a specific customer
-     * @param accountNumber - customer account number
-     * @return List of bills for the customer
+     * Get bills by customer
      */
-    public List<Bill> getBillsByCustomer(String accountNumber) {
-        if (accountNumber == null || accountNumber.trim().isEmpty()) {
-            return null;
+    public List<Bill> getBillsByCustomer(int customerId) throws SQLException {
+        if (customerId <= 0) {
+            return new ArrayList<>();
         }
 
-        return billDAO.getBillsByCustomer(accountNumber.trim());
+        return billDAO.getBillsByCustomer(customerId);
     }
 
     /**
      * Get all bills
-     * @return List of all bills
      */
-    public List<Bill> getAllBills() {
+    public List<Bill> getAllBills() throws SQLException {
         return billDAO.getAllBills();
     }
 
     /**
-     * Get bills within a date range
-     * @param startDate - start date
-     * @param endDate - end date
-     * @return List of bills within the date range
+     * Get bills by date range
      */
-    public List<Bill> getBillsByDateRange(Date startDate, Date endDate) {
+    public List<Bill> getBillsByDateRange(Date startDate, Date endDate) throws SQLException {
         if (startDate == null || endDate == null || startDate.after(endDate)) {
-            return null;
+            return new ArrayList<>();
         }
 
         return billDAO.getBillsByDateRange(startDate, endDate);
     }
 
     /**
-     * Delete bill by bill ID
-     * @param billId - bill ID to delete
-     * @return true if deletion successful, false otherwise
+     * Search bills by bill number
      */
-    public boolean deleteBill(int billId) {
+    public Bill searchBillByNumber(String billNumber) throws SQLException {
+        if (billNumber == null || billNumber.trim().isEmpty()) {
+            return null;
+        }
+
+        return billDAO.getBillByNumber(billNumber.trim());
+    }
+
+    /**
+     * Cancel a bill
+     */
+    public boolean cancelBill(int billId) throws SQLException {
         if (billId <= 0) {
             return false;
         }
 
-        return billDAO.deleteBill(billId);
+        return billDAO.cancelBill(billId);
+    }
+
+
+
+    /**
+     * Get today's sales
+     */
+    public BigDecimal getTodaysSales() throws SQLException {
+        return billDAO.getTodaysSales();
     }
 
     /**
-     * Get total revenue for a specific date
-     * @param date - date to calculate revenue for
-     * @return total revenue for the date
+     * Get sales statistics for date range
      */
-    public BigDecimal getTotalRevenueByDate(Date date) {
-        if (date == null) {
-            return BigDecimal.ZERO;
+    public Map<String, BigDecimal> getSalesStatistics(Date startDate, Date endDate) throws SQLException {
+        return billDAO.getSalesStatistics(startDate, endDate);
+    }
+
+    /**
+     * Get best selling items
+     */
+    public List<Map<String, Object>> getBestSellingItems(int limit) throws SQLException {
+        return billItemDAO.getBestSellingItems(limit);
+    }
+
+    /**
+     * Get sales by category
+     */
+    public List<Map<String, Object>> getSalesByCategory() throws SQLException {
+        return billItemDAO.getSalesByCategory();
+    }
+
+    /**
+     * Calculate quick bill preview
+     */
+    public Map<String, Object> calculateBillPreview(List<Map<String, Object>> items,
+                                                    int customerId, int loyaltyPointsToRedeem)
+            throws SQLException {
+
+        Map<String, Object> preview = new HashMap<>();
+
+        // Get customer
+        Customer customer = customerDAO.getCustomerById(customerId);
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer not found");
         }
 
-        return billDAO.getTotalRevenueByDate(date);
+        // Create temporary bill items
+        List<BillItem> billItems = new ArrayList<>();
+        for (Map<String, Object> itemData : items) {
+            BillItem billItem = new BillItem();
+            billItem.setItemId((String) itemData.get("itemId"));
+            billItem.setQuantity((Integer) itemData.get("quantity"));
+            billItem.setDiscountPercentage((BigDecimal) itemData.getOrDefault("discount", BigDecimal.ZERO));
+            billItems.add(billItem);
+        }
+
+        // Validate and prepare items
+        List<BillItem> preparedItems = validateAndPrepareBillItems(billItems);
+
+        // Calculate totals
+        BillCalculation calc = calculateBillTotals(preparedItems, customer, loyaltyPointsToRedeem);
+
+        // Prepare preview
+        preview.put("items", preparedItems);
+        preview.put("subtotal", calc.subtotal);
+        preview.put("itemDiscount", calc.itemDiscountAmount);
+        preview.put("membershipDiscount", calc.membershipDiscountAmount);
+        preview.put("loyaltyDiscount", calc.loyaltyDiscountAmount);
+        preview.put("totalDiscount", calc.totalDiscountAmount);
+        preview.put("taxAmount", calc.taxAmount);
+        preview.put("totalAmount", calc.totalAmount);
+        preview.put("loyaltyPointsEarned", calc.loyaltyPointsEarned);
+        preview.put("totalSavings", calc.totalSavings);
+        preview.put("customerName", customer.getName());
+        preview.put("membershipType", customer.getMembershipType());
+        preview.put("availableLoyaltyPoints", customer.getLoyaltyPoints());
+
+        return preview;
     }
 
     /**
-     * Get today's total revenue
-     * @return today's total revenue
+     * Process return for bill items
      */
-    public BigDecimal getTodaysRevenue() {
+    public boolean processReturn(int billId, Map<Integer, Integer> itemReturns) throws SQLException {
+        if (billId <= 0 || itemReturns == null || itemReturns.isEmpty()) {
+            return false;
+        }
+
+        // Get bill
+        Bill bill = getBillById(billId);
+        if (bill == null || "CANCELLED".equals(bill.getPaymentStatus())) {
+            return false;
+        }
+
+        // Process each return
+        for (Map.Entry<Integer, Integer> entry : itemReturns.entrySet()) {
+            billItemDAO.processItemReturn(entry.getKey(), entry.getValue());
+        }
+
+        // TODO: Update bill totals and customer loyalty points
+
+        return true;
+    }
+
+    /**
+     * Get bill statistics summary
+     */
+    public Map<String, Object> getBillStatisticsSummary() throws SQLException {
+        Map<String, Object> summary = new HashMap<>();
+
+        // Get today's stats
         Date today = Date.valueOf(LocalDate.now());
-        return getTotalRevenueByDate(today);
-    }
+        Date startOfMonth = Date.valueOf(LocalDate.now().withDayOfMonth(1));
+        Date endOfMonth = Date.valueOf(LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()));
 
-    /**
-     * Get monthly revenue for current month
-     * @return current month's total revenue
-     */
-    public BigDecimal getMonthlyRevenue() {
-        LocalDate now = LocalDate.now();
-        Date startOfMonth = Date.valueOf(now.withDayOfMonth(1));
-        Date endOfMonth = Date.valueOf(now.withDayOfMonth(now.lengthOfMonth()));
+        Map<String, BigDecimal> todayStats = getSalesStatistics(today, today);
+        Map<String, BigDecimal> monthStats = getSalesStatistics(startOfMonth, endOfMonth);
 
-        List<Bill> monthlyBills = getBillsByDateRange(startOfMonth, endOfMonth);
-        if (monthlyBills == null) {
-            return BigDecimal.ZERO;
-        }
+        summary.put("todaySales", todayStats.get("totalRevenue"));
+        summary.put("todayBills", todayStats.get("totalBills"));
+        summary.put("monthSales", monthStats.get("totalRevenue"));
+        summary.put("monthBills", monthStats.get("totalBills"));
+        summary.put("averageBillToday", todayStats.get("averageBill"));
+        summary.put("averageBillMonth", monthStats.get("averageBill"));
 
-        BigDecimal totalRevenue = BigDecimal.ZERO;
-        for (Bill bill : monthlyBills) {
-            totalRevenue = totalRevenue.add(bill.getTotalAmount());
-        }
-
-        return totalRevenue;
-    }
-
-    /**
-     * Generate next bill number
-     * @return formatted bill number string
-     */
-    public String generateBillNumber() {
-        int latestBillId = billDAO.getLatestBillId();
-        int nextBillNumber = latestBillId + 1;
-
-        // Format: BILL-2024-001
-        LocalDate now = LocalDate.now();
-        return String.format("BILL-%d-%03d", now.getYear(), nextBillNumber);
-    }
-
-    /**
-     * Get bill statistics
-     * @return String with bill statistics
-     */
-    public String getBillStatistics() {
-        List<Bill> allBills = getAllBills();
-        if (allBills == null || allBills.isEmpty()) {
-            return "No bills found.";
-        }
-
-        int totalBills = allBills.size();
-        BigDecimal totalRevenue = BigDecimal.ZERO;
-        int totalUnits = 0;
-
-        for (Bill bill : allBills) {
-            totalRevenue = totalRevenue.add(bill.getTotalAmount());
-            totalUnits += bill.getTotalUnits();
-        }
-
-        BigDecimal averageBillAmount = totalRevenue.divide(new BigDecimal(totalBills), 2, BigDecimal.ROUND_HALF_UP);
-
-        return String.format(
-                "Total Bills: %d | Total Revenue: LKR %.2f | Total Units: %d | Average Bill: LKR %.2f",
-                totalBills, totalRevenue, totalUnits, averageBillAmount
-        );
+        return summary;
     }
 
     /**
      * Validate bill data
-     * @param bill - Bill object to validate
-     * @return true if valid, false otherwise
      */
     public boolean isValidBill(Bill bill) {
         if (bill == null) {
             return false;
         }
 
-        // Validate account number
-        if (bill.getAccountNumber() == null || bill.getAccountNumber().trim().isEmpty()) {
+        // Validate customer
+        if (bill.getCustomerId() <= 0) {
             return false;
         }
 
-        // Validate units
-        if (bill.getTotalUnits() < 0) {
+        // Validate amounts
+        if (bill.getSubtotal() == null || bill.getSubtotal().compareTo(BigDecimal.ZERO) < 0) {
             return false;
         }
 
-        // Validate amount
         if (bill.getTotalAmount() == null || bill.getTotalAmount().compareTo(BigDecimal.ZERO) < 0) {
             return false;
         }
 
-        // Validate date
-        if (bill.getBillDate() == null) {
+        // Validate bill items
+        if (bill.getBillItems() == null || bill.getBillItems().isEmpty()) {
             return false;
         }
 
@@ -328,10 +445,23 @@ public class BillService {
     }
 
     /**
-     * Get current rate per unit
-     * @return rate per unit
+     * Get discount policy information
      */
-    public BigDecimal getRatePerUnit() {
-        return RATE_PER_UNIT;
+    public String getDiscountPolicy() {
+        return String.format(
+                "Bookshop Discount Policy:\n" +
+                        "========================\n" +
+                        "Membership Discounts:\n" +
+                        "- Regular: 0%%\n" +
+                        "- Premium: %.0f%%\n" +
+                        "- VIP: %.0f%%\n\n" +
+                        "Loyalty Points:\n" +
+                        "- Earn: 1 point per %d currency units spent\n" +
+                        "- Redeem: 1 point = %.2f currency units\n\n" +
+                        "Tax Rate: %.0f%%",
+                PREMIUM_DISCOUNT, VIP_DISCOUNT,
+                LOYALTY_POINTS_PER_AMOUNT, LOYALTY_POINT_VALUE,
+                TAX_RATE.multiply(new BigDecimal(100))
+        );
     }
 }

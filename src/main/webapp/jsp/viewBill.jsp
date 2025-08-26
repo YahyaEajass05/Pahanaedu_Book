@@ -783,9 +783,9 @@
             <div class="store-logo">
                 <i class="fas fa-book-open"></i>
             </div>
-            <div class="store-name">Book Paradise</div>
+            <div class="store-name">Pahana Edu</div>
             <div class="store-details">
-                103 Galle Road , Dehiwala<br>
+                132 Galle Road , Dehiwala<br>
                 Phone: +94 11 2345678 | Email: info@pahanaedu.lk<br>
                 <small>web: ww.pahanaedu.lk | Reg No: Reg19875</small>
             </div>

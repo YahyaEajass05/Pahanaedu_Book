@@ -1205,11 +1205,11 @@
             outOfStockItems = new ArrayList<>();
         }
 
-        @SuppressWarnings("unchecked")
-        List<String> categories = (List<String>) request.getAttribute("categories");
-        if (categories == null) {
-            categories = new ArrayList<>();
-        }
+    @SuppressWarnings("unchecked")
+    List<String> categories = (List<String>) request.getAttribute("categories");
+    if (categories == null) {
+        categories = new ArrayList<>();
+    }
 
     Boolean isLowStockView = (Boolean) request.getAttribute("isLowStockView");
     Boolean isOutOfStockView = (Boolean) request.getAttribute("isOutOfStockView");
@@ -1450,12 +1450,13 @@
             <div class="stat-icon">
                 <i class="fas fa-dollar-sign"></i>
             </div>
-            <div class="stat-value" data-value="<%
-                    double totalValue = 0;
-                    for (Item item : items) {
-                        totalValue += item.getPrice().doubleValue() * item.getStock();
-                    }
-                %>"><%= String.format("%.0f", totalValue) %></div>
+            <%
+                double totalValue = 0;
+                for (Item item : items) {
+                    totalValue += item.getPrice().doubleValue() * item.getStock();
+                }
+            %>
+            <div class="stat-value" data-value="<%= totalValue %>" data-format="currency">0</div>
             <div class="stat-label">Total Value (LKR)</div>
         </div>
     </div>
@@ -1780,12 +1781,13 @@
         }
     }
 
-    // Animate Stats on Load
+    // Fixed animate stats function for currency values
     function animateStats() {
         const stats = document.querySelectorAll('.stat-value');
 
         stats.forEach(stat => {
-            const finalValue = parseInt(stat.getAttribute('data-value'));
+            const finalValue = parseFloat(stat.getAttribute('data-value'));
+            const isCurrency = stat.getAttribute('data-format') === 'currency';
             const duration = 1500;
             const step = finalValue / (duration / 16);
             let current = 0;
@@ -1797,8 +1799,12 @@
                     clearInterval(timer);
                 }
 
-                // Format number with commas
-                stat.textContent = Math.floor(current).toLocaleString();
+                // Format the display value
+                if (isCurrency) {
+                    stat.textContent = Math.floor(current).toLocaleString();
+                } else {
+                    stat.textContent = Math.floor(current).toLocaleString();
+                }
             }, 16);
         });
     }

@@ -785,9 +785,9 @@
             </div>
             <div class="store-name">Book Paradise</div>
             <div class="store-details">
-                123 Book Street, Reading City<br>
-                Phone: +94 11 2345678 | Email: info@bookparadise.lk<br>
-                <small>GST No: 123456789 | Reg No: ABC12345</small>
+                103 Galle Road , Dehiwala<br>
+                Phone: +94 11 2345678 | Email: info@pahanaedu.lk<br>
+                <small>web: ww.pahanaedu.lk | Reg No: Reg19875</small>
             </div>
         </div>
 

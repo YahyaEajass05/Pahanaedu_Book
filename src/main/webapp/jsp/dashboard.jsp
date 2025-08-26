@@ -863,7 +863,7 @@
 <div class="bg-animation"></div>
 
 <!-- Check if user is logged in -->
-<%
+    <%
     if (session == null || session.getAttribute("adminUser") == null) {
         response.sendRedirect(request.getContextPath() + "/login");
         return;
@@ -872,14 +872,14 @@
     String adminUsername = (String) session.getAttribute("username");
     if (adminUsername == null) adminUsername = "Admin";
 
-    // Get dashboard data
+    // Get dashboard data - FIXED: Changed variable names to match servlet
     Integer totalCustomers = (Integer) request.getAttribute("totalCustomers");
     Integer totalItems = (Integer) request.getAttribute("totalItems");
     Integer totalStock = (Integer) request.getAttribute("totalStock");
     BigDecimal inventoryValue = (BigDecimal) request.getAttribute("inventoryValue");
     Integer lowStockCount = (Integer) request.getAttribute("lowStockCount");
-    BigDecimal todaysRevenue = (BigDecimal) request.getAttribute("todaysRevenue");
-    BigDecimal monthlyRevenue = (BigDecimal) request.getAttribute("monthlyRevenue");
+    BigDecimal todaysSales = (BigDecimal) request.getAttribute("todaysSales");
+    BigDecimal monthSales = (BigDecimal) request.getAttribute("monthSales");
     String billStats = (String) request.getAttribute("billStats");
     Boolean hasLowStock = (Boolean) request.getAttribute("hasLowStock");
     Boolean hasCustomers = (Boolean) request.getAttribute("hasCustomers");
@@ -891,8 +891,8 @@
     if (totalStock == null) totalStock = 0;
     if (inventoryValue == null) inventoryValue = BigDecimal.ZERO;
     if (lowStockCount == null) lowStockCount = 0;
-    if (todaysRevenue == null) todaysRevenue = BigDecimal.ZERO;
-    if (monthlyRevenue == null) monthlyRevenue = BigDecimal.ZERO;
+    if (todaysSales == null) todaysSales = BigDecimal.ZERO;
+    if (monthSales == null) monthSales = BigDecimal.ZERO;
     if (billStats == null) billStats = "No billing data available";
     if (hasLowStock == null) hasLowStock = false;
     if (hasCustomers == null) hasCustomers = false;
@@ -944,7 +944,7 @@
     </div>
 
     <!-- Notifications -->
-    <% if (request.getParameter("success") != null) { %>
+        <% if (request.getParameter("success") != null) { %>
     <div class="notification notification-success">
         <i class="fas fa-check-circle notification-icon"></i>
         <div>
@@ -954,9 +954,9 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-    <% } %>
+        <% } %>
 
-    <% if (request.getAttribute("errorMessage") != null) { %>
+        <% if (request.getAttribute("errorMessage") != null) { %>
     <div class="notification notification-error">
         <i class="fas fa-exclamation-circle notification-icon"></i>
         <div>
@@ -966,10 +966,10 @@
             <i class="fas fa-times"></i>
         </button>
     </div>
-    <% } %>
+        <% } %>
 
     <!-- Low Stock Alert -->
-    <% if (hasLowStock && lowStockCount > 0) { %>
+        <% if (hasLowStock && lowStockCount > 0) { %>
     <div class="low-stock-alert">
         <i class="fas fa-exclamation-triangle"></i>
         <div style="flex: 1;">
@@ -980,7 +980,7 @@
             <i class="fas fa-boxes"></i> View Low Stock
         </a>
     </div>
-    <% } %>
+        <% } %>
 
     <!-- Quick Statistics -->
     <div class="quick-stats">
@@ -1032,7 +1032,7 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-content">
-                    <h3>LKR <%= String.format("%,.2f", todaysRevenue) %></h3>
+                    <h3>LKR <%= String.format("%,.2f", todaysSales) %></h3>
                     <p>Today's Sales</p>
                 </div>
                 <div class="stat-icon">
@@ -1042,7 +1042,7 @@
             <div class="stat-footer">
                 <div class="stat-change">
                     <i class="fas fa-calendar-alt"></i>
-                    Month: LKR <%= String.format("%,.2f", monthlyRevenue) %>
+                    Month: LKR <%= String.format("%,.2f", monthSales) %>
                 </div>
             </div>
         </div>
@@ -1207,7 +1207,7 @@
                 <i class="fas fa-fire" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
                 <h4 style="margin: 0.5rem 0;">Best Sellers</h4>
                 <p style="margin: 0; opacity: 0.9;">Track your top-selling books</p>
-                <a href="${pageContext.request.contextPath}/item?action=popular" style="color: white; text-decoration: underline; font-size: 0.875rem;">View Report →</a>
+                <a href="${pageContext.request.contextPath}/item?action=discounted" style="color: white; text-decoration: underline; font-size: 0.875rem;">View Report →</a>
             </div>
 
             <div class="insight-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 1rem; text-align: center;">
@@ -1221,14 +1221,14 @@
                 <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
                 <h4 style="margin: 0.5rem 0;">Recent Bills</h4>
                 <p style="margin: 0; opacity: 0.9;">View latest transactions</p>
-                <a href="${pageContext.request.contextPath}/bill?action=recent" style="color: white; text-decoration: underline; font-size: 0.875rem;">View Bills →</a>
+                <a href="${pageContext.request.contextPath}/bill?action=today" style="color: white; text-decoration: underline; font-size: 0.875rem;">View Bills →</a>
             </div>
 
             <div class="insight-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 1.5rem; border-radius: 1rem; text-align: center;">
                 <i class="fas fa-chart-pie" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
                 <h4 style="margin: 0.5rem 0;">Reports</h4>
                 <p style="margin: 0; opacity: 0.9;">Analytics & insights</p>
-                <a href="${pageContext.request.contextPath}/reports" style="color: white; text-decoration: underline; font-size: 0.875rem;">View Reports →</a>
+                <a href="${pageContext.request.contextPath}/item?action=inventory" style="color: white; text-decoration: underline; font-size: 0.875rem;">View Reports →</a>
             </div>
         </div>
     </div>

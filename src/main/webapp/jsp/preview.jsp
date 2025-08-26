@@ -648,10 +648,10 @@
             <div class="store-logo">
                 <i class="fas fa-book-open"></i>
             </div>
-            <div class="store-name">Book Paradise</div>
+            <div class="store-name">Pahana Edu</div>
             <div class="store-details">
-                123 Book Street, Reading City<br>
-                Phone: +94 11 2345678 | Email: info@bookparadise.lk<br>
+                132 Galle Road, Dehiwala<br>
+                Phone: +94 11 2345678 | Email: info@pahanaedu.lk<br>
                 <small>Date: <%= dateFormat.format(currentDate) %> | Time: <%= timeFormat.format(currentDate) %></small>
             </div>
         </div>

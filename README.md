@@ -13,7 +13,7 @@ A comprehensive web-based bill management system built with Java, JSP, and MySQL
 
 ### Advanced Features
 - **Interactive Dashboard**: Real-time charts showing revenue and transaction data
-- **Status Tracking**: Monitor bill statuses (PAID, PENDING, CANCELLED)
+- **Status Tracking**: Monitor bill statuses (PAID, CANCELLED)
 - **Audit Trail**: Track creation and modification timestamps
 - **Responsive Design**: Mobile-friendly interface with modern UI
 - **Data Export**: Generate reports and export billing data
@@ -60,7 +60,7 @@ CREATE TABLE bills (
     customer_name VARCHAR(255) NOT NULL,
     customer_email VARCHAR(255),
     total DECIMAL(10,2) NOT NULL,
-    status ENUM('PAID', 'PENDING', 'CANCELLED') DEFAULT 'PENDING',
+    status ENUM('PAID', 'CANCELLED') DEFAULT 'PAID',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

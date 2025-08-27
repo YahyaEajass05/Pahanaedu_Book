@@ -1,6 +1,3 @@
-Here's the complete item-edit.jsp with modern UI design for your bookstore management system:
-
-```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.pahanaedu.model.Item" %>
 <!DOCTYPE html>

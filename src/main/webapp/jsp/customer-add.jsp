@@ -803,21 +803,21 @@
                             <strong style="color: #95A5A6;">Regular</strong>
                             <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
                                 <li>5% discount</li>
-                                <li>1 point per $10</li>
+                                <li>1 point per Rs10</li>
                             </ul>
                         </div>
                         <div style="background: rgba(243, 156, 18, 0.1); padding: 1rem; border-radius: 10px;">
                             <strong style="color: #F39C12;">Premium</strong>
                             <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
                                 <li>10% discount</li>
-                                <li>2 points per $10</li>
+                                <li>2 points per Rs10</li>
                             </ul>
                         </div>
                         <div style="background: rgba(231, 76, 60, 0.1); padding: 1rem; border-radius: 10px;">
                             <strong style="color: #E74C3C;">VIP</strong>
                             <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
                                 <li>15% discount</li>
-                                <li>3 points per $10</li>
+                                <li>3 points per Rs10</li>
                             </ul>
                         </div>
                     </div>

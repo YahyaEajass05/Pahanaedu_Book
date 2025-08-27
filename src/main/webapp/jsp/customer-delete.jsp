@@ -1223,7 +1223,7 @@
                     <i class="fas fa-shopping-cart"></i>
                     Total Purchases
                 </div>
-                <div class="info-value">$<%= String.format("%.2f", customer.getTotalPurchases()) %></div>
+                <div class="info-value">Rs<%= String.format("%.2f", customer.getTotalPurchases()) %></div>
             </div>
 
             <div class="info-item">
@@ -1254,7 +1254,7 @@
                 <div class="impact-icon">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <div class="impact-value">$<%= String.format("%.2f", customer.getTotalPurchases()) %></div>
+                <div class="impact-value">Rs<%= String.format("%.2f", customer.getTotalPurchases()) %></div>
                 <div class="impact-label">Revenue Loss</div>
             </div>
             <div class="impact-card">
@@ -1416,7 +1416,7 @@
             'You are about to permanently delete:\n\n' +
             `Customer: ${customerName}\n` +
             `Email: ${customerEmail}\n` +
-            `Total Purchases: $${totalPurchases.toFixed(2)}\n` +
+            `Total Purchases: Rs${totalPurchases.toFixed(2)}\n` +
             `Loyalty Points: ${loyaltyPoints}\n\n` +
             'Are you absolutely sure?'
         );

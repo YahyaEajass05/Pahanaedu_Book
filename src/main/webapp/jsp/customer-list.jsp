@@ -1392,7 +1392,7 @@
                 </td>
                 <td>
                     <div class="purchase-info">
-                        <span class="purchase-amount">$<%= String.format("%.2f", customer.getTotalPurchases()) %></span>
+                        <span class="purchase-amount">Rs<%= String.format("%.2f", customer.getTotalPurchases()) %></span>
                         <span class="loyalty-points">
                                 <i class="fas fa-coins"></i>
                                 <%= customer.getLoyaltyPoints() %> points

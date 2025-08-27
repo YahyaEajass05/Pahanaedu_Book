@@ -1370,7 +1370,7 @@
                         </div>
                         <div class="help-text">
                             <i class="fas fa-info-circle"></i>
-                            1 point = $0.01 discount
+                            1 point = Rs0.01 discount
                         </div>
                         <div class="error-message" id="loyaltyPointsError">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -1656,7 +1656,7 @@
                 let changeItem = '';
 
                 if (fieldName === 'totalPurchases') {
-                    changeItem = changeText + ': $' + originalValue + ' → $' + currentValue;
+                    changeItem = changeText + ': Rs' + originalValue + ' → Rs' + currentValue;
                 } else if (fieldName === 'loyaltyPoints') {
                     changeItem = changeText + ': ' + originalValue + ' → ' + currentValue + ' points';
                 } else {
@@ -1692,7 +1692,7 @@
     // Format field name
     function formatFieldName(fieldName) {
         return fieldName
-            .replace(/([A-Z])/g, ' $1')
+            .replace(/([A-Z])/g, ' Rs1')
             .replace(/^./, str => str.toUpperCase());
     }
 
